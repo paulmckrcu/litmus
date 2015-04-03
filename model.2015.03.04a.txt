@@ -1,0 +1,117 @@
+------------------------------------------------------------------------
+linux.bell
+------------------------------------------------------------------------
+
+"memory barriers"
+
+enum Accesses = 'once || 
+                'release || 'acquire ||
+                'assign (*rcu_assign_pointer*) || 
+                'deref (*rcu_dereference*) ||
+                'lderef (*lockless_dereference*)
+events R[{'once,'acquire,'deref,'lderef}]
+events W[{'once,'release,'assign}]
+
+enum Barriers = 'wmb || 'rmb || 'mb
+                || 'rb_dep (*smp_read_barrier_depends*)
+                || 'lock (*rcu_read_lock*) || 'unlock (*rcu_read_unlock*)
+                || 'sync (*synchronize_rcu*)
+
+events F[Barriers]
+
+let rmb = fencerel(F & Rmb) & (R*R)
+let wmb = fencerel(F & Wmb) & (W*W)
+let mb = fencerel(F & Mb) 
+let sync = fencerel(F & Sync)
+
+let acq-po = po & (Acquire * M)
+let po-rel = po & (M * Release)
+let deref-po = po & (Deref * M)
+let lderef-po = po & (Lderef * M)
+let po-assign = po & (M * Assign)
+
+let fences = rmb | wmb | mb | sync | 
+             po-rel | po-assign
+
+let lock-po = po & (Lock * M)
+let po-unlock = po & (M * Unlock)
+
+show rmb, wmb, mb, acq-po, po-rel, 
+  deref-po, po-assign, 
+  lock-po, po-unlock, sync
+
+
+------------------------------------------------------------------------
+LL.cat
+------------------------------------------------------------------------
+
+LL
+let chapo = fr | rf | co | (co;rf) | (fr;rf)
+let poi = WW(po-loc) | RW(po-loc) | WR(po-loc)
+irreflexive poi ; chapo
+(* Show things... *)
+let dmb.st=WW(dmb.st)
+let dsb.st=WW(dsb.st)
+show dmb, dsb, dmb.st, dsb.st
+show addr, data, ctrl, ctrlisb
+
+------------------------------------------------------------------------
+linux.cat
+------------------------------------------------------------------------
+
+"memory barriers"
+
+include "common.cat"
+
+let po-loc = po & loc
+let com = rf | co | fr
+
+procedure sc-per-location() =
+  let order = (po-loc | com) 
+  acyclic order
+end
+
+let deps = addr | data | ctrl 
+let data-fence = fencerel(F & Rb_dep) & (addr | data)
+
+let hb = (deps | data-fence | fences | rfe)+
+procedure causality() =
+  acyclic hb
+end
+
+let deref-po-deps = deref-po & (addr | data | ctrl)
+let lderef-po-deps = lderef-po & (addr | data | ctrl)
+let pairs =  (po-rel;rfe;acq-po | 
+              po-assign;rfe;deref-po-deps |
+              po-rel;rfe;lderef-po-deps |
+              po-rel;rfe;ctrl)+
+let cumul-fences = mb | sync
+let A-cumul = rfe;cumul-fences
+let prop = (wmb | cumul-fences | pairs | A-cumul);hb*
+
+procedure propagation() =
+  acyclic co | prop
+end
+
+let between = range(lock-po) & domain(po-unlock)
+let sandwich = (po | po^-1) & between*between
+let grace = (sync;com+)+;((*hb?;*)sandwich;com+)+
+
+procedure observation() =
+  irreflexive fre;prop
+end
+
+procedure restoring-sc() =
+  acyclic mb | com
+  acyclic grace
+end
+
+procedure memory_barriers() =
+  call sc-per-location()
+  call causality()
+  call observation()
+  call propagation()
+  call restoring-sc()
+end
+
+call memory_barriers()
