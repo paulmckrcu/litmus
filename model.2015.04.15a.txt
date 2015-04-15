@@ -1,0 +1,130 @@
+------------------------------------------------------------------------
+linux.bell
+------------------------------------------------------------------------
+
+"memory barriers"
+
+enum Accesses = 'once || 
+                'release || 'acquire ||
+                'assign (*rcu_assign_pointer*) || 
+                'deref (*rcu_dereference*) ||
+                'lderef (*lockless_dereference*)
+events R[{'once,'acquire,'deref,'lderef}]
+events W[{'once,'release,'assign}]
+
+enum Barriers = 'wmb || 'rmb || 'mb
+                || 'rb_dep (*smp_read_barrier_depends*)
+                || 'lock (*rcu_read_lock*) || 'unlock (*rcu_read_unlock*)
+                || 'sync (*synchronize_rcu*)
+
+events F[Barriers]
+
+let rmb = fencerel(F & Rmb) & (R*R)
+let wmb = fencerel(F & Wmb) & (W*W)
+let mb = fencerel(F & Mb) 
+let sync = fencerel(F & Sync)
+
+let acq-po = po & (Acquire * M)
+let po-rel = po & (M * Release)
+let deref-po = po & (Deref * M)
+let lderef-po = po & (Lderef * M)
+let po-assign = po & (M * Assign)
+
+let fences = rmb | wmb | mb | sync 
+             (*| po-rel | po-assign | acq-po*)
+
+let lock-po = po & (Lock * M)
+let po-unlock = po & (M * Unlock)
+
+show rmb, wmb, mb, acq-po, po-rel, 
+  deref-po, po-assign, 
+  lock-po, po-unlock, sync
+
+
+(*question for Paul: should acq-po, deref-po and lderef-po be in fences as well?*)
+
+(*R that are rcu_deref create an addr dep 
+  with the following R/W--only if the following
+  R/W is actually addr-dependent, e.g.:
+  RR case
+  r2 = rcu_deref(C)
+  r3 = *r2
+
+  RW case
+  r2 = rcu_deref(C)
+  *C = 5
+
+  for now we'll leave data deps out, but we
+  should check if:
+  r2 = rcu_deref(C)
+  q = r2
+  creates a data dep or not
+  *)
+(*smp, dma, mmio: scopes? or bits?*)
+
+
+------------------------------------------------------------------------
+stitching.cat
+------------------------------------------------------------------------
+
+"stitching model"
+
+include "common.cat"
+
+let po-loc = po & loc
+let com = rf | co | fr
+
+procedure sc-per-location() =
+  let order = (po-loc | com)
+  acyclic order
+end
+
+let deps = addr | data
+let deref-po-deps = (deref-po & deps)
+let lderef-po-deps = (lderef-po & deps)
+let rb-fence = (fencerel(F & Rb_dep) & deps)
+let proper-deps = rb-fence | deref-po-deps | lderef-po-deps | ctrl
+let local = proper-deps | fences 
+let non-transitive = rfe?;local
+
+let pairs = ((po?;(rfe & (Release * Acquire));po?) |
+            (po?;(rfe & (Assign * Deref));deref-po-deps) |
+            (po?;(rfe & (Release * Lderef));lderef-po-deps) |
+            (po?;(rfe & (Release * R)); ctrl))+
+
+let transitive-fences = (mb | sync)
+let transitive = (rfe?;transitive-fences | pairs)+
+
+let hb = (non-transitive | transitive);non-transitive?
+
+procedure causality() =  
+  irreflexive hb
+end
+
+procedure observation() =
+  irreflexive fre;hb
+end
+
+let prop = transitive;non-transitive?
+procedure propagation() =
+  acyclic co | prop
+end
+
+let between = range(lock-po) & domain(po-unlock)
+let sandwich = (po | po^-1) & between*between
+let grace = (sync;com+)+;(sandwich;com+)+
+
+procedure restoring-sc() =
+  acyclic mb | com
+  acyclic grace
+end
+
+procedure memory_barriers() =
+  call sc-per-location()
+  call causality()
+  call observation()
+  call propagation()
+  call restoring-sc()
+end
+
+call memory_barriers()
