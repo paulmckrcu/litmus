@@ -89,8 +89,12 @@ incode == 1 {
 	for (i = 1; i <= nproc; i++) {
 		gsub(/^[ 	]*/, "", curline[i]);
 		gsub(/[ 	]*$/, "", curline[i]);
-		if (curline[i] == "f[sync]")
+		if (curline[i] == "f[sync]") {
 			ngp++;
+			rcugp[ngp] = i;
+		}
+		if (curline[i] == "f[lock]")
+			rcurscs[i]++;
 		lisa[i ":" line] = curline[i];
 	}
 	line++;
@@ -107,6 +111,5 @@ END {
 		print "proph" i "=1;";
 	print "}";
 	print ":"exists":";
-	print "Grace periods: " ngp;
 }
 '
