@@ -29,6 +29,15 @@ function proc_needs_gp_check(proc_num, gp_num) {
 	return rcugp[gp_num] != proc_num;
 }
 
+function stmt_needs_gp_check(proc_num, gp_num, stmt) {
+	if (!proc_needs_gp_check(proc_num, gp_num))
+		return 0;
+	if (stmt = "f[lock]" || stmt = "f[unlock]")
+		return 0;
+	if (stmt ~ /^[frw]\[/)
+		return 1;
+}
+
 /^[ 	]*$/ {
 	next;  /* Kill blank lines. */
 }
