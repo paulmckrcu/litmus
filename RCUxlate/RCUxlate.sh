@@ -24,7 +24,7 @@
 gawk '
 
 function proc_needs_gp_check(proc_num, gp_num) {
-	if (!rcurscs[proc_num])
+	if (!rcurl[proc_num])
 		return 0;
 	return rcugp[gp_num] != proc_num;
 }
@@ -109,8 +109,19 @@ incode == 1 {
 			ngp++;
 			rcugp[ngp] = i;
 		}
-		if (curline[i] == "f[lock]")
-			rcurscs[i]++;
+		if (curline[i] == "f[lock]") {
+			if (rcunest[i] + 0 == 0)
+				rcurl[i]++;
+			else
+				curline[i] = "(* nested " curline[i] "*)";
+			rcunest[i]++;
+		} else if (curline[i] == "f[unlock]") {
+			if (rcunest[i] == 1)
+				rcurul[i]++;
+			else
+				curline[i] = "(* nested " curline[i] "*)";
+			rcunest[i]--;
+		}
 		lisa[i ":" line] = curline[i];
 	}
 	line++;
@@ -128,7 +139,7 @@ END {
 	print "}";
 	print ":"exists":";
 	for (i = 1; i <= nproc; i++) {
-		printf "Process %d: needs checks for grace periods:", i;
+		printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
 		for (j = 1; j <= ngp; j++) {
 			if (proc_needs_gp_check(i, j))
 				printf " %d", j;
