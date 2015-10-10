@@ -21,7 +21,14 @@
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
 ./stripocamlcomment |
-awk '
+gawk '
+
+function proc_needs_gp_check(proc_num, gp_num) {
+	if (!rcurscs[proc_num])
+		return 0;
+	return rcugp[gp_num] != proc_num;
+}
+
 /^[ 	]*$/ {
 	next;  /* Kill blank lines. */
 }
@@ -111,5 +118,13 @@ END {
 		print "proph" i "=1;";
 	print "}";
 	print ":"exists":";
+	for (i = 1; i <= nproc; i++) {
+		printf "Process %d: needs checks for grace periods:", i;
+		for (j = 1; j <= ngp; j++) {
+			if (proc_needs_gp_check(i, j))
+				printf " %d", j;
+		}
+		printf "\n";
+	}
 }
 '
