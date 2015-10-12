@@ -30,27 +30,62 @@ function proc_needs_gp_check(proc_num, gp_num) {
 }
 
 function stmt_needs_gp_check(proc_num, gp_num, stmt) {
-	if (!proc_needs_gp_check(proc_num, gp_num))
+	printf "stmt_needs_gp_check(:%s:) ", stmt;
+	if (!proc_needs_gp_check(proc_num, gp_num)) {
+		printf "\n";
 		return 0;
-	if (stmt = "f[lock]" || stmt = "f[unlock]")
-		return 0;
-	if (stmt ~ /^[frw]\[/)
-		return 1;
-}
-
-function do_one_gp_check(proc_num, line_in, line_out, rcurscs, rl, rul, gp_num) {
-	if (stmt_needs_gp_check(proc_num, i, lisa[proc_num ":" line_in])) {
-		if (rcurscs > rl)
-			print "(* preamble " gp_num " *)";
-		if (rul > 0)
-			print "(* postamble " gp_num " *)";
 	}
+	printf "proc_needs_gp_check() ";
+	if (stmt == "f[lock]" || stmt == "f[unlock]") {
+		printf "\n";
+		return 0;
+	}
+	printf "f[lock]/f[unlock] ";
+	if (stmt ~ /^[frw]\[/) {
+		printf "\n";
+		return 1;
+	}
+	printf "[frw][... ";
+	if (stmt == "-EOF-") {
+		printf "\n";
+		return 1;
+	}
+	printf "-EOF-";
+	if (stmt ~ /^P[0-9]/) {
+		printf "\n";
+		return 0;
+	}
+	printf "Other\n";
+	return 0;
 }
 
-function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line) {
+function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  line) {
 	line = line_out;
-	for (i = 1; i <= ngp; i++)
-		line = do_one_gp_check(proc_num, line_in, line, i);
+	print "do_one_gp_check(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
+	if (stmt_needs_gp_check(proc_num, i, stmt)) {
+		print "Need GP check, rcurscs = " rcurscs " rl = " rl " rul = " rul;
+		if (rcurscs > rl) {
+			print "Adding preamble"
+			aux[proc_num ":" line] = "(* preamble " gp_num " *)";
+			line++;
+		}
+		if (rul > 0) {
+			print "Adding postamble"
+			aux[proc_num ":" line] = "(* postamble " gp_num " *)";
+			line++;
+		}
+	}
+	return line;
+}
+
+function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
+	line = line_out;
+	print "do_gp_checks(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
+	for (i = 1; i <= ngp; i++) {
+		stmt = lisa[proc_num ":" line_in];
+		line = do_one_gp_check(proc_num, stmt, line, rcurscs, rl, rul, i);
+	}
+	return line;
 }
 
 /^[ 	]*$/ {
@@ -110,34 +145,37 @@ incode == 1 && $1 ~ /^exists/ {
 incode == 1 {
 	gsub(/^[ 	]*/, "");
 	gsub(/;[ 	]*$/, "");
-	split($0, curline, "|");
+	split($0, cur_line, "|");
 	if (nproc == 0)
-		nproc = length(curline);
-	else if (nproc != length(curline)) {
+		nproc = length(cur_line);
+	else if (nproc != length(cur_line)) {
 		print "Line " NR ": Expected " nproc " processes!";
 		exit;
 	}
 	for (i = 1; i <= nproc; i++) {
-		gsub(/^[ 	]*/, "", curline[i]);
-		gsub(/[ 	]*$/, "", curline[i]);
-		if (curline[i] == "f[sync]") {
+		gsub(/^[ 	]*/, "", cur_line[i]);
+		gsub(/[ 	]*$/, "", cur_line[i]);
+		if (cur_line[i] == "f[sync]") {
 			ngp++;
 			rcugp[ngp] = i;
 		}
-		if (curline[i] == "f[lock]") {
+		if (cur_line[i] == "f[lock]") {
 			if (rcunest[i] + 0 == 0)
 				rcurl[i]++;
 			else
-				curline[i] = "(* nested " curline[i] "*)";
+				cur_line[i] = "(* nested " cur_line[i] "*)";
 			rcunest[i]++;
-		} else if (curline[i] == "f[unlock]") {
+		} else if (cur_line[i] == "f[unlock]") {
 			if (rcunest[i] == 1)
 				rcurul[i]++;
 			else
-				curline[i] = "(* nested " curline[i] "*)";
+				cur_line[i] = "(* nested " cur_line[i] "*)";
 			rcunest[i]--;
 		}
-		lisa[i ":" line] = curline[i];
+		if (cur_line[i] != "") {
+			max_line[i]++;
+			lisa[i ":" max_line[i]] = cur_line[i];
+		}
 	}
 	line++;
 	next;
@@ -152,7 +190,6 @@ END {
 	for (i = 1; i <= ngp; i++)
 		print "proph" i "=1;";
 	print "}";
-	print ":"exists":";
 	for (i = 1; i <= nproc; i++) {
 		printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
 		for (j = 1; j <= ngp; j++) {
@@ -161,5 +198,76 @@ END {
 		}
 		printf "\n";
 	}
+
+	# Do the translation from lisa[] to aux[].
+	aux_max_line = 0;
+	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		line_in = 1;
+		line_out = 1;
+		drl = 0;
+		rl = 0;
+		rul = 0;
+		for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
+			print "line_out = " line_out;
+			line_out = do_gp_checks(proc_num, line_in, line_out, rcurl[proc_num], rl, rul);
+			stmt = lisa[proc_num ":" line_in];
+			aux[proc_num ":" line_out] = stmt;
+			if (line_out > aux_max_line)
+				aux_max_line = line_out;
+			print "aux_max_line = " aux_max_line;
+			if (stmt == "f[lock]") {
+				drl++;
+				aux[proc_num ":" line_out] = "(* " stmt " *)";
+			} else if (stmt == "f[unlock]") {
+				rul += 1;
+				rl += drl;
+				drl = 0;
+				aux[proc_num ":" line_out] = "(* " stmt " *)";
+			} else if (stmt ~ /^[frw]\[/) {
+				rl += drl;
+				drl = 0;
+				aux[proc_num ":" line_out] = stmt;
+			} else {
+				aux[proc_num ":" line_out] = stmt;
+			}
+			line_out++;
+		}
+		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
+			print "line_out = " line_out;
+			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul);
+			if (line_out - 1 > aux_max_line)
+				aux_max_line = line_out - 1;
+			print "aux_max_line = " aux_max_line;
+		}
+	}
+	# print "";
+	# print "LISA:"
+	# for (proc_num = 1; proc_num <= nproc; proc_num++) {
+	# 	for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
+	# 		if (lisa[proc_num ":" line_in] != "")
+	# 			print ":" lisa[proc_num ":" line_in] ":";
+	# 	}
+	# }
+	print "";
+	print "AUX: aux_max_line = " aux_max_line;
+	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		max_length[proc_num] = 0;
+		for (line_out = 1; line_out <= aux_max_line; line_out++) {
+			stmt = aux[proc_num ":" line_out];
+			if (length(stmt) > max_length[proc_num])
+				max_length[proc_num] = length(stmt);
+			# if (aux[proc_num ":" line_out] != "")
+			# 	print ":" aux[proc_num ":" line_out] ":";
+		}
+	}
+	for (line_out = 1; line_out <= aux_max_line; line_out++) {
+		for (proc_num = 1; proc_num <= nproc; proc_num++) {
+			stmt = aux[proc_num ":" line_out];
+			pad = max_length[proc_num] - length(stmt);
+			printf " %s%*s |", stmt, pad, "";
+		}
+		printf "\n";
+	}
+	print "exists "exists"@@@";
 }
 '
