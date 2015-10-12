@@ -186,7 +186,7 @@ inexists == 1 {
 }
 
 END {
-	print nproc ":r001=1;";
+	print nproc ":r000=0;";
 	for (i = 1; i <= ngp; i++)
 		print "proph" i "=1;";
 	print "}";
@@ -269,14 +269,14 @@ END {
 		if (line_out == 1) {
 			printf " P%d", nproc;
 		} else if (line_out <= ngp + 1) {
-			printf " w[once] proph%2d %d:r001", line_out - 1, nproc;
+			printf " w[once] proph%2d %d:r000", line_out - 1, nproc;
 		}
 		printf " ;\n";
 	}
 	for (; line_out <= ngp + 1; line_out++) {
 		for (proc_num = 1; proc_num <= nproc; proc_num++)
 			printf " %*s |", max_length[proc_num], "";
-		printf " w[once] proph%2d %d:r001 ;\n", line_out - 1, nproc;
+		printf " w[once] proph%2d %d:r000 ;\n", line_out - 1, nproc;
 	}
 	print "exists "exists"@@@";
 }
