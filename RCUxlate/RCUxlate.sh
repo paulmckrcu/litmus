@@ -191,12 +191,12 @@ END {
 		print "proph" i "=1;";
 	print "}";
 	for (i = 1; i <= nproc; i++) {
-		printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
-		for (j = 1; j <= ngp; j++) {
-			if (proc_needs_gp_check(i, j))
-				printf " %d", j;
-		}
-		printf "\n";
+		## printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
+		## for (j = 1; j <= ngp; j++) {
+		##	if (proc_needs_gp_check(i, j))
+		##		## printf " %d", j;
+		##}
+		## printf "\n";
 	}
 
 	# Do the translation from lisa[] to aux[].
