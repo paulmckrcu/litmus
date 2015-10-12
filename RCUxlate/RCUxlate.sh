@@ -30,47 +30,47 @@ function proc_needs_gp_check(proc_num, gp_num) {
 }
 
 function stmt_needs_gp_check(proc_num, gp_num, stmt) {
-	printf "stmt_needs_gp_check(:%s:) ", stmt;
+	## printf "stmt_needs_gp_check(:%s:) ", stmt;
 	if (!proc_needs_gp_check(proc_num, gp_num)) {
-		printf "\n";
+		## printf "\n";
 		return 0;
 	}
-	printf "proc_needs_gp_check() ";
+	## printf "proc_needs_gp_check() ";
 	if (stmt == "f[lock]" || stmt == "f[unlock]") {
-		printf "\n";
+		## printf "\n";
 		return 0;
 	}
-	printf "f[lock]/f[unlock] ";
+	## printf "f[lock]/f[unlock] ";
 	if (stmt ~ /^[frw]\[/) {
-		printf "\n";
+		## printf "\n";
 		return 1;
 	}
-	printf "[frw][... ";
+	## printf "[frw][... ";
 	if (stmt == "-EOF-") {
-		printf "\n";
+		## printf "\n";
 		return 1;
 	}
-	printf "-EOF-";
+	## printf "-EOF-";
 	if (stmt ~ /^P[0-9]/) {
-		printf "\n";
+		## printf "\n";
 		return 0;
 	}
-	printf "Other\n";
+	## printf "Other\n";
 	return 0;
 }
 
 function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  line) {
 	line = line_out;
-	print "do_one_gp_check(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
+	## print "do_one_gp_check(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
 	if (stmt_needs_gp_check(proc_num, i, stmt)) {
-		print "Need GP check, rcurscs = " rcurscs " rl = " rl " rul = " rul;
+		## print "Need GP check, rcurscs = " rcurscs " rl = " rl " rul = " rul;
 		if (rcurscs > rl) {
-			print "Adding preamble"
+			## print "Adding preamble"
 			aux[proc_num ":" line] = "(* preamble " gp_num " *)";
 			line++;
 		}
 		if (rul > 0) {
-			print "Adding postamble"
+			## print "Adding postamble"
 			aux[proc_num ":" line] = "(* postamble " gp_num " *)";
 			line++;
 		}
@@ -80,7 +80,7 @@ function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  li
 
 function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
 	line = line_out;
-	print "do_gp_checks(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
+	## print "do_gp_checks(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
 	for (i = 1; i <= ngp; i++) {
 		stmt = lisa[proc_num ":" line_in];
 		line = do_one_gp_check(proc_num, stmt, line, rcurscs, rl, rul, i);
@@ -208,13 +208,13 @@ END {
 		rl = 0;
 		rul = 0;
 		for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
-			print "line_out = " line_out;
+			## print "line_out = " line_out;
 			line_out = do_gp_checks(proc_num, line_in, line_out, rcurl[proc_num], rl, rul);
 			stmt = lisa[proc_num ":" line_in];
 			aux[proc_num ":" line_out] = stmt;
 			if (line_out > aux_max_line)
 				aux_max_line = line_out;
-			print "aux_max_line = " aux_max_line;
+			## print "aux_max_line = " aux_max_line;
 			if (stmt == "f[lock]") {
 				drl++;
 				aux[proc_num ":" line_out] = "(* " stmt " *)";
@@ -233,31 +233,31 @@ END {
 			line_out++;
 		}
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
-			print "line_out = " line_out;
+			## print "line_out = " line_out;
 			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul);
 			if (line_out - 1 > aux_max_line)
 				aux_max_line = line_out - 1;
-			print "aux_max_line = " aux_max_line;
+			## print "aux_max_line = " aux_max_line;
 		}
 	}
-	# print "";
-	# print "LISA:"
-	# for (proc_num = 1; proc_num <= nproc; proc_num++) {
-	# 	for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
-	# 		if (lisa[proc_num ":" line_in] != "")
-	# 			print ":" lisa[proc_num ":" line_in] ":";
-	# 	}
-	# }
-	print "";
-	print "AUX: aux_max_line = " aux_max_line;
+	## print "";
+	## print "LISA:"
+	## for (proc_num = 1; proc_num <= nproc; proc_num++) {
+	## 	for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
+	## 		if (lisa[proc_num ":" line_in] != "")
+	## 			print ":" lisa[proc_num ":" line_in] ":";
+	## 	}
+	## }
+	## print "";
+	## print "AUX: aux_max_line = " aux_max_line;
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		max_length[proc_num] = 0;
 		for (line_out = 1; line_out <= aux_max_line; line_out++) {
 			stmt = aux[proc_num ":" line_out];
 			if (length(stmt) > max_length[proc_num])
 				max_length[proc_num] = length(stmt);
-			# if (aux[proc_num ":" line_out] != "")
-			# 	print ":" aux[proc_num ":" line_out] ":";
+			## if (aux[proc_num ":" line_out] != "")
+			## 	print ":" aux[proc_num ":" line_out] ":";
 		}
 	}
 	for (line_out = 1; line_out <= aux_max_line; line_out++) {
