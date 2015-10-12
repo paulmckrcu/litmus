@@ -278,6 +278,7 @@ END {
 			printf " %*s |", max_length[proc_num], "";
 		printf " w[once] proph%2d %d:r000 ;\n", line_out - 1, nproc;
 	}
-	print "exists "exists"@@@";
+	printf "%s)\n", exists;
+	#@@@ Need rest of exists statement.
 }
 '
