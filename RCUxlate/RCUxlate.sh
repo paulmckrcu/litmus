@@ -38,6 +38,21 @@ function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 		return 1;
 }
 
+function do_one_gp_check(proc_num, line_in, line_out, rcurscs, rl, rul, gp_num) {
+	if (stmt_needs_gp_check(proc_num, i, lisa[proc_num ":" line_in])) {
+		if (rcurscs > rl)
+			print "(* preamble " gp_num " *)";
+		if (rul > 0)
+			print "(* postamble " gp_num " *)";
+	}
+}
+
+function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line) {
+	line = line_out;
+	for (i = 1; i <= ngp; i++)
+		line = do_one_gp_check(proc_num, line_in, line, i);
+}
+
 /^[ 	]*$/ {
 	next;  /* Kill blank lines. */
 }
