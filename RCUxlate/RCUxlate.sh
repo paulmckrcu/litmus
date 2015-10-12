@@ -234,7 +234,7 @@ END {
 		}
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
 			## print "line_out = " line_out;
-			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul);
+			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul, cur_gp);
 			if (line_out - 1 > aux_max_line)
 				aux_max_line = line_out - 1;
 			## print "aux_max_line = " aux_max_line;
