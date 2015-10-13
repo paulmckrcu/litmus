@@ -60,8 +60,9 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r1008 (ne r1%02d1 r1%02d2)", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1008 ERR%02d", proc_num);
+	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1 r1%02d2)", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num]++;
@@ -260,7 +261,9 @@ END {
 	# Output initialization for auxiliary litmus-test variables.
 	for (i = 1; i <= ngp; i++)
 		printf "proph%02d=0;\n", i;
-	print "}";
+	for (i = 1; i <= nproc; i++)
+		printf " %d:r1001=1;", nproc;
+	print "\n}";
 	for (i = 1; i <= nproc; i++) {
 		## printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
 		## for (j = 1; j <= ngp; j++) {
