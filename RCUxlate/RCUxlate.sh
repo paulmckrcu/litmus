@@ -308,12 +308,12 @@ END {
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
 			## print "line_out = " line_out;
 			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul, cur_gp);
-			if (postamble[proc_num] > 0)
-				aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
-			if (line_out - 1 > aux_max_line)
-				aux_max_line = line_out - 1;
-			## print "aux_max_line = " aux_max_line;
 		}
+		if (postamble[proc_num] > 0)
+			aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
+		if (line_out - 1 > aux_max_line)
+			aux_max_line = line_out - 1;
+		## print "aux_max_line = " aux_max_line;
 	}
 	## print "";
 	## print "LISA:"
