@@ -259,7 +259,7 @@ inexists == 1 {
 END {
 	# Output initialization for auxiliary litmus-test variables.
 	for (i = 1; i <= ngp; i++)
-		printf "proph%02d=1;\n", i;
+		printf "proph%02d=0;\n", i;
 	print "}";
 	for (i = 1; i <= nproc; i++) {
 		## printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
@@ -361,7 +361,11 @@ END {
 	}
 
 	# exists clause.
-	printf "%s)\n", exists;
+	printf "%s", exists;
+	for (proc_num = 1; proc_num <= nproc; proc_num++)
+		if (postamble[proc_num] > 0)
+			printf(" /\\ %d:r1008=0", proc_num);
+	print ")";
 	#@@@ Need rest of exists statement.
 }
 '
