@@ -68,6 +68,19 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	return line;
 }
 
+# Emit an RCU grace period.
+function emit_sync(gp_num, line_out,  line) {
+	line = line_out;
+	aux[proc_num ":" line++] = "(* GP " gp_num " *)";
+	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = sprintf("w[once] gpstart%02d 1", gp_num);
+	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = sprintf("w[once] gpend%02d 1", gp_num);
+	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = "(* end GP " gp_num " *)";
+	return line;
+}
+
 # Grace-period checks are only needed in processes containing RCU
 # read-side critical sections, and even then only for grace periods
 # in other processes.  This function checks to see if the specified
@@ -262,6 +275,7 @@ END {
 
 	# Do the translation from lisa[] to aux[].
 	aux_max_line = 0;
+	gp_num = 1;
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		line_in = 1;
 		line_out = 1;
@@ -278,20 +292,21 @@ END {
 			## print "aux_max_line = " aux_max_line;
 			if (stmt == "f[lock]") {
 				drl++;
-				aux[proc_num ":" line_out] = "(* " stmt " *)";
+				aux[proc_num ":" line_out++] = "(* " stmt " *)";
 			} else if (stmt == "f[unlock]") {
 				rul += 1;
 				rl += drl;
 				drl = 0;
-				aux[proc_num ":" line_out] = "(* " stmt " *)";
+				aux[proc_num ":" line_out++] = "(* " stmt " *)";
+			} else if (stmt == "f[sync]") {
+				line_out = emit_sync(gp_num++, line_out);
 			} else if (stmt ~ /^[frw]\[/) {
 				rl += drl;
 				drl = 0;
-				aux[proc_num ":" line_out] = stmt;
+				aux[proc_num ":" line_out++] = stmt;
 			} else {
-				aux[proc_num ":" line_out] = stmt;
+				aux[proc_num ":" line_out++] = stmt;
 			}
-			line_out++;
 		}
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
 			## print "line_out = " line_out;
