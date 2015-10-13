@@ -350,7 +350,7 @@ END {
 		if (line_out == 1) {
 			printf " P%d", nproc;
 		} else if (line_out <= ngp + 1) {
-			printf " w[once] proph%02d %d:r000", line_out - 1, nproc;
+			printf " w[once] proph%02d r000", line_out - 1;
 		}
 		printf " ;\n";
 	}
