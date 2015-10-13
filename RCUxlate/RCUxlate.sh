@@ -60,7 +60,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1 r1%02d2)", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("mov r1008 (ne r1%02d1 r1%02d2)", gp_num, gp_num);
 	aux[proc_num ":" line++] = sprintf("b[] r1008 ERR%02d", proc_num);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
@@ -348,7 +348,7 @@ END {
 		if (line_out == 1) {
 			printf " P%d", nproc;
 		} else if (line_out <= ngp + 1) {
-			printf " w[once] proph%02d 0", line_out - 1;
+			printf " w[once] proph%02d 1", line_out - 1;
 		}
 		printf " ;\n";
 	}
@@ -357,7 +357,7 @@ END {
 	for (; line_out <= ngp + 1; line_out++) {
 		for (proc_num = 1; proc_num <= nproc; proc_num++)
 			printf " %*s |", max_length[proc_num], "";
-		printf " w[once] proph%2d 0 ;\n", line_out - 1, nproc;
+		printf " w[once] proph%2d 1 ;\n", line_out - 1, nproc;
 	}
 
 	# exists clause.
