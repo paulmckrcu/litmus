@@ -208,7 +208,7 @@ inexists == 1 {
 END {
 	print nproc ":r000=0;";
 	for (i = 1; i <= ngp; i++)
-		print "proph" i "=1;";
+		printf "proph%02d=1;\n", i;
 	print "}";
 	for (i = 1; i <= nproc; i++) {
 		## printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
@@ -289,7 +289,7 @@ END {
 		if (line_out == 1) {
 			printf " P%d", nproc;
 		} else if (line_out <= ngp + 1) {
-			printf " w[once] proph%2d %d:r000", line_out - 1, nproc;
+			printf " w[once] proph%02d %d:r000", line_out - 1, nproc;
 		}
 		printf " ;\n";
 	}
