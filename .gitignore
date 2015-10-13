@@ -5,4 +5,5 @@
 *.blg
 *.log
 *.out
+*-Aux.litmus
 *~
