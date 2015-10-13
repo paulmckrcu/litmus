@@ -38,10 +38,10 @@ function emit_preamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
 	if (preamble[proc_num] + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r%02d0 GPSS%02d%02d%d", gp_num, gp_num, proc_num, preambl[proc_num]);
-	aux[proc_num ":" line++] = sprintf("r[once] r%02d0 gpstart%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r009 (eq r%02d0 0)", gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r009 GPSS%02d%02d%d", gp_num, proc_num, preambl[proc_num]);
+		aux[proc_num ":" line++] = sprintf("b[] r1%02d0 GPSS%02d%02d%d", gp_num, gp_num, proc_num, preambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0 gpstart%02d", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0 0)", gp_num);
+	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, preambl[proc_num]);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, preambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end preamble " gp_num " *)";
@@ -54,14 +54,14 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
 	if (postamble[proc_num] + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
-	aux[proc_num ":" line++] = sprintf("r[once] r%02d2 proph%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
+		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2 proph%02d", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
-	aux[proc_num ":" line++] = sprintf("r[once] r%02d1 gpend%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r008 (eq r%02d1 r%02d2)", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r008 ERR%02d", proc_num);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1 r1%02d2)", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("b[] r1008 ERR%02d", proc_num);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	preamble[proc_num]++;
@@ -257,9 +257,6 @@ inexists == 1 {
 
 # Translate and output!
 END {
-	# Output initialization for auxiliary litmus-test registers.
-	print nproc ":r000=0;";
-
 	# Output initialization for auxiliary litmus-test variables.
 	for (i = 1; i <= ngp; i++)
 		printf "proph%02d=1;\n", i;
@@ -311,7 +308,8 @@ END {
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
 			## print "line_out = " line_out;
 			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul, cur_gp);
-			aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
+			if (postamble[proc_num] > 0)
+				aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
 			if (line_out - 1 > aux_max_line)
 				aux_max_line = line_out - 1;
 			## print "aux_max_line = " aux_max_line;
@@ -350,7 +348,7 @@ END {
 		if (line_out == 1) {
 			printf " P%d", nproc;
 		} else if (line_out <= ngp + 1) {
-			printf " w[once] proph%02d r000", line_out - 1;
+			printf " w[once] proph%02d 0", line_out - 1;
 		}
 		printf " ;\n";
 	}
@@ -359,7 +357,7 @@ END {
 	for (; line_out <= ngp + 1; line_out++) {
 		for (proc_num = 1; proc_num <= nproc; proc_num++)
 			printf " %*s |", max_length[proc_num], "";
-		printf " w[once] proph%2d %d:r000 ;\n", line_out - 1, nproc;
+		printf " w[once] proph%2d 0 ;\n", line_out - 1, nproc;
 	}
 
 	# exists clause.
