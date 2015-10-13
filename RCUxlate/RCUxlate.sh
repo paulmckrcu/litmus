@@ -262,7 +262,7 @@ END {
 	for (i = 1; i <= ngp; i++)
 		printf "proph%02d=0;\n", i;
 	for (i = 1; i <= nproc; i++)
-		printf " %d:r1001=1;", i;
+		printf " %d:r1001=1;", i - 1;
 	print "\n}";
 	for (i = 1; i <= nproc; i++) {
 		## printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
