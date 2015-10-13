@@ -56,9 +56,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	if (postamble[proc_num] + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2 proph%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 MB%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
-	aux[proc_num ":" line++] = sprintf("b[] r1001 CKP%02d%02d%d", gp_num, proc_num, postambl[proc_num]);
-	aux[proc_num ":" line++] = sprintf("MB%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
