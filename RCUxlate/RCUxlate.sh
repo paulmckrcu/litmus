@@ -64,7 +64,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	aux[proc_num ":" line++] = sprintf("b[] r1008 ERR%02d", proc_num);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
-	preamble[proc_num]++;
+	postamble[proc_num]++;
 	return line;
 }
 
