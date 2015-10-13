@@ -38,12 +38,12 @@ function emit_preamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
 	if (preamble[proc_num ":" gp_num] + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r1%02d0 GPSS%02d%02d%d", gp_num, gp_num, proc_num, preambl[proc_num]);
+		aux[proc_num ":" line++] = sprintf("b[] r1%02d0 GPSS%02d%02d%d", gp_num, gp_num, proc_num, preamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0 gpstart%02d", gp_num, gp_num);
 	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0 0)", gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, preambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, preamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = "f[mb]";
-	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, preambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, preamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = "(* end preamble " gp_num " *)";
 	preamble[proc_num ":" gp_num]++;
 	return line;
@@ -54,16 +54,16 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
 	if (postamble[proc_num ":" gp_num] + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
+		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2 proph%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = "f[mb]";
-	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
 	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1 r1%02d2)", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, postamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
-	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
 	return line;
