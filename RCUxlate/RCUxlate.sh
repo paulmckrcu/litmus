@@ -24,8 +24,8 @@
 gawk '
 
 # Data structures:
-# preamble[proc]: How many preambles emitted for process.
-# postamble[proc]: How many postambles emitted for process.
+# preamble[proc][gp]: How many preambles emitted for process/gp combo.
+# postamble[proc][gp]: How many postambles emitted for process/gp combo.
 # aux[proc][line]: Litmus test with RCU statements translated.
 # lisa[proc][line]: Input litmus-test statements.
 # nproc: Number of processes, ignoring prophesy-variable process.
@@ -37,7 +37,7 @@ gawk '
 function emit_preamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
-	if (preamble[proc_num] + 0 >= 1)
+	if (preamble[proc_num ":" gp_num] + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1%02d0 GPSS%02d%02d%d", gp_num, gp_num, proc_num, preambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0 gpstart%02d", gp_num, gp_num);
 	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0 0)", gp_num);
@@ -45,7 +45,7 @@ function emit_preamble(proc_num, gp_num, line_out,  line) {
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, preambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end preamble " gp_num " *)";
-	preamble[proc_num]++;
+	preamble[proc_num ":" gp_num]++;
 	return line;
 }
 
@@ -53,7 +53,7 @@ function emit_preamble(proc_num, gp_num, line_out,  line) {
 function emit_postamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
-	if (postamble[proc_num] + 0 >= 1)
+	if (postamble[proc_num ":" gp_num] + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2 proph%02d", gp_num, gp_num);
 	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
@@ -65,7 +65,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
-	postamble[proc_num]++;
+	postamble[proc_num ":" gp_num]++;
 	return line;
 }
 
@@ -312,7 +312,10 @@ END {
 			## print "line_out = " line_out;
 			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul, cur_gp);
 		}
-		if (postamble[proc_num] > 0)
+		sum = 0;
+		for (i = 1; i <= ngp; i++)
+			sum += postamble[proc_num ":" i];
+		if (sum > 0)
 			aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
 		if (line_out - 1 > aux_max_line)
 			aux_max_line = line_out - 1;
@@ -366,7 +369,10 @@ END {
 	# exists clause.
 	printf "%s", exists;
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
-		if (postamble[proc_num] > 0) {
+		sum = 0;
+		for (i = 1; i <= ngp; i++)
+			sum += postamble[proc_num ":" i];
+		if (sum > 0) {
 			printf(" /\\ %d:r1008=1", proc_num - 1);
 			for (gp_num = 1; gp_num <= ngp; gp_num++)
 				if (rcugp[gp_num] != proc_num)
