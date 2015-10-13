@@ -112,6 +112,7 @@ function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, s
 	next;  /* Kill blank lines. */
 }
 
+# Header line
 NR == 1 {
 	if ($1 != "LISA") {
 		print "Need LISA file!";
@@ -122,6 +123,7 @@ NR == 1 {
 	next;
 }
 
+# String and comments.
 inpreamble == 1 {
 	if ($1 ~ /"/)
 		print;
@@ -137,6 +139,7 @@ inpreamble == 1 {
 	next;
 }
 
+# Initialization statements.
 ininit == 1 {
 	if ($0 ~ /}/) {
 		if ($0 != "}") {
@@ -154,6 +157,7 @@ ininit == 1 {
 	next;
 }
 
+# The "exists" statement at the end.  Handled first due to terminal laziness.
 incode == 1 && $1 ~ /^exists/ {
 	incode = 0;
 	inexists = 1;
@@ -162,6 +166,7 @@ incode == 1 && $1 ~ /^exists/ {
 	next;
 }
 
+# The processes' statements.
 incode == 1 {
 	gsub(/^[ 	]*/, "");
 	gsub(/;[ 	]*$/, "");
@@ -201,10 +206,12 @@ incode == 1 {
 	next;
 }
 
+# In case we have a multi-line "exists" statement, pull it all together.
 inexists == 1 {
 	exists = exists " " $0;
 }
 
+# Translate and output!
 END {
 	print nproc ":r000=0;";
 	for (i = 1; i <= ngp; i++)
