@@ -56,7 +56,9 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	if (postamble[proc_num] + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2 proph%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 MB%02d%02d%d", gp_num, gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("b[] r1001 CKP%02d%02d%d", gp_num, proc_num, postambl[proc_num]);
+	aux[proc_num ":" line++] = sprintf("MB%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
@@ -262,7 +264,7 @@ END {
 	for (i = 1; i <= ngp; i++)
 		printf "proph%02d=0;\n", i;
 	for (i = 1; i <= nproc; i++)
-		printf " %d:r1001=1;", nproc;
+		printf " %d:r1001=1;", i;
 	print "\n}";
 	for (i = 1; i <= nproc; i++) {
 		## printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
@@ -368,7 +370,9 @@ END {
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		if (postamble[proc_num] > 0) {
 			printf(" /\\ %d:r1008=1", proc_num - 1);
-			printf(" /\\ (%d:r1010=1 \\/ %d:r1011=0)", proc_num - 1, proc_num - 1);
+			for (gp_num = 1; gp_num <= ngp; gp_num++)
+				if (rcugp[gp_num] != proc_num)
+					printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d1=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
 		}
 	}
 	#@@@ Need rest of exists statement.
