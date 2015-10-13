@@ -367,7 +367,7 @@ END {
 	printf "%s", exists;
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		if (postamble[proc_num] > 0) {
-			printf(" /\\ %d:r1008=0", proc_num - 1);
+			printf(" /\\ %d:r1008=1", proc_num - 1);
 			printf(" /\\ (%d:r1010=1 \\/ %d:r1011=0)", proc_num - 1, proc_num - 1);
 		}
 	}
