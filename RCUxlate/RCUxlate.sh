@@ -23,12 +23,26 @@
 ./stripocamlcomment |
 gawk '
 
+# Data structures:
+# aux[proc][line]: Litmus test with RCU statements translated.
+# lisa[proc][line]: Input litmus-test statements.
+# nproc: Number of processes, ignoring prophesy-variable process.
+# ngp: Number of grace periods across all processes.
+# rcugp[gp]: Process containg RCU grace period gp.
+# rcurl[proc]: Number of RCU read-side critical sections in process.
+
+# Grace-period checks are only needed in processes containing RCU
+# read-side critical sections, and even then only for grace periods
+# in other processes.  This function checks to see if the specified
+# process needs to check for the specified grace period.
 function proc_needs_gp_check(proc_num, gp_num) {
 	if (!rcurl[proc_num])
 		return 0;
 	return rcugp[gp_num] != proc_num;
 }
 
+# Does the specified statement of the specified process need check code
+# against the specified grace period?
 function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 	## printf "stmt_needs_gp_check(:%s:) ", stmt;
 	if (!proc_needs_gp_check(proc_num, gp_num)) {
@@ -59,6 +73,9 @@ function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 	return 0;
 }
 
+# Determine whether the specified line of the specified process needs
+# against the specified grace period, and if so, cause the litmus-test
+# code for the checks to be inserted into the aux[][] array.
 function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  line) {
 	line = line_out;
 	## print "do_one_gp_check(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
@@ -78,6 +95,9 @@ function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  li
 	return line;
 }
 
+# Determine whether the specified line of the specified process needs
+# checks against any of the grace periods, and cause the litmus-test
+# code for the checks to be inserted into the aux[][] array as needed.
 function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
 	line = line_out;
 	## print "do_gp_checks(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
