@@ -60,7 +60,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r%02d1 gpend%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r008 (eq r%02d1 r%02d2", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("mov r008 (eq r%02d1 r%02d2)", gp_num, gp_num);
 	aux[proc_num ":" line++] = sprintf("b[] r008 ERR%02d", proc_num);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postambl[proc_num]);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
