@@ -95,32 +95,16 @@ function proc_needs_gp_check(proc_num, gp_num) {
 # Does the specified statement of the specified process need check code
 # against the specified grace period?
 function stmt_needs_gp_check(proc_num, gp_num, stmt) {
-	## printf "stmt_needs_gp_check(:%s:) ", stmt;
-	if (!proc_needs_gp_check(proc_num, gp_num)) {
-		## printf "\n";
+	if (!proc_needs_gp_check(proc_num, gp_num))
 		return 0;
-	}
-	## printf "proc_needs_gp_check() ";
-	if (stmt == "f[lock]" || stmt == "f[unlock]") {
-		## printf "\n";
+	if (stmt == "f[lock]" || stmt == "f[unlock]")
 		return 0;
-	}
-	## printf "f[lock]/f[unlock] ";
-	if (stmt ~ /^[frw]\[/) {
-		## printf "\n";
+	if (stmt ~ /^[frw]\[/)
 		return 1;
-	}
-	## printf "[frw][... ";
-	if (stmt == "-EOF-") {
-		## printf "\n";
+	if (stmt == "-EOF-")
 		return 1;
-	}
-	## printf "-EOF-";
-	if (stmt ~ /^P[0-9]/) {
-		## printf "\n";
+	if (stmt ~ /^P[0-9]/)
 		return 0;
-	}
-	## printf "Other\n";
 	return 0;
 }
 
@@ -129,9 +113,7 @@ function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 # code for the checks to be inserted into the aux[][] array.
 function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  line) {
 	line = line_out;
-	## print "do_one_gp_check(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
 	if (stmt_needs_gp_check(proc_num, i, stmt)) {
-		## print "Need GP check, rcurscs = " rcurscs " rl = " rl " rul = " rul;
 		if (rcurscs > rl)
 			line = emit_preamble(proc_num, gp_num, line);
 		if (rul > 0)
@@ -145,7 +127,6 @@ function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  li
 # code for the checks to be inserted into the aux[][] array as needed.
 function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
 	line = line_out;
-	## print "do_gp_checks(): proc_num = " proc_num " rcurscs = " rcurscs " rl = " rl " rul = " rul
 	for (i = 1; i <= ngp; i++) {
 		stmt = lisa[proc_num ":" line_in];
 		line = do_one_gp_check(proc_num, stmt, line, rcurscs, rl, rul, i);
@@ -264,14 +245,6 @@ END {
 	for (i = 1; i <= nproc; i++)
 		printf " %d:r1001=1;", i - 1;
 	print "\n}";
-	for (i = 1; i <= nproc; i++) {
-		## printf "Process %d: (%dR %dU) needs checks for grace periods:", i, rcurl[i], rcurul[i];
-		## for (j = 1; j <= ngp; j++) {
-		##	if (proc_needs_gp_check(i, j))
-		##		## printf " %d", j;
-		##}
-		## printf "\n";
-	}
 
 	# Do the translation from lisa[] to aux[].
 	aux_max_line = 0;
@@ -283,13 +256,11 @@ END {
 		rl = 0;
 		rul = 0;
 		for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
-			## print "line_out = " line_out;
 			line_out = do_gp_checks(proc_num, line_in, line_out, rcurl[proc_num], rl, rul);
 			stmt = lisa[proc_num ":" line_in];
 			aux[proc_num ":" line_out] = stmt;
 			if (line_out > aux_max_line)
 				aux_max_line = line_out;
-			## print "aux_max_line = " aux_max_line;
 			if (stmt == "f[lock]") {
 				drl++;
 				aux[proc_num ":" line_out++] = "(* " stmt " *)";
@@ -309,7 +280,6 @@ END {
 			}
 		}
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
-			## print "line_out = " line_out;
 			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul, cur_gp);
 		}
 		sum = 0;
@@ -319,18 +289,7 @@ END {
 			aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
 		if (line_out - 1 > aux_max_line)
 			aux_max_line = line_out - 1;
-		## print "aux_max_line = " aux_max_line;
 	}
-	## print "";
-	## print "LISA:"
-	## for (proc_num = 1; proc_num <= nproc; proc_num++) {
-	## 	for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
-	## 		if (lisa[proc_num ":" line_in] != "")
-	## 			print ":" lisa[proc_num ":" line_in] ":";
-	## 	}
-	## }
-	## print "";
-	## print "AUX: aux_max_line = " aux_max_line;
 
 	# Find maximum statement length for each process.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
@@ -339,8 +298,6 @@ END {
 			stmt = aux[proc_num ":" line_out];
 			if (length(stmt) > max_length[proc_num])
 				max_length[proc_num] = length(stmt);
-			## if (aux[proc_num ":" line_out] != "")
-			## 	print ":" aux[proc_num ":" line_out] ":";
 		}
 	}
 
