@@ -166,7 +166,7 @@ incode == 1 && $1 ~ /^exists/ {
 	next;
 }
 
-# The processes' statements.
+# The statements of the processes.
 incode == 1 {
 	gsub(/^[ 	]*/, "");
 	gsub(/;[ 	]*$/, "");
@@ -188,13 +188,13 @@ incode == 1 {
 			if (rcunest[i] + 0 == 0)
 				rcurl[i]++;
 			else
-				cur_line[i] = "(* nested " cur_line[i] "*)";
+				cur_line[i] = "(* nested " cur_line[i] " *)";
 			rcunest[i]++;
 		} else if (cur_line[i] == "f[unlock]") {
 			if (rcunest[i] == 1)
 				rcurul[i]++;
 			else
-				cur_line[i] = "(* nested " cur_line[i] "*)";
+				cur_line[i] = "(* nested " cur_line[i] " *)";
 			rcunest[i]--;
 		}
 		if (cur_line[i] != "") {
@@ -213,7 +213,10 @@ inexists == 1 {
 
 # Translate and output!
 END {
+	# Output initialization for auxiliary litmus-test registers.
 	print nproc ":r000=0;";
+
+	# Output initialization for auxiliary litmus-test variables.
 	for (i = 1; i <= ngp; i++)
 		printf "proph%02d=1;\n", i;
 	print "}";
@@ -277,6 +280,8 @@ END {
 	## }
 	## print "";
 	## print "AUX: aux_max_line = " aux_max_line;
+
+	# Find maximum statement length for each process.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		max_length[proc_num] = 0;
 		for (line_out = 1; line_out <= aux_max_line; line_out++) {
@@ -287,6 +292,8 @@ END {
 			## 	print ":" aux[proc_num ":" line_out] ":";
 		}
 	}
+
+	# Output the code and the stores to the prophesy variables.
 	for (line_out = 1; line_out <= aux_max_line; line_out++) {
 		for (proc_num = 1; proc_num <= nproc; proc_num++) {
 			stmt = aux[proc_num ":" line_out];
@@ -300,11 +307,15 @@ END {
 		}
 		printf " ;\n";
 	}
+
+	# In case there are more prophesy variables than lines of code.
 	for (; line_out <= ngp + 1; line_out++) {
 		for (proc_num = 1; proc_num <= nproc; proc_num++)
 			printf " %*s |", max_length[proc_num], "";
 		printf " w[once] proph%2d %d:r000 ;\n", line_out - 1, nproc;
 	}
+
+	# exists clause.
 	printf "%s)\n", exists;
 	#@@@ Need rest of exists statement.
 }
