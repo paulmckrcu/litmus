@@ -207,8 +207,13 @@ incode == 1 {
 		gsub(/^[ 	]*/, "", cur_line[i]);
 		gsub(/[ 	]*$/, "", cur_line[i]);
 		if (cur_line[i] == "f[sync]") {
-			ngp++;
-			rcugp[ngp] = i;
+			if (rcunest[i] + 0 != 0) {
+				# Force LISA syntax error
+				cur_line[i] = "f[sync DEADLOCK]";
+			} else {
+				ngp++;
+				rcugp[ngp] = i;
+			}
 		}
 		if (cur_line[i] == "f[lock]") {
 			if (rcunest[i] + 0 == 0)
