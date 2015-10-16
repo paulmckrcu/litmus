@@ -23,7 +23,10 @@
 ./stripocamlcomment |
 gawk '
 
+########################################################################
+#
 # Data structures:
+#
 # preamble[proc][gp]: How many preambles emitted for process/gp combo.
 # postamble[proc][gp]: How many postambles emitted for process/gp combo.
 # aux[proc][line]: Litmus test with RCU statements translated.
@@ -32,6 +35,23 @@ gawk '
 # ngp: Number of grace periods across all processes.
 # rcugp[gp]: Process containg RCU grace period gp.
 # rcurl[proc]: Number of RCU read-side critical sections in process.
+
+
+########################################################################
+#
+# Litmus-test variables and registers:
+#
+# gpstartGG: Has grace period GG started yet?  (GG count is one-based.)
+# gpendGG: Has grace period GG ended yet?
+# prophGG: Prophesy variable for gpendGG.
+#
+# r1001:  Always 1 (to emulate unconditional branch).
+# r1008:  Scratch register for conditionals.
+# r1009:  Scratch register for conditionals.
+# r1GG0:  Holds gpstartGG.
+# r1GG1NN:  Holds gpendGG, NNth read by current process, zero-based.
+# r1GG2NN:  Holds prophGG, NNth read by current process.
+
 
 ########################################################################
 #
@@ -61,13 +81,13 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	cpa = postamble[proc_num ":" gp_num];
 	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
 	if (cpa + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, cpa);
+		aux[proc_num ":" line++] = sprintf("b[] r1%02d1%02d GPES%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2%02d proph%02d", gp_num, cpa, gp_num);
 	aux[proc_num ":" line++] = sprintf("b[] r1%02d2%02d CKP%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, cpa);
-	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1 r1%02d2%02d)", gp_num, gp_num, cpa);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
+	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1%02d r1%02d2%02d)", gp_num, cpa, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
@@ -170,7 +190,7 @@ function output_exists_clause() {
 			printf(" /\\ %d:r1008=1", proc_num - 1);
 			for (gp_num = 1; gp_num <= ngp; gp_num++)
 				if (rcugp[gp_num] != proc_num)
-					printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d1=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
+					printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d100=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
 		}
 	}
 	print ")";
