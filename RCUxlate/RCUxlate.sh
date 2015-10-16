@@ -150,6 +150,26 @@ function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, s
 
 ########################################################################
 #
+# Output the "exists" clause.
+#
+function output_exists_clause() {
+	printf "%s", exists;
+	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		sum = 0;
+		for (i = 1; i <= ngp; i++)
+			sum += postamble[proc_num ":" i];
+		if (sum > 0) {
+			printf(" /\\ %d:r1008=1", proc_num - 1);
+			for (gp_num = 1; gp_num <= ngp; gp_num++)
+				if (rcugp[gp_num] != proc_num)
+					printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d1=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
+		}
+	}
+	print ")";
+}
+
+########################################################################
+#
 # Start of patternist code.
 
 # Kill blank lines
@@ -348,18 +368,6 @@ END {
 	}
 
 	# exists clause.
-	printf "%s", exists;
-	for (proc_num = 1; proc_num <= nproc; proc_num++) {
-		sum = 0;
-		for (i = 1; i <= ngp; i++)
-			sum += postamble[proc_num ":" i];
-		if (sum > 0) {
-			printf(" /\\ %d:r1008=1", proc_num - 1);
-			for (gp_num = 1; gp_num <= ngp; gp_num++)
-				if (rcugp[gp_num] != proc_num)
-					printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d1=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
-		}
-	}
-	print ")";
+	output_exists_clause();
 }
 '
