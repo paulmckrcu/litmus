@@ -33,6 +33,8 @@ gawk '
 # rcugp[gp]: Process containg RCU grace period gp.
 # rcurl[proc]: Number of RCU read-side critical sections in process.
 
+########################################################################
+#
 # Emit a preamble
 function emit_preamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
@@ -49,6 +51,8 @@ function emit_preamble(proc_num, gp_num, line_out,  line) {
 	return line;
 }
 
+########################################################################
+#
 # Emit a postamble
 function emit_postamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
@@ -69,6 +73,8 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 	return line;
 }
 
+########################################################################
+#
 # Emit an RCU grace period.
 function emit_sync(gp_num, line_out,  line) {
 	line = line_out;
@@ -82,6 +88,8 @@ function emit_sync(gp_num, line_out,  line) {
 	return line;
 }
 
+########################################################################
+#
 # Grace-period checks are only needed in processes containing RCU
 # read-side critical sections, and even then only for grace periods
 # in other processes.  This function checks to see if the specified
@@ -92,6 +100,8 @@ function proc_needs_gp_check(proc_num, gp_num) {
 	return rcugp[gp_num] != proc_num;
 }
 
+########################################################################
+#
 # Does the specified statement of the specified process need check code
 # against the specified grace period?
 function stmt_needs_gp_check(proc_num, gp_num, stmt) {
@@ -108,6 +118,8 @@ function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 	return 0;
 }
 
+########################################################################
+#
 # Determine whether the specified line of the specified process needs
 # against the specified grace period, and if so, cause the litmus-test
 # code for the checks to be inserted into the aux[][] array.
@@ -122,6 +134,8 @@ function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  li
 	return line;
 }
 
+########################################################################
+#
 # Determine whether the specified line of the specified process needs
 # checks against any of the grace periods, and cause the litmus-test
 # code for the checks to be inserted into the aux[][] array as needed.
@@ -134,8 +148,13 @@ function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, s
 	return line;
 }
 
+########################################################################
+#
+# Start of patternist code.
+
+# Kill blank lines
 /^[ 	]*$/ {
-	next;  /* Kill blank lines. */
+	next;
 }
 
 # Header line
@@ -341,7 +360,6 @@ END {
 					printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d1=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
 		}
 	}
-	#@@@ Need rest of exists statement.
 	print ")";
 }
 '
