@@ -173,13 +173,15 @@ function stmt_needs_gp_check(stmt) {
 # against the specified grace period, and if so, cause the litmus-test
 # code for the checks to be inserted into the aux[][] array.
 #
-function do_one_gp_check(proc_num, line_out, rcurscs, rl, rul, gp_num,  line) {
+function do_gp_checks(proc_num, line_out, rcurscs, rl, rul,  gp_num, line) {
 	line = line_out;
-	if (proc_needs_gp_check(proc_num, gp_num)) {
-		if (rcurscs > rl)
-			line = emit_preamble(proc_num, gp_num, line);
-		if (rul > 0)
-			line = emit_postamble(proc_num, gp_num, line);
+	for (gp_num = 1; gp_num <= ngp; gp_num++) {
+		if (proc_needs_gp_check(proc_num, gp_num)) {
+			if (rcurscs > rl)
+				line = emit_preamble(proc_num, gp_num, line);
+			if (rul > 0)
+				line = emit_postamble(proc_num, gp_num, line);
+		}
 	}
 	return line;
 }
@@ -190,14 +192,12 @@ function do_one_gp_check(proc_num, line_out, rcurscs, rl, rul, gp_num,  line) {
 # checks against any of the grace periods, and cause the litmus-test
 # code for the checks to be inserted into the aux[][] array as needed.
 #
-function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
+function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  line, stmt) {
 	line = line_out;
 	stmt = lisa[proc_num ":" line_in];
 	if (!stmt_needs_gp_check(stmt))
 		return line;  # Later check for empty RCU RS CS here
-	for (i = 1; i <= ngp; i++) {
-		line = do_one_gp_check(proc_num, line, rcurscs, rl, rul, i);
-	}
+	line = do_gp_checks(proc_num, line, rcurscs, rl, rul);
 	return line;
 }
 
@@ -407,9 +407,7 @@ END {
 				aux[proc_num ":" line_out++] = stmt;
 			}
 		}
-		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
-			line_out = do_one_gp_check(proc_num, line_out, rcurl[proc_num], rl, rul, cur_gp);
-		}
+		line_out = do_gp_checks(proc_num, line_out, rcurl[proc_num], rl, rul);
 		if (prophesy_check_lisa) {
 			sum = 0;
 			for (i = 1; i <= ngp; i++)
