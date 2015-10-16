@@ -410,11 +410,13 @@ END {
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
 			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul, cur_gp);
 		}
-		sum = 0;
-		for (i = 1; i <= ngp; i++)
-			sum += postamble[proc_num ":" i];
-		if (sum > 0)
-			aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
+		if (prophesy_check_lisa) {
+			sum = 0;
+			for (i = 1; i <= ngp; i++)
+				sum += postamble[proc_num ":" i];
+			if (sum > 0)
+				aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
+		}
 		if (line_out - 1 > aux_max_line)
 			aux_max_line = line_out - 1;
 	}
