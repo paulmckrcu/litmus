@@ -155,9 +155,7 @@ function proc_needs_gp_check(proc_num, gp_num) {
 # Does the specified statement of the specified process need check code
 # against the specified grace period?
 #
-function stmt_needs_gp_check(proc_num, gp_num, stmt) {
-	if (!proc_needs_gp_check(proc_num, gp_num))
-		return 0;
+function stmt_needs_gp_check(stmt) {
 	if (stmt == "f[lock]" || stmt == "f[unlock]")
 		return 0;
 	if (stmt ~ /^[frw]\[/)
@@ -175,9 +173,9 @@ function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 # against the specified grace period, and if so, cause the litmus-test
 # code for the checks to be inserted into the aux[][] array.
 #
-function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  line) {
+function do_one_gp_check(proc_num, line_out, rcurscs, rl, rul, gp_num,  line) {
 	line = line_out;
-	if (stmt_needs_gp_check(proc_num, i, stmt)) {
+	if (proc_needs_gp_check(proc_num, gp_num)) {
 		if (rcurscs > rl)
 			line = emit_preamble(proc_num, gp_num, line);
 		if (rul > 0)
@@ -192,11 +190,13 @@ function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  li
 # checks against any of the grace periods, and cause the litmus-test
 # code for the checks to be inserted into the aux[][] array as needed.
 #
-function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
+function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
 	line = line_out;
+	stmt = lisa[proc_num ":" line_in];
+	if (!stmt_needs_gp_check(stmt))
+		return line;  # Later check for empty RCU RS CS here
 	for (i = 1; i <= ngp; i++) {
-		stmt = lisa[proc_num ":" line_in];
-		line = do_one_gp_check(proc_num, stmt, line, rcurscs, rl, rul, i);
+		line = do_one_gp_check(proc_num, line, rcurscs, rl, rul, i);
 	}
 	return line;
 }
@@ -384,7 +384,7 @@ END {
 		rl = 0;
 		rul = 0;
 		for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
-			line_out = do_gp_checks(proc_num, line_in, line_out, rcurl[proc_num], rl, rul);
+			line_out = do_gp_checks_if_needed(proc_num, line_in, line_out, rcurl[proc_num], rl, rul);
 			stmt = lisa[proc_num ":" line_in];
 			aux[proc_num ":" line_out] = stmt;
 			if (line_out > aux_max_line)
@@ -408,7 +408,7 @@ END {
 			}
 		}
 		for (cur_gp = 1; cur_gp <= ngp; cur_gp++) {
-			line_out = do_one_gp_check(proc_num, "-EOF-", line_out, rcurl[proc_num], rl, rul, cur_gp);
+			line_out = do_one_gp_check(proc_num, line_out, rcurl[proc_num], rl, rul, cur_gp);
 		}
 		if (prophesy_check_lisa) {
 			sum = 0;
