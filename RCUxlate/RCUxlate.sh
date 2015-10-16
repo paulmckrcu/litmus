@@ -74,6 +74,27 @@ function emit_preamble(proc_num, gp_num, line_out,  line) {
 
 ########################################################################
 #
+# Emit a postamble prophesy check using LISA code.
+#
+function emit_postamble_prophesy_check_lisa(proc_num, gp_num, cpa, line_in,  line) {
+	line = line_in;
+	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1%02d r1%02d2%02d)", gp_num, cpa, gp_num, cpa);
+	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, cpa);
+	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
+	return line;
+}
+
+########################################################################
+#
+# Emit a postamble prophesy check using exists clause, that is, no check
+# in the LISA code.
+#
+function emit_postamble_prophesy_check_exists(proc_num, gp_num, cpa, line_in) {
+	return line_in;
+}
+
+########################################################################
+#
 # Emit a postamble
 #
 function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
@@ -87,9 +108,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1%02d r1%02d2%02d)", gp_num, cpa, gp_num, cpa);
-	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, cpa);
-	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
+	line = emit_postamble_prophesy_check_lisa(proc_num, gp_num, cpa, line);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
