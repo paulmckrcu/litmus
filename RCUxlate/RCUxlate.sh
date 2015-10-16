@@ -20,8 +20,11 @@
 #
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
+prophesy_check_lisa=
+# prophesy_check_lisa="-v prophesy_check_lisa=1"
+
 ./stripocamlcomment |
-gawk '
+gawk $prophesy_check_lisa '
 
 ########################################################################
 #
@@ -108,7 +111,10 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
-	line = emit_postamble_prophesy_check_lisa(proc_num, gp_num, cpa, line);
+	if (prophesy_check_lisa)
+		line = emit_postamble_prophesy_check_lisa(proc_num, gp_num, cpa, line);
+	else
+		line = emit_postamble_prophesy_check_exists(proc_num, gp_num, cpa, line);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
@@ -238,7 +244,10 @@ function output_exists_clause(  npa) {
 				break;
 			}
 		}
-		output_exists_clause_lisa(proc_num, npa);
+		if (prophesy_check_lisa)
+			output_exists_clause_lisa(proc_num, npa);
+		else
+			output_exists_clause_exists(proc_num, npa);
 	}
 	print ")";
 }
