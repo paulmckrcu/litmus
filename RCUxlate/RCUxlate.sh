@@ -36,6 +36,7 @@ gawk '
 ########################################################################
 #
 # Emit a preamble
+#
 function emit_preamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
@@ -54,20 +55,22 @@ function emit_preamble(proc_num, gp_num, line_out,  line) {
 ########################################################################
 #
 # Emit a postamble
-function emit_postamble(proc_num, gp_num, line_out,  line) {
+#
+function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	line = line_out;
+	cpa = postamble[proc_num ":" gp_num];
 	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
-	if (postamble[proc_num ":" gp_num] + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, postamble[proc_num ":" gp_num]);
-	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2 proph%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1%02d2 CKP%02d%02d%d", gp_num, gp_num, proc_num, postamble[proc_num ":" gp_num]);
+	if (cpa + 0 >= 1)
+		aux[proc_num ":" line++] = sprintf("b[] r1%02d1 GPES%02d%02d%d", gp_num, gp_num, proc_num, cpa);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2%02d proph%02d", gp_num, cpa, gp_num);
+	aux[proc_num ":" line++] = sprintf("b[] r1%02d2%02d CKP%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
-	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, postamble[proc_num ":" gp_num]);
+	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1 r1%02d2)", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, postamble[proc_num ":" gp_num]);
+	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1 r1%02d2%02d)", gp_num, gp_num, cpa);
+	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
-	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, postamble[proc_num ":" gp_num]);
+	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
 	return line;
@@ -76,6 +79,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line) {
 ########################################################################
 #
 # Emit an RCU grace period.
+#
 function emit_sync(gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* GP " gp_num " *)";
@@ -94,6 +98,7 @@ function emit_sync(gp_num, line_out,  line) {
 # read-side critical sections, and even then only for grace periods
 # in other processes.  This function checks to see if the specified
 # process needs to check for the specified grace period.
+#
 function proc_needs_gp_check(proc_num, gp_num) {
 	if (!rcurl[proc_num])
 		return 0;
@@ -104,6 +109,7 @@ function proc_needs_gp_check(proc_num, gp_num) {
 #
 # Does the specified statement of the specified process need check code
 # against the specified grace period?
+#
 function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 	if (!proc_needs_gp_check(proc_num, gp_num))
 		return 0;
@@ -123,6 +129,7 @@ function stmt_needs_gp_check(proc_num, gp_num, stmt) {
 # Determine whether the specified line of the specified process needs
 # against the specified grace period, and if so, cause the litmus-test
 # code for the checks to be inserted into the aux[][] array.
+#
 function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  line) {
 	line = line_out;
 	if (stmt_needs_gp_check(proc_num, i, stmt)) {
@@ -139,6 +146,7 @@ function do_one_gp_check(proc_num, stmt, line_out, rcurscs, rl, rul, gp_num,  li
 # Determine whether the specified line of the specified process needs
 # checks against any of the grace periods, and cause the litmus-test
 # code for the checks to be inserted into the aux[][] array as needed.
+#
 function do_gp_checks(proc_num, line_in, line_out, rcurscs, rl, rul,  i, line, stmt) {
 	line = line_out;
 	for (i = 1; i <= ngp; i++) {
