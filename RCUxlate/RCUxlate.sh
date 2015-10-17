@@ -20,6 +20,10 @@
 #
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
+# Version 1: prophesy_check_lisa=
+
+# Version 2: prophesy_check_lisa="-v prophesy_check_lisa=1"
+
 prophesy_check_lisa=
 # prophesy_check_lisa="-v prophesy_check_lisa=1"
 
