@@ -250,9 +250,9 @@ END {
 				aux[proc_num ":" line_out++] = stmt;
 
 				line_out = emit_preamble(proc_num, line_out);
-				aux[proc_num ":" line_out++] = "(* " stmt " *)";
+				aux[proc_num ":" line_out++] = "(* end " stmt " *)";
 			} else if (stmt == "f[unlock]") {
-				aux[proc_num ":" line_out++] = "(* " stmt " *)";
+				aux[proc_num ":" line_out++] = "(* start " stmt " *)";
 				line_out = emit_postamble(proc_num, line_out);
 				aux[proc_num ":" line_out++] = stmt;
 			} else if (stmt == "f[sync]") {
