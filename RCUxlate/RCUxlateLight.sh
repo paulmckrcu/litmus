@@ -31,7 +31,7 @@ gawk '
 # postamble[proc][gp]: How many postambles emitted for process/gp combo.
 # aux[proc][line]: Litmus test with RCU statements translated.
 # lisa[proc][line]: Input litmus-test statements.
-# nproc: Number of processes, ignoring prophesy-variable process.
+# nproc: Number of processes.
 # ngp: Number of grace periods across all processes.
 # rcugp[gp]: Process containg RCU grace period gp.
 # rcurl[proc]: Number of RCU read-side critical sections in process.
@@ -233,13 +233,6 @@ inexists == 1 {
 
 # Translate and output!
 END {
-	# Output initialization for auxiliary litmus-test variables.
-	for (i = 1; i <= ngp; i++)
-		printf "proph%02d=0;\n", i;
-	for (i = 1; i <= nproc; i++)
-		printf " %d:r1001=1;", i - 1;
-	print "\n}";
-
 	# Do the translation from lisa[] to aux[].
 	aux_max_line = 0;
 	gp_num = 1;
