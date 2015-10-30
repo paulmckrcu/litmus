@@ -245,8 +245,6 @@ END {
 			stmt = lisa[proc_num ":" line_in];
 			if (line_in == 1) {
 				aux[proc_num ":" line_out++] = stmt;
-				if (rcurl[proc_num])
-					line_out = emit_preamble(proc_num, line_out);
 			} else if (stmt == "f[lock]") {
 				aux[proc_num ":" line_out++] = stmt;
 
@@ -262,8 +260,6 @@ END {
 				aux[proc_num ":" line_out++] = stmt;
 			}
 		}
-		if (rcurl[proc_num] >= 1)
-			line_out = emit_postamble(proc_num, line_out);
 		if (line_out - 1 > aux_max_line)
 			aux_max_line = line_out - 1;
 	}
