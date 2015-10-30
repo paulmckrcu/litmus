@@ -109,7 +109,7 @@ function emit_sync(gp_num, line_out,  line) {
 	aux[proc_num ":" line++] = "(* GP " gp_num " *)";
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("w[once] gpstart%02d 1", gp_num);
-	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = "f[sync]";
 	aux[proc_num ":" line++] = sprintf("w[once] gpend%02d 1", gp_num);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = "(* end GP " gp_num " *)";
@@ -159,6 +159,7 @@ ininit == 1 {
 			print "Line " NR ": Single } to end initialization!";
 			exit;
 		}
+		print "}"
 		ininit = 0;
 		incode = 1;
 		line = 1;
