@@ -20,8 +20,12 @@
 #
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
+# Uncomment the following to cause this script to detect RCU self-deadlock
+# and force a LISA syntax error.
+# rcu_deadlock="-v rcu_deadlock=1"
+
 ./stripocamlcomment |
-gawk '
+gawk $rcu_deadlock '
 
 ########################################################################
 #
@@ -196,7 +200,7 @@ incode == 1 {
 		gsub(/[ 	]*$/, "", cur_line[proc_num]);
 		## print "P" proc_num - 1 ": " cur_line[proc_num] # @@@
 		if (cur_line[proc_num] == "f[sync]") {
-			if (rcunest[proc_num] + 0 != 0) {
+			if (rcunest[proc_num] + 0 != 0 && rcu_deadlock + 0) {
 				# Force LISA syntax error
 				cur_line[proc_num] = "f[sync DEADLOCK]";
 			} else {
