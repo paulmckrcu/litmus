@@ -55,7 +55,7 @@ gawk $prophesy_check_lisa '
 # r1001:  Always 1 (to emulate unconditional branch).
 # r1008:  Scratch register for conditionals.
 # r1009:  Scratch register for conditionals.
-# r1GG0:  Holds gpstartGG.
+# r1GG0NN:  Holds gpstartGG, NNth read by current process, zero-based.
 # r1GG1NN:  Holds gpendGG, NNth read by current process, zero-based.
 # r1GG2NN:  Holds prophGG, NNth read by current process.
 
@@ -64,13 +64,14 @@ gawk $prophesy_check_lisa '
 #
 # Emit a preamble
 #
-function emit_preamble(proc_num, gp_num, line_out,  line) {
+function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
+	cpa = preamble[proc_num ":" gp_num];
 	line = line_out;
 	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
 	if (preamble[proc_num ":" gp_num] + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r1%02d0 GPSS%02d%02d%d", gp_num, gp_num, proc_num, preamble[proc_num ":" gp_num]);
-	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0 gpstart%02d", gp_num, gp_num);
-	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0 0)", gp_num);
+		aux[proc_num ":" line++] = sprintf("b[] r1%02d0%02d GPSS%02d%02d%d", gp_num, cpa, gp_num, proc_num, preamble[proc_num ":" gp_num]);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0%02d gpstart%02d", gp_num, cpa, gp_num);
+	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0%02d 0)", gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, preamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, preamble[proc_num ":" gp_num]);
@@ -216,7 +217,7 @@ function output_exists_clause_lisa(proc_num, npa,  gp_num) {
 	printf(" /\\ %d:r1008=1", proc_num - 1);
 	for (gp_num = 1; gp_num <= ngp; gp_num++)
 		if (rcugp[gp_num] != proc_num)
-			printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d100=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
+			printf(" /\\ (%d:r1%02d000=1 \\/ %d:r1%02d100=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
 }
 
 ########################################################################
@@ -229,7 +230,7 @@ function output_exists_clause_exists(proc_num, npa,  i, gp_num) {
 		for (gp_num = 1; gp_num <= ngp; gp_num++) {
 			printf(" /\\ %d:r1%02d1%02d=%d:r1%02d2%02d", proc_num - 1, gp_num, i, proc_num - 1, gp_num, i);
 			if (rcugp[gp_num] != proc_num)
-				printf(" /\\ (%d:r1%02d0=1 \\/ %d:r1%02d1%02d=0)", proc_num - 1, gp_num, proc_num - 1, gp_num, i);
+				printf(" /\\ (%d:r1%02d0%02d=1 \\/ %d:r1%02d1%02d=0)", proc_num - 1, gp_num, i, proc_num - 1, gp_num, i);
 		}
 	}
 }
