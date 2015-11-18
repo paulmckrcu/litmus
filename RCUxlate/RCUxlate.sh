@@ -20,15 +20,8 @@
 #
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
-# Version 1: prophesy_check_lisa=
-
-# Version 2: prophesy_check_lisa="-v prophesy_check_lisa=1"
-
-prophesy_check_lisa=
-# prophesy_check_lisa="-v prophesy_check_lisa=1"
-
 ./stripocamlcomment |
-gawk $prophesy_check_lisa '
+gawk '
 
 ########################################################################
 #
@@ -85,27 +78,6 @@ function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
 
 ########################################################################
 #
-# Emit a postamble prophesy check using LISA code.
-#
-function emit_postamble_prophesy_check_lisa(proc_num, gp_num, cpa, line_in,  line) {
-	line = line_in;
-	aux[proc_num ":" line++] = sprintf("mov r1008 (eq r1%02d1%02d r1%02d2%02d)", gp_num, cpa, gp_num, cpa);
-	aux[proc_num ":" line++] = sprintf("b[] r1008 GPES%02d%02d%d", gp_num, proc_num, cpa);
-	aux[proc_num ":" line++] = sprintf("b[] r1001 ERR%02d", proc_num);
-	return line;
-}
-
-########################################################################
-#
-# Emit a postamble prophesy check using exists clause, that is, no check
-# in the LISA code.
-#
-function emit_postamble_prophesy_check_exists(proc_num, gp_num, cpa, line_in) {
-	return line_in;
-}
-
-########################################################################
-#
 # Emit a postamble
 #
 function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
@@ -119,13 +91,9 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("mov r1008%02d 1", gp_num, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, cpa);
-	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
-	if (prophesy_check_lisa)
-		line = emit_postamble_prophesy_check_lisa(proc_num, gp_num, cpa, line);
-	else
-		line = emit_postamble_prophesy_check_exists(proc_num, gp_num, cpa, line);
 	if (cpa + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
 	return line;
@@ -213,20 +181,6 @@ function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  
 
 ########################################################################
 #
-# Output the "exists" clause the old way, which uses LISA code to
-# compute whether or not the prophesy was correct.
-#
-function output_exists_clause_lisa(proc_num, npa,  gp_num) {
-	if (npa <= 0)
-		return;
-	printf(" /\\ %d:r1008=1", proc_num - 1);
-	for (gp_num = 1; gp_num <= ngp; gp_num++)
-		if (rcugp[gp_num] != proc_num)
-			printf(" /\\ (%d:r1%02d000=1 \\/ %d:r1%02d100=0)", proc_num - 1, gp_num, proc_num - 1, gp_num);
-}
-
-########################################################################
-#
 # Output the "exists" clause the new way, which uses the exists clause
 # to compute whether or not the prophesy was correct.
 #
@@ -249,15 +203,12 @@ function output_exists_clause(  npa) {
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		npa = 0;
 		for (i = 1; i <= ngp; i++) {
-			if (postamble[proc_num ":" i] > 0) {
+			if (postamble[proc_num ":" i] > npa) {
 				npa = postamble[proc_num ":" i];
 				break;
 			}
 		}
-		if (prophesy_check_lisa)
-			output_exists_clause_lisa(proc_num, npa);
-		else
-			output_exists_clause_exists(proc_num, npa);
+		output_exists_clause_exists(proc_num, npa);
 	}
 	print ")";
 }
@@ -418,13 +369,6 @@ END {
 			}
 		}
 		line_out = do_gp_checks(proc_num, line_out, rcurl[proc_num], rl, rul);
-		if (prophesy_check_lisa) {
-			sum = 0;
-			for (i = 1; i <= ngp; i++)
-				sum += postamble[proc_num ":" i];
-			if (sum > 0)
-				aux[proc_num ":" line_out++] = sprintf("ERR%02d:", proc_num);
-		}
 		if (line_out - 1 > aux_max_line)
 			aux_max_line = line_out - 1;
 	}
