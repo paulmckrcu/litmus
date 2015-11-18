@@ -54,6 +54,7 @@ gawk $prophesy_check_lisa '
 #
 # r1001:  Always 1 (to emulate unconditional branch).
 # r1008:  Scratch register for conditionals.
+# r1008GG: End of grace period GG already not seen?
 # r1009:  Scratch register for conditionals.
 # r1009GG: Start of grace period GG already seen?
 # r1GG0NN:  Holds gpstartGG, NNth read by current process, zero-based.
@@ -75,8 +76,7 @@ function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
 	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0%02d 0)", gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
-	if (rcurl[proc_num] >= 1)
-		aux[proc_num ":" line++] = sprintf("mov r1009%02d r1%02d0%02d", gp_num, gp_num, cpa);
+	aux[proc_num ":" line++] = sprintf("mov r1009%02d r1%02d0%02d", gp_num, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "(* end preamble " gp_num " *)";
 	preamble[proc_num ":" gp_num]++;
@@ -113,17 +113,19 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	cpa = postamble[proc_num ":" gp_num];
 	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
 	if (cpa + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r1%02d1%02d GPES%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
+		aux[proc_num ":" line++] = sprintf("b[] r1008%02d GPES%02d%02d%d", gp_num, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2%02d proph%02d", gp_num, cpa, gp_num);
 	aux[proc_num ":" line++] = sprintf("b[] r1%02d2%02d CKP%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = sprintf("mov r1008%02d 1", gp_num, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
 	if (prophesy_check_lisa)
 		line = emit_postamble_prophesy_check_lisa(proc_num, gp_num, cpa, line);
 	else
 		line = emit_postamble_prophesy_check_exists(proc_num, gp_num, cpa, line);
-	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
+	if (cpa + 0 >= 1)
+		aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
 	return line;
