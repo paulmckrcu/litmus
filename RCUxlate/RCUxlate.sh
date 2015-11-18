@@ -182,7 +182,7 @@ function do_gp_checks(proc_num, line_out, rcurscs, rl, rul,  gp_num, line) {
 	line = line_out;
 	for (gp_num = 1; gp_num <= ngp; gp_num++) {
 		if (proc_needs_gp_check(proc_num, gp_num)) {
-			if (rul > postamble[proc_num ":" gp_num])
+			if (rul > 0)
 				line = emit_postamble(proc_num, gp_num, line);
 			if (rcurscs > rl)
 				line = emit_preamble(proc_num, gp_num, line);
