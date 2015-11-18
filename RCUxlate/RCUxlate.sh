@@ -69,7 +69,7 @@ function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
 	if (preamble[proc_num ":" gp_num] + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("b[] r1%02d0%02d GPSS%02d%02d%d", gp_num, cpa, gp_num, proc_num, preamble[proc_num ":" gp_num]);
+		aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, cpa, gp_num, proc_num, preamble[proc_num ":" gp_num]);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0%02d gpstart%02d", gp_num, cpa, gp_num);
 	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0%02d 0)", gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, preamble[proc_num ":" gp_num]);
