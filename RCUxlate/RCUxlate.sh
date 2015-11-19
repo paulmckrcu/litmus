@@ -341,7 +341,7 @@ END {
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		line_in = 1;
 		line_out = 1;
-		drl = 0;
+		drl = 0; /* Deferred rcu_read_lock(): till next memref. */
 		rl = 0;
 		rul = 0;
 		for (line_in = 1; line_in <= max_line[proc_num]; line_in++) {
