@@ -87,12 +87,10 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	if (cpa + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1008%02d GPES%02d%02d%d", gp_num, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2%02d proph%02d", gp_num, cpa, gp_num);
-	aux[proc_num ":" line++] = sprintf("b[] r1%02d2%02d CKP%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
+	aux[proc_num ":" line++] = sprintf("b[] r1%02d2%02d GPES%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("mov r1008%02d 1", gp_num, gp_num, cpa);
-	aux[proc_num ":" line++] = sprintf("CKP%02d%02d%d:", gp_num, proc_num, cpa);
-	if (cpa + 0 >= 1)
-		aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
+	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
