@@ -343,13 +343,6 @@ inexists == 1 {
 
 # Translate and output!
 END {
-	# Output initialization for auxiliary litmus-test variables.
-	for (i = 1; i <= ngp; i++)
-		printf "proph%02d=0;\n", i;
-	for (i = 1; i <= nproc; i++)
-		printf " %d:r1001=1;", i - 1;
-	print "\n}";
-
 	# Build the refgp[] array.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		refgp[proc_num] = -1;
@@ -402,6 +395,13 @@ END {
 		if (line_out - 1 > aux_max_line)
 			aux_max_line = line_out - 1;
 	}
+
+	# Output initialization for auxiliary litmus-test variables.
+	for (i = 1; i <= ngp; i++)
+		printf "proph%02d=0;\n", i;
+	for (i = 1; i <= nproc; i++)
+		printf " %d:r1001=1;", i - 1;
+	print "\n}";
 
 	# Find maximum statement length for each process.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
