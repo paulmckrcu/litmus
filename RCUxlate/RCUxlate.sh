@@ -185,20 +185,34 @@ function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  
 # Output the "exists" clause the new way, which uses the exists clause
 # to compute whether or not the prophesy was correct.
 #
-function output_exists_clause_exists(proc_num,  npa, i, gp_num) {
+function output_exists_clause_exists(proc_num,  gp_num, i, npa, rgp, rln) {
+	# Compute the number of postambles for this process.
 	npa = 0;
 	for (i = 1; i <= ngp; i++) {
 		if (postamble[proc_num ":" i] > npa) {
 			npa = postamble[proc_num ":" i];
-			break;
+			break;  /* Same number, so first non-zero wins */
 		}
 	}
+
+	# Output prophesy-variable checks for each postamble.
 	for (i = 0; i < npa; i++) {
 		for (gp_num = 1; gp_num <= ngp; gp_num++) {
+			if (rcugp[gp_num] == proc_num)
+				continue;
 			printf(" /\\ %d:r1%02d1%02d=%d:r1%02d2%02d", proc_num - 1, gp_num, i, proc_num - 1, gp_num, i);
-			if (rcugp[gp_num] != proc_num)
-				printf(" /\\ (%d:r1%02d0%02d=1 \\/ %d:r1%02d1%02d=0)", proc_num - 1, gp_num, i, proc_num - 1, gp_num, i);
 		}
+	}
+
+	# Output grace-period violation checks
+	rgp = refgp[proc_num]
+	if (rgp == -1)
+		return;
+	for (gp_num = 1; gp_num <= ngp; gp_num++) {
+		if (rcugp[gp_num] == proc_num)
+			continue;
+		for (rln = 1; rln <= rcurl[proc_num]; rln++)
+			printf(" /\\ (%d:r1%02d0%02d=1 \\/ %d:r1%02d1%02d=0)", proc_num - 1, gp_num, rlpreamble[proc_num ":" rln], proc_num - 1, gp_num, rlpostamble[proc_num ":" rln]);
 	}
 }
 
