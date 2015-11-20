@@ -30,6 +30,7 @@ gawk '
 # aux[proc][line]: Litmus test with RCU statements translated.
 # lisa[proc][line]: Input litmus-test statements.
 # ngp: Number of grace periods across all processes.
+# npa[proc]: Number of postambles emitted per GP for proc.
 # nproc: Number of processes, ignoring prophesy-variable process.
 # postamble[proc][gp]: How many postambles emitted for process/gp combo.
 # preamble[proc][gp]: How many preambles emitted for process/gp combo.
@@ -97,6 +98,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
+	npa[proc_num] = postamble[proc_num ":" gp_num];
 	return line;
 }
 
@@ -185,18 +187,9 @@ function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  
 # Output the "exists" clause the new way, which uses the exists clause
 # to compute whether or not the prophesy was correct.
 #
-function output_exists_clause_exists(proc_num,  gp_num, i, npa, rgp, rln) {
-	# Compute the number of postambles for this process.
-	npa = 0;
-	for (i = 1; i <= ngp; i++) {
-		if (postamble[proc_num ":" i] > npa) {
-			npa = postamble[proc_num ":" i];
-			break;  /* Same number, so first non-zero wins */
-		}
-	}
-
+function output_exists_clause_exists(proc_num,  gp_num, i, rgp, rln) {
 	# Output prophesy-variable checks for each postamble.
-	for (i = 0; i < npa; i++) {
+	for (i = 0; i < npa[proc_num]; i++) {
 		for (gp_num = 1; gp_num <= ngp; gp_num++) {
 			if (rcugp[gp_num] == proc_num)
 				continue;
@@ -401,7 +394,21 @@ END {
 		printf "proph%02d=0;\n", i;
 	for (i = 1; i <= nproc; i++)
 		printf " %d:r1001=1;", i - 1;
-	print "\n}";
+	printf("\n");
+	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		neednewline=0;
+		for (i = 0; i < npa[proc_num]; i++) {
+			for (gp_num = 1; gp_num <= ngp; gp_num++) {
+				if (rcugp[gp_num] == proc_num)
+					continue;
+				printf(" %d:r1%02d2%02d=2;", proc_num - 1, gp_num, i);
+				neednewline=1;
+			}
+		}
+		if (neednewline)
+			printf("\n");
+	}
+	print "}";
 
 	# Find maximum statement length for each process.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
