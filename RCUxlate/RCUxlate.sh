@@ -391,7 +391,7 @@ END {
 
 	# Output initialization for auxiliary litmus-test variables.
 	for (i = 1; i <= ngp; i++)
-		printf "proph%02d=0;\n", i;
+		printf "proph%02d=1;\n", i;
 	for (i = 1; i <= nproc; i++)
 		printf " %d:r1001=1;", i - 1;
 	printf("\n");
@@ -430,7 +430,7 @@ END {
 		if (line_out == 1) {
 			printf " P%d", nproc;
 		} else if (line_out <= ngp + 1) {
-			printf " w[once] proph%02d 1", line_out - 1;
+			printf " w[once] proph%02d 0", line_out - 1;
 		}
 		printf " ;\n";
 	}
@@ -439,7 +439,7 @@ END {
 	for (; line_out <= ngp + 1; line_out++) {
 		for (proc_num = 1; proc_num <= nproc; proc_num++)
 			printf " %*s |", max_length[proc_num], "";
-		printf " w[once] proph%2d 1 ;\n", line_out - 1, nproc;
+		printf " w[once] proph%2d 0 ;\n", line_out - 1, nproc;
 	}
 
 	# exists clause.
