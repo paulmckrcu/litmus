@@ -27,14 +27,17 @@ gawk '
 #
 # Data structures:
 #
-# preamble[proc][gp]: How many preambles emitted for process/gp combo.
-# postamble[proc][gp]: How many postambles emitted for process/gp combo.
 # aux[proc][line]: Litmus test with RCU statements translated.
 # lisa[proc][line]: Input litmus-test statements.
-# nproc: Number of processes, ignoring prophesy-variable process.
 # ngp: Number of grace periods across all processes.
+# nproc: Number of processes, ignoring prophesy-variable process.
+# postamble[proc][gp]: How many postambles emitted for process/gp combo.
+# preamble[proc][gp]: How many preambles emitted for process/gp combo.
 # rcugp[gp]: Process containg RCU grace period gp.
 # rcurl[proc]: Number of RCU read-side critical sections in process.
+# refgp[proc]: Grace-period number of GP in some other process (-1 if none).
+# rlpreamble[proc][rl]: Preamble # corresponding to this rcu_read_lock().
+# rulpreamble[proc][rul]: Postamble # corresponding to this rcu_read_unlock().
 
 
 ########################################################################
@@ -182,7 +185,14 @@ function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  
 # Output the "exists" clause the new way, which uses the exists clause
 # to compute whether or not the prophesy was correct.
 #
-function output_exists_clause_exists(proc_num, npa,  i, gp_num) {
+function output_exists_clause_exists(proc_num,  npa, i, gp_num) {
+	npa = 0;
+	for (i = 1; i <= ngp; i++) {
+		if (postamble[proc_num ":" i] > npa) {
+			npa = postamble[proc_num ":" i];
+			break;
+		}
+	}
 	for (i = 0; i < npa; i++) {
 		for (gp_num = 1; gp_num <= ngp; gp_num++) {
 			printf(" /\\ %d:r1%02d1%02d=%d:r1%02d2%02d", proc_num - 1, gp_num, i, proc_num - 1, gp_num, i);
@@ -196,17 +206,10 @@ function output_exists_clause_exists(proc_num, npa,  i, gp_num) {
 #
 # Output the "exists" clause.
 #
-function output_exists_clause(  npa) {
+function output_exists_clause() {
 	printf "%s", exists;
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
-		npa = 0;
-		for (i = 1; i <= ngp; i++) {
-			if (postamble[proc_num ":" i] > npa) {
-				npa = postamble[proc_num ":" i];
-				break;
-			}
-		}
-		output_exists_clause_exists(proc_num, npa);
+		output_exists_clause_exists(proc_num);
 	}
 	print ")";
 }
@@ -333,6 +336,17 @@ END {
 		printf " %d:r1001=1;", i - 1;
 	print "\n}";
 
+	# Build the refgp[] array.
+	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		refgp[proc_num] = -1;
+		for (gp_num = 1; gp_num <= ngp; gp_num++) {
+			if (rcugp[gp_num] != proc_num) {
+				refgp[proc_num] = gp_num;
+				break;
+			}
+		}
+	}
+
 	# Do the translation from lisa[] to aux[].
 	aux_max_line = 0;
 	gp_num = 1;
@@ -350,9 +364,13 @@ END {
 				aux_max_line = line_out;
 			if (stmt == "f[lock]") {
 				drl++;
+				if (refgp[proc_num] != -1)
+					rlpreamble[proc_num ":" rl + drl] = preamble[proc_num ":" refgp[proc_num]];
 				aux[proc_num ":" line_out++] = "(* " stmt " *)";
 			} else if (stmt == "f[unlock]") {
 				rul += 1;
+				if (refgp[proc_num] != -1)
+					rlpostamble[proc_num ":" rul] = postamble[proc_num ":" refgp[proc_num]];
 				rl += drl;
 				drl = 0;
 				aux[proc_num ":" line_out++] = "(* " stmt " *)";
