@@ -184,6 +184,48 @@ function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  
 
 ########################################################################
 #
+# Output one clause of the prophesy portion of the "exists" clause.
+#
+function output_exists_clause_exists_proph(proc_num, gp_num, i) {
+	# Prophesy variable not yet cleared.  Grace period cannot have
+	# ended yet, nor can it have ended next time.
+	printf(" /\\ (~%d:r1%02d2%02d=1 \\/", proc_num - 1, gp_num, i);
+	if (i + 1 < npa[proc_num])
+		printf(" (%d:r1%02d1%02d=0 /\\", proc_num - 1, gp_num, i + 1);
+	printf(" %d:r1%02d1%02d=0", proc_num - 1, gp_num, i);
+	if (i + 1 < npa[proc_num])
+		printf(")");
+	printf(")");
+
+	# Prophesy variable just now zeroed.  The grace period cannot
+	# have ended yet, but it had better do so next time (if there is
+	# a next time).
+	printf(" /\\ (~%d:r1%02d2%02d=0 \\/", proc_num - 1, gp_num, i);
+	if (i + 1 < npa[proc_num])
+		printf(" (%d:r1%02d1%02d=1 /\\", proc_num - 1, gp_num, i + 1);
+	printf(" %d:r1%02d1%02d=0", proc_num - 1, gp_num, i);
+	if (i + 1 < npa[proc_num])
+		printf(")");
+	printf(")");
+
+	# Prophesy variable changed some time back.  The grace period
+	# had better have ended already.
+	if (i != 0) {
+		printf(" /\\ (~%d:r1%02d2%02d=2 \\/", proc_num - 1, gp_num, i);
+		printf(" %d:r1%02d1%02d=1)", proc_num - 1, gp_num, i);
+	}
+
+	# If we have not seen the end of the grace period by the last
+	# postamble, there had better have been a memory barrier.
+	if (i + 1 >= npa[proc_num]) {
+		printf(" /\\ (~%d:r1%02d1%02d=0 \\/", proc_num - 1, gp_num, i);
+		printf(" %d:r1%02d2%02d=0)", proc_num - 1, gp_num, i);
+	}
+	printf("\n");
+}
+
+########################################################################
+#
 # Output the "exists" clause the new way, which uses the exists clause
 # to compute whether or not the prophesy was correct.
 #
@@ -193,7 +235,7 @@ function output_exists_clause_exists(proc_num,  gp_num, i, rgp, rln) {
 		for (gp_num = 1; gp_num <= ngp; gp_num++) {
 			if (rcugp[gp_num] == proc_num)
 				continue;
-			printf(" /\\ %d:r1%02d1%02d=%d:r1%02d2%02d", proc_num - 1, gp_num, i, proc_num - 1, gp_num, i);
+			output_exists_clause_exists_proph(proc_num, gp_num, i);
 		}
 	}
 
