@@ -184,42 +184,51 @@ function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  
 
 ########################################################################
 #
+# Output the clause of the prophesy portion of the "exists" clause
+# corresponding to the last prophesy-variable read.
+#
+function output_exists_clause_exists_proph_last(proc_num, gp_num, i) {
+	# If we have not seen the end of the grace period by the last
+	# postamble, there had better have been a memory barrier.
+	printf(" /\\");
+	if (i > 0)
+		printf(" (%d:r1%02d2%02d=2 \\/", proc_num - 1, gp_num, i);
+	printf(" %d:r1%02d1%02d=", proc_num - 1, gp_num, i);
+	printf("%d:r1%02d2%02d", proc_num - 1, gp_num, i);
+	if (i > 0)
+		printf(")");
+	printf("\n");
+}
+
+########################################################################
+#
 # Output one clause of the prophesy portion of the "exists" clause.
 #
 function output_exists_clause_exists_proph(proc_num, gp_num, i) {
+	# Handle last access specially.
+	if (i + 1 >= npa[proc_num]) {
+		output_exists_clause_exists_proph_last(proc_num, gp_num, i);
+		return;
+	}
+
 	# Prophesy variable not yet cleared.  Grace period cannot have
 	# ended yet, nor can it have ended next time.
 	printf(" /\\ (~%d:r1%02d2%02d=1 \\/", proc_num - 1, gp_num, i);
-	if (i + 1 < npa[proc_num])
-		printf(" (%d:r1%02d1%02d=0 /\\", proc_num - 1, gp_num, i + 1);
-	printf(" %d:r1%02d1%02d=0", proc_num - 1, gp_num, i);
-	if (i + 1 < npa[proc_num])
-		printf(")");
-	printf(")");
+	printf(" (%d:r1%02d1%02d=0 /\\", proc_num - 1, gp_num, i + 1);
+	printf(" %d:r1%02d1%02d=0))", proc_num - 1, gp_num, i);
 
 	# Prophesy variable just now zeroed.  The grace period cannot
 	# have ended yet, but it had better do so next time (if there is
 	# a next time).
 	printf(" /\\ (~%d:r1%02d2%02d=0 \\/", proc_num - 1, gp_num, i);
-	if (i + 1 < npa[proc_num])
-		printf(" (%d:r1%02d1%02d=1 /\\", proc_num - 1, gp_num, i + 1);
-	printf(" %d:r1%02d1%02d=0", proc_num - 1, gp_num, i);
-	if (i + 1 < npa[proc_num])
-		printf(")");
-	printf(")");
+	printf(" (%d:r1%02d1%02d=1 /\\", proc_num - 1, gp_num, i + 1);
+	printf(" %d:r1%02d1%02d=0))", proc_num - 1, gp_num, i);
 
 	# Prophesy variable changed some time back.  The grace period
 	# had better have ended already.
 	if (i != 0) {
 		printf(" /\\ (~%d:r1%02d2%02d=2 \\/", proc_num - 1, gp_num, i);
 		printf(" %d:r1%02d1%02d=1)", proc_num - 1, gp_num, i);
-	}
-
-	# If we have not seen the end of the grace period by the last
-	# postamble, there had better have been a memory barrier.
-	if (i + 1 >= npa[proc_num]) {
-		printf(" /\\ (~%d:r1%02d1%02d=0 \\/", proc_num - 1, gp_num, i);
-		printf(" %d:r1%02d2%02d=0)", proc_num - 1, gp_num, i);
 	}
 	printf("\n");
 }
