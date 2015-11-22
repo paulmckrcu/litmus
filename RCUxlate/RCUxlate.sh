@@ -265,7 +265,7 @@ function output_exists_clause_exists(proc_num,  gp_num, i, rgp, rln) {
 # Output the "exists" clause.
 #
 function output_exists_clause() {
-	printf "%s", exists;
+	printf "%s\n", exists;
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		output_exists_clause_exists(proc_num);
 	}
