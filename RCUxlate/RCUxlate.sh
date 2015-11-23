@@ -47,7 +47,7 @@ gawk '
 #
 # Litmus-test variables and registers:
 #
-# gpstartGG: Has grace period GG started yet?  (GG count is one-based.)
+# gpstartGG: Has grace period GG not started yet?  (GG count is one-based.)
 # gpendGG: Has grace period GG ended yet?
 # prophGG: Prophesy variable for gpendGG.
 #
@@ -72,8 +72,7 @@ function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0%02d gpstart%02d", gp_num, cpa, gp_num);
 	if (cpa + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1009%02d GPSS%02d%02d%d", gp_num, gp_num, proc_num, cpa);
-	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0%02d 0)", gp_num, cpa);
-	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, cpa);
+	aux[proc_num ":" line++] = sprintf("b[] r1%02d0%02d GPSS%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
 	preamblels[proc_num ":" gp_num] = line;
 	aux[proc_num ":" line++] = sprintf("mov r1009%02d 1", gp_num, gp_num, cpa);
@@ -114,7 +113,7 @@ function emit_sync(gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* GP " gp_num " *)";
 	aux[proc_num ":" line++] = "f[mb]";
-	aux[proc_num ":" line++] = sprintf("w[once] gpstart%02d 1", gp_num);
+	aux[proc_num ":" line++] = sprintf("w[once] gpstart%02d 0", gp_num);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("w[once] gpend%02d 1", gp_num);
 	aux[proc_num ":" line++] = "f[mb]";
@@ -255,7 +254,7 @@ function output_exists_clause_exists(proc_num,  gp_num, i, rgp, rln) {
 		if (rcugp[gp_num] == proc_num)
 			continue;
 		for (rln = 1; rln <= rcurl[proc_num]; rln++)
-			printf(" /\\ (%d:r1%02d0%02d=1 \\/ %d:r1%02d1%02d=0)", proc_num - 1, gp_num, rlpreamble[proc_num ":" rln], proc_num - 1, gp_num, rlpostamble[proc_num ":" rln]);
+			printf(" /\\ (%d:r1%02d0%02d=0 \\/ %d:r1%02d1%02d=0)", proc_num - 1, gp_num, rlpreamble[proc_num ":" rln], proc_num - 1, gp_num, rlpostamble[proc_num ":" rln]);
 	}
 }
 
@@ -452,8 +451,10 @@ END {
 	}
 
 	# Output initialization for auxiliary litmus-test variables.
-	for (i = 1; i <= ngp; i++)
+	for (i = 1; i <= ngp; i++) {
+		printf "gpstart%02d=1;\n", i;
 		printf "proph%02d=1;\n", i;
+	}
 	for (i = 1; i <= nproc; i++)
 		printf " %d:r1001=1;", i - 1;
 	printf("\n");
