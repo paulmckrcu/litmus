@@ -33,7 +33,9 @@ gawk '
 # npa[proc]: Number of postambles emitted per GP for proc.
 # nproc: Number of processes, ignoring prophesy-variable process.
 # postamble[proc][gp]: How many postambles emitted for process/gp combo.
+# postamblels[proc][gp]: Line number of condition-set for last postamble.
 # preamble[proc][gp]: How many preambles emitted for process/gp combo.
+# preamblels[proc][gp]: Line number of condition-set for last preamble.
 # rcugp[gp]: Process containg RCU grace period gp.
 # rcurl[proc]: Number of RCU read-side critical sections in process.
 # refgp[proc]: Grace-period number of GP in some other process (-1 if none).
@@ -73,6 +75,7 @@ function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
 	aux[proc_num ":" line++] = sprintf("mov r1009 (eq r1%02d0%02d 0)", gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("b[] r1009 GPSS%02d%02d%d", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
+	preamblels[proc_num ":" gp_num] = line;
 	aux[proc_num ":" line++] = sprintf("mov r1009%02d 1", gp_num, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "(* end preamble " gp_num " *)";
@@ -93,6 +96,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2%02d proph%02d", gp_num, cpa, gp_num);
 	aux[proc_num ":" line++] = sprintf("b[] r1%02d2%02d GPES%02d%02d%d", gp_num, cpa, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = "f[mb]";
+	postamblels[proc_num ":" gp_num] = line;
 	aux[proc_num ":" line++] = sprintf("mov r1008%02d 1", gp_num, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
@@ -433,6 +437,18 @@ END {
 		line_out = do_gp_checks(proc_num, line_out, rcurl[proc_num], rl, rul);
 		if (line_out - 1 > aux_max_line)
 			aux_max_line = line_out - 1;
+	}
+
+	# Comment out the last condition set per GP per process.
+	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		for (gp_num = 1; gp_num <= ngp; gp_num++) {
+			line = preamblels[proc_num ":" gp_num];
+			if (line != "")
+				aux[proc_num ":" line] = "(* " aux[proc_num ":" line] " *)";
+			line = postamblels[proc_num ":" gp_num];
+			if (line != "")
+				aux[proc_num ":" line] = "(* " aux[proc_num ":" line] " *)";
+		}
 	}
 
 	# Output initialization for auxiliary litmus-test variables.
