@@ -66,9 +66,9 @@ gawk '
 # Emit a preamble
 #
 function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
-	cpa = preamble[proc_num ":" gp_num];
+	cpa = preamble[proc_num ":" gp_num] + 0;
 	line = line_out;
-	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
+	aux[proc_num ":" line++] = "(* preamble G" gp_num " #" cpa " *)";
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0%02d gpstart%02d", gp_num, cpa, gp_num);
 	if (cpa + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1009%02d GPSS%02d%02d%d", gp_num, gp_num, proc_num, cpa);
@@ -77,7 +77,7 @@ function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
 	preamblels[proc_num ":" gp_num] = line;
 	aux[proc_num ":" line++] = sprintf("mov r1009%02d 1", gp_num, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("GPSS%02d%02d%d:", gp_num, proc_num, cpa);
-	aux[proc_num ":" line++] = "(* end preamble " gp_num " *)";
+	aux[proc_num ":" line++] = "(* end preamble G" gp_num " #" cpa " *)";
 	preamble[proc_num ":" gp_num]++;
 	return line;
 }
@@ -88,8 +88,8 @@ function emit_preamble(proc_num, gp_num, line_out,  cpa, line) {
 #
 function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	line = line_out;
-	cpa = postamble[proc_num ":" gp_num];
-	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
+	cpa = postamble[proc_num ":" gp_num] + 0;
+	aux[proc_num ":" line++] = "(* postamble G" gp_num " #" cpa " *)";
 	if (cpa + 0 >= 1)
 		aux[proc_num ":" line++] = sprintf("b[] r1008%02d GPES%02d%02d%d", gp_num, gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d2%02d proph%02d", gp_num, cpa, gp_num);
@@ -99,7 +99,7 @@ function emit_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	aux[proc_num ":" line++] = sprintf("mov r1008%02d 1", gp_num, gp_num, cpa);
 	aux[proc_num ":" line++] = sprintf("GPES%02d%02d%d:", gp_num, proc_num, cpa);
 	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1%02d gpend%02d", gp_num, cpa, gp_num);
-	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
+	aux[proc_num ":" line++] = "(* end postamble G" gp_num " #" cpa " *)";
 	postamble[proc_num ":" gp_num]++;
 	npa[proc_num] = postamble[proc_num ":" gp_num];
 	return line;
