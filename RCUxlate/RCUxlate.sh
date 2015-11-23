@@ -52,9 +52,7 @@ gawk '
 # prophGG: Prophesy variable for gpendGG.
 #
 # r1001:  Always 1 (to emulate unconditional branch).
-# r1008:  Scratch register for conditionals.
 # r1008GG: End of grace period GG already not seen?
-# r1009:  Scratch register for conditionals.
 # r1009GG: Start of grace period GG already seen?
 # r1GG0NN:  Holds gpstartGG, NNth read by current process, zero-based.
 # r1GG1NN:  Holds gpendGG, NNth read by current process, zero-based.
