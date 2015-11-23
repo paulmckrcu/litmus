@@ -188,16 +188,11 @@ function do_gp_checks_if_needed(proc_num, line_in, line_out, rcurscs, rl, rul,  
 # corresponding to the last prophesy-variable read.
 #
 function output_exists_clause_exists_proph_last(proc_num, gp_num, i) {
-	# If we have not seen the end of the grace period by the last
-	# postamble, there had better have been a memory barrier.
-	printf(" /\\");
-	if (i > 0)
-		printf(" (%d:r1%02d2%02d=2 \\/", proc_num - 1, gp_num, i);
-	printf(" %d:r1%02d1%02d=", proc_num - 1, gp_num, i);
-	printf("%d:r1%02d2%02d", proc_num - 1, gp_num, i);
-	if (i > 0)
-		printf(")");
-	printf("\n");
+	# If this is the last postamble, if we have not see the
+	# end of the grace period, there had better have been a
+	# memory barrier.
+	printf(" /\\ %d:r1%02d1%02d=", proc_num - 1, gp_num, i);
+	printf("%d:r1%02d2%02d\n", proc_num - 1, gp_num, i);
 }
 
 ########################################################################
@@ -211,25 +206,25 @@ function output_exists_clause_exists_proph(proc_num, gp_num, i) {
 		return;
 	}
 
-	# Prophesy variable not yet cleared.  Grace period cannot have
-	# ended yet, nor can it have ended next time.
-	printf(" /\\ (~%d:r1%02d2%02d=1 \\/", proc_num - 1, gp_num, i);
-	printf(" (%d:r1%02d1%02d=0 /\\", proc_num - 1, gp_num, i + 1);
-	printf(" %d:r1%02d1%02d=0))", proc_num - 1, gp_num, i);
+	# If the grace period has already ended, the prophesy variable
+	# must be 1 (thus no memory barrier).
+	printf(" /\\ (%d:r1%02d1%02d=0 \\/", proc_num - 1, gp_num, i);
+	printf(" %d:r1%02d2%02d=1)", proc_num - 1, gp_num, i);
 
-	# Prophesy variable just now zeroed.  The grace period cannot
-	# have ended yet, but it had better do so next time (if there is
-	# a next time).
-	printf(" /\\ (~%d:r1%02d2%02d=0 \\/", proc_num - 1, gp_num, i);
-	printf(" (%d:r1%02d1%02d=1 /\\", proc_num - 1, gp_num, i + 1);
-	printf(" %d:r1%02d1%02d=0))", proc_num - 1, gp_num, i);
+	# If we have a memory barrier this time, the grace period has
+	# to have ended next time.
+	printf(" /\\ (%d:r1%02d2%02d=1 \\/", proc_num - 1, gp_num, i);
+	printf(" %d:r1%02d1%02d=1)", proc_num - 1, gp_num, i + 1);
 
-	# Prophesy variable changed some time back.  The grace period
-	# had better have ended already.
-	if (i != 0) {
-		printf(" /\\ (~%d:r1%02d2%02d=2 \\/", proc_num - 1, gp_num, i);
-		printf(" %d:r1%02d1%02d=1)", proc_num - 1, gp_num, i);
-	}
+	# Note that the above two imply that there are not two
+	# consecutive zero-value prophesy reads.
+
+	# If we do not see the end of the grace period this time, but
+	# do see it next time, there had better be a memory barrier
+	# this time, that is, zero-valued prophesy.
+	printf(" /\\ (~(%d:r1%02d1%02d=0 /\\", proc_num - 1, gp_num, i);
+	printf(" %d:r1%02d1%02d=1) \\/", proc_num - 1, gp_num, i + 1);
+	printf(" %d:r1%02d2%02d=0)", proc_num - 1, gp_num, i);
 	printf("\n");
 }
 
@@ -452,7 +447,7 @@ END {
 			for (gp_num = 1; gp_num <= ngp; gp_num++) {
 				if (rcugp[gp_num] == proc_num)
 					continue;
-				printf(" %d:r1%02d2%02d=2;", proc_num - 1, gp_num, i);
+				printf(" %d:r1%02d2%02d=1;", proc_num - 1, gp_num, i);
 				neednewline=1;
 			}
 		}
@@ -461,8 +456,28 @@ END {
 	}
 	print "}";
 
+	# Form code for prophesy-variable writes.
+	gp_proc = rcugp[1];
+	proph_mb = 1;
+	for (gp_num = 2; gp_num <= ngp; gp_num++) {
+		if (rcugp[gp_num] != gp_proc) {
+			proph_mb = 0;
+			break;
+		}
+	}
+	line_out = 0;
+	aux[nproc + 1 ":" ++line_out] = sprintf("P%d", nproc);
+	for (gp_num = 1; gp_num <= ngp; gp_num++) {
+		if (gp_num > 1 && proph_mb)
+			aux[nproc + 1 ":" ++line_out] = "f[mb]";
+		aux[nproc + 1 ":" ++line_out] = sprintf("w[once] proph%02d 0", gp_num);
+		aux[nproc + 1 ":" ++line_out] = sprintf("w[once] proph%02d 1", gp_num);
+		if (line_out > aux_line_max)
+			aux_line_max = line_out;
+	}
+
 	# Find maximum statement length for each process.
-	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+	for (proc_num = 1; proc_num <= nproc + 1; proc_num++) {
 		max_length[proc_num] = 0;
 		for (line_out = 1; line_out <= aux_max_line; line_out++) {
 			stmt = aux[proc_num ":" line_out];
@@ -473,17 +488,11 @@ END {
 
 	# Output the code and the stores to the prophesy variables.
 	for (line_out = 1; line_out <= aux_max_line; line_out++) {
-		for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		for (proc_num = 1; proc_num <= nproc + 1; proc_num++) {
 			stmt = aux[proc_num ":" line_out];
 			pad = max_length[proc_num] - length(stmt);
-			printf " %s%*s |", stmt, pad, "";
+			printf " %s%*s %s", stmt, pad, "", proc_num <= nproc ? "|" : ";\n";
 		}
-		if (line_out == 1) {
-			printf " P%d", nproc;
-		} else if (line_out <= ngp + 1) {
-			printf " w[once] proph%02d 0", line_out - 1;
-		}
-		printf " ;\n";
 	}
 
 	# In case there are more prophesy variables than lines of code.
