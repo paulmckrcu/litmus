@@ -1,0 +1,42 @@
+To prepare to run litmus-test translation scripts:
+
+	cd RCUxlate
+	make
+
+This will create the stripocamlcomment binary required by the scripts.
+
+Contents of this archive:
+
+./	Prototype LWN paper and teleconference notes.
+
+./DIYLinuxMM/
+
+	Implementation of a fragment of the Linux-kernel API in userspace.
+	This can be used in DIY testing of Linux-kernel litmus tests.
+
+./LinuxModel/
+
+	Expanded tarball of Linux-kerenl litmus tests from Jade.
+
+./models/
+
+	Random models, .bell and .cat files.
+
+./RCUmodel/
+
+	Script-based models of RCU for LISA models.  These can be thought
+	of as RCU implementations written in LISA.  They are quite slow,
+	but are reasonably accurate.
+
+	Note: None are yet perfect, and probably won't be due to the
+	fact that they don't model compiler optimizations.  Modeling
+	compiler optimizations requires considerable code reordering,
+	which would add yet another round of combinatorial explosion.
+	One possibility would be to create multiple simpler litmus tests
+	and combine the results of all of them.
+
+./RCUxlate/
+
+	Scripts for converting litmus tests containing f[lock], f[unlock],
+	and f[sync] into equivalent models based on loads, stores,
+	and memory barriers.
