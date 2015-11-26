@@ -345,10 +345,10 @@ incode == 1 {
 	for (i = 1; i <= nproc; i++) {
 		gsub(/^[ 	]*/, "", cur_line[i]);
 		gsub(/[ 	]*$/, "", cur_line[i]);
-		if (cur_line[i] == "f[sync]") {
+		if (cur_line[i] == "f[sync]" || cur_line[i] == "call[sync]") {
 			if (rcunest[i] + 0 != 0) {
 				# Force LISA syntax error
-				cur_line[i] = "f[sync DEADLOCK]";
+				cur_line[i] = "call[sync DEADLOCK]";
 			} else {
 				ngp++;
 				rcugp[ngp] = i;
@@ -421,7 +421,7 @@ END {
 				rl += drl;
 				drl = 0;
 				aux[proc_num ":" line_out++] = "(* " stmt " *)";
-			} else if (stmt == "f[sync]") {
+			} else if (stmt == "f[sync]" || stmt == "call[sync]") {
 				line_out = emit_sync(gp_num++, line_out);
 			} else if (stmt ~ /^[frw]\[/) {
 				rl += drl;
