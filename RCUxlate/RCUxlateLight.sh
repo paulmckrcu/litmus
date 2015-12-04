@@ -108,12 +108,12 @@ function emit_postamble(proc_num, line_out,  gp_num, line) {
 #
 # Emit an RCU grace period.
 #
-function emit_sync(gp_num, line_out, stmt,  line) {
+function emit_sync(gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* GP " gp_num " *)";
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = sprintf("w[once] gpstart%02d 1", gp_num);
-	aux[proc_num ":" line++] = stmt;
+	aux[proc_num ":" line++] = "f[gp]";
 	aux[proc_num ":" line++] = sprintf("w[once] gpend%02d 1", gp_num);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = "(* end GP " gp_num " *)";
@@ -202,7 +202,7 @@ incode == 1 {
 		if (cur_line[proc_num] == "f[sync]" || cur_line[proc_num] == "call[sync]") {
 			if (rcunest[proc_num] + 0 != 0 && rcu_deadlock + 0) {
 				# Force LISA syntax error
-				cur_line[proc_num] = "call[sync DEADLOCK]";
+				cur_line[proc_num] = "f[gp DEADLOCK]";
 			} else {
 				ngp++;
 				rcugp[ngp] = proc_num;
@@ -258,8 +258,8 @@ END {
 				aux[proc_num ":" line_out++] = "(* start " stmt " *)";
 				line_out = emit_postamble(proc_num, line_out);
 				aux[proc_num ":" line_out++] = stmt;
-			} else if (stmt == "f[sync]" || stmt = "call[sync]") {
-				line_out = emit_sync(gp_num++, line_out, stmt);
+			} else if (stmt == "f[sync]" || stmt == "call[sync]") {
+				line_out = emit_sync(gp_num++, line_out);
 			} else {
 				aux[proc_num ":" line_out++] = stmt;
 			}
