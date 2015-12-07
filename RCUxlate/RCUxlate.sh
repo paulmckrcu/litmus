@@ -29,6 +29,7 @@ gawk '
 #
 # aux[proc][line]: Litmus test with RCU statements translated.
 # lisa[proc][line]: Input litmus-test statements.
+# max_line[nproc]: Number of input lines in lisa[].
 # ngp: Number of grace periods across all processes.
 # npa[proc]: Number of postambles emitted per GP for proc.
 # nproc: Number of processes, ignoring prophesy-variable process.
@@ -38,6 +39,7 @@ gawk '
 # preamblels[proc][gp]: Line number of condition-set for last preamble.
 # rcugp[gp]: Process containg RCU grace period gp.
 # rcurl[proc]: Number of RCU read-side critical sections in process.
+# rcurlonly[proc]: Singe RCU read-side critical section fills entire process.
 # refgp[proc]: Grace-period number of GP in some other process (-1 if none).
 # rlpreamble[proc][rl]: Preamble # corresponding to this rcu_read_lock().
 # rulpreamble[proc][rul]: Postamble # corresponding to this rcu_read_unlock().
@@ -383,7 +385,8 @@ inexists == 1 {
 
 # Translate and output!
 END {
-	# Build the refgp[] array.
+	# Build the refgp[] and rcurlonly[] arrays.
+	rcurlonly_all = 1;
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		refgp[proc_num] = -1;
 		for (gp_num = 1; gp_num <= ngp; gp_num++) {
@@ -392,6 +395,12 @@ END {
 				break;
 			}
 		}
+		rcurlonly[proc_num] = 0;
+		if (lisa[proc_num ":" 2] == "f[lock]" && lisa[proc_num ":" max_line[proc_num]] == "f[unlock]") {
+			rcurlonly[proc_num] = 1;
+		}
+		if (rcurl[proc_num] > 1 || (rcurl[proc_num] > 0 && !rcurlonly[proc_num]))
+			rcurlonly_all = 0;
 	}
 
 	# Do the translation from lisa[] to aux[].
@@ -486,7 +495,8 @@ END {
 		if (gp_num > 1 && proph_mb)
 			aux[nproc + 1 ":" ++line_out] = "f[mb]";
 		aux[nproc + 1 ":" ++line_out] = sprintf("w[once] proph%02d 0", gp_num);
-		aux[nproc + 1 ":" ++line_out] = sprintf("w[once] proph%02d 1", gp_num);
+		if (!rcurlonly_all)
+			aux[nproc + 1 ":" ++line_out] = sprintf("w[once] proph%02d 1", gp_num);
 		if (line_out > aux_line_max)
 			aux_line_max = line_out;
 	}
