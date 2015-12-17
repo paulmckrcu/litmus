@@ -31,10 +31,10 @@
 #
 # Convert necklace to string
 #
-function necklace2str(curnecklace, nbeads,  strnecklace, i) {
+function necklace2str(curnecklace, nbeads, colors,  strnecklace, i) {
 	strnecklace="";
 	for (i = 0; i < nbeads; i++)
-		strnecklace = sprintf("%s %d", strnecklace, curnecklace[i]);
+		strnecklace = strnecklace " " colors[curnecklace[i] + 1];
 	return strnecklace;
 }
 
@@ -42,7 +42,7 @@ function necklace2str(curnecklace, nbeads,  strnecklace, i) {
 #
 # Check all rotations of the necklace, return 1 if new.
 #
-function checknecklace(curnecklace, nbeads,  rotnecklace, i, j, ns) {
+function checknecklace(curnecklace, nbeads, colors,  rotnecklace, i, j, ns) {
 	for (i = 0; i < nbeads; i++) {
 		for (j = 0; j < i; j++) {
 			rotnecklace[j + nbeads - i] = curnecklace[j];
@@ -50,11 +50,11 @@ function checknecklace(curnecklace, nbeads,  rotnecklace, i, j, ns) {
 		for (j = i; j < nbeads; j++) {
 			rotnecklace[j - i] = curnecklace[j];
 		}
-		ns = necklace2str(rotnecklace, nbeads);
+		ns = necklace2str(rotnecklace, nbeads, colors);
 		if (necklacebag[ns])
 			return 0;
 	}
-	ns = necklace2str(curnecklace, nbeads);
+	ns = necklace2str(curnecklace, nbeads, colors);
 	necklacebag[ns] = 1;
 	return 1;
 }
@@ -63,7 +63,7 @@ function checknecklace(curnecklace, nbeads,  rotnecklace, i, j, ns) {
 #
 # Recursive necklace construction, to be invoked from necklace().
 #
-function __ncklc(curnecklace, nbeads, ncolors, maxbeads,  newnecklace, i, j, k, ns) {
+function __ncklc(curnecklace, nbeads, ncolors, maxbeads, colors,  newnecklace, i, j, k, ns) {
 	if (nbeads >= maxbeads)
 		return;
 	for (i = nbeads; i >= (nbeads == 0 ? 0 : 1); i--) {
@@ -75,8 +75,8 @@ function __ncklc(curnecklace, nbeads, ncolors, maxbeads,  newnecklace, i, j, k, 
 			if (i + 1 < nbeads && curnecklace[i + 1] == k)
 				continue;
 			newnecklace[i] = k;
-			if (checknecklace(newnecklace, nbeads + 1))
-				__ncklc(newnecklace, nbeads + 1, ncolors, maxbeads);
+			if (checknecklace(newnecklace, nbeads + 1, colors))
+				__ncklc(newnecklace, nbeads + 1, ncolors, maxbeads, colors);
 		}
 	}
 }
@@ -84,15 +84,31 @@ function __ncklc(curnecklace, nbeads, ncolors, maxbeads,  newnecklace, i, j, k, 
 ########################################################################
 #
 # Recursive necklace construction.  Fills necklacebag with corresponding
-# string representations of the necklaces.
+# string representations of the necklaces.  The colors string is a
+# blank-separated list of the names of the desired colors.
 #
-function necklace(ncolors, maxbeads, necklacebag,  curnecklace, i) {
-	print "necklace(" ncolors, ", " maxbeads ")"
+function necklace(colorstr, maxbeads, necklacebag,  curnecklace, i, ncolors, colors) {
+	ncolors = split(colorstr, colors, " "); 
 	for (i in necklacebag)
 		if (necklacebag[i])
 			delete necklacebag[i];
 	curnecklace["0"] = "";
-	__ncklc(curnecklace, 0, ncolors, maxbeads);
+	__ncklc(curnecklace, 0, ncolors, maxbeads, colors);
+}
+
+########################################################################
+#
+# Recursive integer necklace construction.  Fills necklacebag with
+# corresponding string representations of the necklaces.
+#
+function necklace_int(ncolors, maxbeads, necklacebag,  curnecklace, i, colors) {
+	for (i = 1; i <= ncolors; i++)
+		colors[i] = (i - 1) "";
+	for (i in necklacebag)
+		if (necklacebag[i])
+			delete necklacebag[i];
+	curnecklace["0"] = "";
+	__ncklc(curnecklace, 0, ncolors, maxbeads, colors);
 }
 
 ########################################################################
