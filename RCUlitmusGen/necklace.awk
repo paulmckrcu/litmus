@@ -3,6 +3,19 @@
 # Usage:
 #	awk -f necklace.awk ...
 #
+# This is the part where I should credit the source of the algorithm.
+# And I did do the usual web search, but found only implementations
+# in strange languages on the one hand and papers with incomprehensible
+# pseudo-code documented only by formal proofs on the other.  It was late,
+# and I was tired, so rather than hammer throught the proofs, I shut down
+# my browser in disgust and went to bed.
+#
+# I woke up the next morning with a clear understanding of a reasonably
+# efficient algorithm and of how to implement it.  I am sure that my
+# bleary-eyed scanning of the pseudo-code and proofs had a lot to do
+# with my morning enlightenment, but I have no idea what papers I looked
+# at.  So I will simply acknowledge an enduring debt to Internet.  ;-)
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
