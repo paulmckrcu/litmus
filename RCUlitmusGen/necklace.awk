@@ -14,7 +14,9 @@
 # efficient algorithm and of how to implement it.  I am sure that my
 # bleary-eyed scanning of the pseudo-code and proofs had a lot to do
 # with my morning enlightenment, but I have no idea what papers I looked
-# at.  So I will simply acknowledge an enduring debt to Internet.  ;-)
+# at, other than "Generating Necklaces" by Ruskey and Savage, filename
+# necklace_fkm.ps, which I happened to leave open in an evince instance.
+# Other than that, all I can do is to credit Internet at large.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
