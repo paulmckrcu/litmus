@@ -29,22 +29,27 @@
 #	C: Maintain a control dependency betweeen the first access
 #		(which must be a load) and the second access (which
 #		must be a store).
-#	D: Maintain a data dependency betweeen the first access (which
+#	D: Maintain an RCU data dependency betweeen the first access (which
 #		must be a load) and the second access (which must be
 #		a store).
 #	G: Separate the X accesses with an RCU grace period.
 #	I: Invert the order of the accesses so that the outgoing
 #		variable is first and the incoming variable is second.
+#	l: Maintain a lockless data dependency betweeen the first access
+#		(which must be a load) and the second access (which must
+#		be a store).
 #	R: Enclose the X accesses in an RCU read-side critical section.
 #	r: Use an release store.  May be used only if the second accesses
 #		is a store.
+#	s: Use an assign store, as in rcu_assign_poiner.  May be used
+#		only if the second accesses is a store.
 #
 #	Any combination of these may be used, though quite a few do not
 #	make sense.  It is OK to have Y empty, in which case the accesses
 #	will be emitted without any sort of ordering control.
 #
 # Summary: X: RR, RW, WR, WW
-#	   Y: a, B, C, D, G, I, R, r.
+#	   Y: a, B, C, D, G, I, R, r, s.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -64,16 +69,7 @@
 #
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
-
-########################################################################
-#
-# Data structures:
-#
-# @@@ preamble[proc][gp]: How many preambles emitted for process/gp combo.
-# postamble[proc][gp]: How many postambles emitted for process/gp combo.
-# stmts[proc][line]: Litmus test with RCU statements translated.
-# stmts[proc][line]: Input litmus-test statements.
-# nproc: Number of processes.
+@include "RCUlitmusout.awk"
 
 ########################################################################
 #
@@ -85,23 +81,23 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " bad read-write specifier: " x > "/dev/stderr";
 		exit;
 	}
-	if (y !~ /[aBCDGIRr]/) {
+	if (y !~ /[aBCDGIlRrs]/) {
 		print "Process " p - 1 " bad modifier: " y > "/dev/stderr";
 		exit;
 	}
-	if (x ~ /^W/ && y ~ /aCD/ && y !~ /I/) {
+	if (x ~ /^W/ && y ~ /alCD/ && y !~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
 		exit;
 	}
-	if (x ~ /R$/ && y ~ /rCD/ && y !~ /I/) {
+	if (x ~ /R$/ && y ~ /rsCD/ && y !~ /I/) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
 		exit;
 	}
-	if (x ~ /W$/ && y ~ /aCD/ && y ~ /I/) {
+	if (x ~ /W$/ && y ~ /alCD/ && y ~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
 		exit;
 	}
-	if (x ~ /^R/ && y ~ /rCD/ && y ~ /I/) {
+	if (x ~ /^R/ && y ~ /rsCD/ && y ~ /I/) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
 		exit;
 	}
@@ -126,9 +122,37 @@ function gen_proc_syntax(p, x, y,  i) {
 
 ########################################################################
 #
-# Parse the specified process's directive string.
+# Parse the specified process's directive string and set up that
+# process's LISA statements. Arguments are as follows:
 #
-function gen_proc(p, s,  i, line_num, x, y) {
+# p: Number of current process, based from 1.
+# n: Number of processes.
+# s: Current process's directive.
+#
+# Side-effects include the following:
+#
+# f_op[proc_num]: First operand ("r" or "w")
+# f_mod[proc_num]: First modifier ("once", "acquire", ...)
+# f_operand1[proc_num]: First first operand (register or variable)
+# f_operand2[proc_num]: First second operand (register or variable)
+# i_op[proc_num]: Incoming operand ("r" or "w")
+# i_mod[proc_num]: Incoming modifier ("once", "acquire", ...)
+# i_operand1[proc_num]: Incoming first operand (register or variable)
+# i_operand2[proc_num]: Incoming second operand (register or variable)
+# l_op[proc_num]: Last operand ("r" or "w")
+# l_mod[proc_num]: Last modifier ("once", "acquire", ...)
+# l_operand1[proc_num]: Last first operand (register or variable)
+# l_operand2[proc_num]: Last second operand (register or variable)
+# o_op[proc_num]: Outgoing operand ("r" or "w")
+# o_mod[proc_num]: Outgoing modifier ("once", "acquire", ...)
+# o_operand1[proc_num]: Outgoing first operand (register or variable)
+# o_operand2[proc_num]: Outgoing second operand (register or variable)
+# stmts[proc_num ":" line_num]: Marshalled LISA statements
+#
+# Incoming is first and outgoing is last, unless "I" is specified, in
+# which case outgoing is first and incoming is last.
+#
+function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 	# Extract read-write (x) and modifier (y) portions of directive.
 	x = s;
 	gsub(/-.*$/, "", x);
@@ -136,7 +160,6 @@ function gen_proc(p, s,  i, line_num, x, y) {
 	gsub(/^.*-/, "", y);
 	if (s !~ /-/)
 		y = "";
-	print "x = " x, "y = " y;
 
 	# Syntax check.
 	gen_proc_syntax(p, x, y);
@@ -149,19 +172,20 @@ function gen_proc(p, s,  i, line_num, x, y) {
 		i_operand2[p] = "x" p - 1;
 	} else {
 		i_op[p] = "w";
-		i_operand1[p] = "2";
-		i_operand2[p] = "x" p - 1;
+		i_operand1[p] = "x" p - 1;
+		i_operand2[p] = "2";
 	}
 
 	# Form outgoing statement base.
 	o_mod[p] = "once";
+	vn = p == n ? 0 : p;
 	if (x ~ /R$/) {
 		o_op[p] = "r";
 		o_operand1[p] = "r2";
-		o_operand2[p] = "x" p;
+		o_operand2[p] = "x" vn;
 	} else {
 		o_op[p] = "w";
-		o_operand1[p] = "x" p;
+		o_operand1[p] = "x" vn;
 		o_operand2[p] = "1";
 	}
 
@@ -186,11 +210,19 @@ function gen_proc(p, s,  i, line_num, x, y) {
 		l_operand2[p] = o_operand2[p];
 	}
 	if (y ~ /a/)
-		f_mod[p] = "acquire";
-	if (y ~ /r/)
-		l_mod[p] = "release";
-	if (y ~ /D/)
+		f_mod[p] = "acquire";	/* smp_load_acquire() */
+	if (y ~ /D/) {
+		f_mod[p] = "deref";	/* rcu_dereference() */
 		l_operand2[p] = "r1";
+	}
+	if (y ~ /l/) {
+		f_mod[p] = "lderef";	/* lockless_dereference() */
+		l_operand2[p] = "r1";
+	}
+	if (y ~ /r/)
+		l_mod[p] = "release";	/* smp_store_release() */
+	if (y ~ /s/)
+		l_mod[p] = "assign";	/* rcu_assign_pointer() */
 
 	# Output statements
 	line_num = 0;
@@ -209,7 +241,45 @@ function gen_proc(p, s,  i, line_num, x, y) {
 	if (y ~ /R/)
 		stmts[p ":" ++line_num] = "r[unlock]";
 
-	# Debug output
-	for (i = 1; i <= line_num; i++)
-		print i, stmts[p ":" i];
+	# Update incoming and outgoing data for later reference.
+	if (y ~ /I/) {
+		o_op[p] = f_op[p];
+		o_mod[p] = f_mod[p];
+		o_operand1[p] = f_operand1[p];
+		o_operand2[p] = f_operand2[p];
+		i_op[p] = l_op[p];
+		i_mod[p] = l_mod[p];
+		i_operand1[p] = l_operand1[p];
+		i_operand2[p] = l_operand2[p];
+	} else {
+		i_op[p] = f_op[p];
+		i_mod[p] = f_mod[p];
+		i_operand1[p] = f_operand1[p];
+		i_operand2[p] = f_operand2[p];
+		o_op[p] = l_op[p];
+		o_mod[p] = l_mod[p];
+		o_operand1[p] = l_operand1[p];
+		o_operand2[p] = l_operand2[p];
+	}
+}
+
+########################################################################
+#
+# Parse the specified process's directive string and set up that
+# process's LISA statements.  Side-effects include the following:
+#
+function gen_litmus(s,  i, line_num, n, name, ptemp) {
+	print "s = " s;
+	n = split(s, ptemp, " ");
+	print "n = " n;
+	for (i = 1; i <= n; i++) {
+		print "Current descriptor: " ptemp[i];
+		if (name == "")
+			name = ptemp[i];
+		else
+			name = name "+" ptemp[i];
+		gen_proc(i, n, ptemp[i]);
+	}
+	print "name: " name;
+	output_lisa(name, "", "", stmts, "");
 }

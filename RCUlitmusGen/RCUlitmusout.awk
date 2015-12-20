@@ -80,7 +80,8 @@ function output_lisa(litname, comments, varinit, stmts, exists,  aux_max_line, c
 
 	# Output initialization.
 	print "{" > fn;
-	print varinit > fn;
+	if (varinit != "")
+		print varinit > fn;
 	print "}" > fn;
 
 	# Find maximum number of statements and maximum statement length
@@ -117,4 +118,5 @@ function output_lisa(litname, comments, varinit, stmts, exists,  aux_max_line, c
 
 	# exists clause.
 	printf "exists\n(%s)\n", exists > fn;
+	close(fn);
 }
