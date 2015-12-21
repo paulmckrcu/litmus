@@ -73,6 +73,31 @@
 
 ########################################################################
 #
+# Global variables:
+#
+# f_op[proc_num]: First operand ("r" or "w")
+# f_mod[proc_num]: First modifier ("once", "acquire", ...)
+# f_operand1[proc_num]: First first operand (register or variable)
+# f_operand2[proc_num]: First second operand (register or variable)
+# i_op[proc_num]: Incoming operand ("r" or "w")
+# i_mod[proc_num]: Incoming modifier ("once", "acquire", ...)
+# i_operand1[proc_num]: Incoming first operand (register or variable)
+# i_operand2[proc_num]: Incoming second operand (register or variable)
+# l_op[proc_num]: Last operand ("r" or "w")
+# l_mod[proc_num]: Last modifier ("once", "acquire", ...)
+# l_operand1[proc_num]: Last first operand (register or variable)
+# l_operand2[proc_num]: Last second operand (register or variable)
+# o_op[proc_num]: Outgoing operand ("r" or "w")
+# o_mod[proc_num]: Outgoing modifier ("once", "acquire", ...)
+# o_operand1[proc_num]: Outgoing first operand (register or variable)
+# o_operand2[proc_num]: Outgoing second operand (register or variable)
+# stmts[proc_num ":" line_num]: Marshalled LISA statements
+#
+# Incoming is first and outgoing is last, unless "I" is specified, in
+# which case outgoing is first and incoming is last.
+
+########################################################################
+#
 # Check the syntax of the specified process's directive string.
 # Complain and exit if there is a problem.
 #
@@ -125,28 +150,7 @@ function gen_proc_syntax(p, x, y,  i) {
 # n: Number of processes.
 # s: Current process's directive.
 #
-# Side-effects include the following:
-#
-# f_op[proc_num]: First operand ("r" or "w")
-# f_mod[proc_num]: First modifier ("once", "acquire", ...)
-# f_operand1[proc_num]: First first operand (register or variable)
-# f_operand2[proc_num]: First second operand (register or variable)
-# i_op[proc_num]: Incoming operand ("r" or "w")
-# i_mod[proc_num]: Incoming modifier ("once", "acquire", ...)
-# i_operand1[proc_num]: Incoming first operand (register or variable)
-# i_operand2[proc_num]: Incoming second operand (register or variable)
-# l_op[proc_num]: Last operand ("r" or "w")
-# l_mod[proc_num]: Last modifier ("once", "acquire", ...)
-# l_operand1[proc_num]: Last first operand (register or variable)
-# l_operand2[proc_num]: Last second operand (register or variable)
-# o_op[proc_num]: Outgoing operand ("r" or "w")
-# o_mod[proc_num]: Outgoing modifier ("once", "acquire", ...)
-# o_operand1[proc_num]: Outgoing first operand (register or variable)
-# o_operand2[proc_num]: Outgoing second operand (register or variable)
-# stmts[proc_num ":" line_num]: Marshalled LISA statements
-#
-# Incoming is first and outgoing is last, unless "I" is specified, in
-# which case outgoing is first and incoming is last.
+# This function operates primarily by side effects on global variables.
 #
 function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 	# Extract read-write (x) and modifier (y) portions of directive.
