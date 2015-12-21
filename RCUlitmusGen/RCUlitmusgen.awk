@@ -101,10 +101,6 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
 		exit;
 	}
-	if (y ~ /R/ && y ~ /G/) {
-		print "Process " p - 1 " RCU deadlock! " y > "/dev/stderr";
-		exit;
-	}
 	i = 0;
 	if (y ~ /B/)
 		i++;
