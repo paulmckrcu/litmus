@@ -378,6 +378,7 @@ function gen_comment_deadlock(ptemp, n, proc_num, deadlock, plural) {
 		}
 		comment = "Result: DEADLOCK\n";
 		comment = comment "\nRCU self-deadlock on process" plural " " deadlock ".";
+		print " result: DEADLOCK";
 		return 1;
 	}
 	return 0;
@@ -481,12 +482,13 @@ function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
 			i_t[proc_num] -= t_min;
 		if (o_t[proc_num] != 0)
 			o_t[proc_num] -= t_min;
-		print proc_num ": " ptemp[proc_num] " i: " i_t[proc_num] " o: " o_t[proc_num];
+		# print proc_num ": " ptemp[proc_num] " i: " i_t[proc_num] " o: " o_t[proc_num];
 	}
 
 	# Generate the comment.
 	result = i_t[1] >= o_t[n] ? "Sometimes" : "Never";
 	comment = "Result: " result "\n";
+	print " result: " result;
 }
 
 ########################################################################
@@ -548,7 +550,7 @@ function gen_litmus(s,  i, line_num, n, name, ptemp) {
 	# Generate auxiliary process and exists clause, then dump it out.
 	gen_aux_proc(n);
 	gen_exists(n);
+	printf "%s ", "name: " name ".litmus";
 	gen_comment(ptemp, n);
 	output_lisa(name, comment, "", stmts, exists);
-	print "name: " name ".litmus";
 }
