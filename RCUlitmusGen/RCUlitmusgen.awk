@@ -227,7 +227,7 @@ function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 	# Output statements
 	line_num = 0;
 	if (y ~ /R/)
-		stmts[p ":" ++line_num] = "r[lock]";
+		stmts[p ":" ++line_num] = "f[lock]";
 	stmts[p ":" ++line_num] = f_op[p] "[" f_mod[p] "] " f_operand1[p] " " f_operand2[p];
 	if (y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
@@ -239,7 +239,7 @@ function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 		stmts[p ":" ++line_num] = "call[sync]";
 	stmts[p ":" ++line_num] = l_op[p] "[" l_mod[p] "] " l_operand1[p] " " l_operand2[p];
 	if (y ~ /R/)
-		stmts[p ":" ++line_num] = "r[unlock]";
+		stmts[p ":" ++line_num] = "f[unlock]";
 
 	# Update incoming and outgoing data for later reference.
 	if (y ~ /I/) {
@@ -299,11 +299,12 @@ function gen_add_exists(e) {
 
 ########################################################################
 #
-# Add a term to the exists clause.  Terms are separated by AND.
+# Generate the exists clause.
 #
-# e: Exists clause to add.
+# n: Number of processes.
 #
 function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
+	exists = "";
 	old_proc_num = n;
 	line_num = 0;
 	for (proc_num = 1; proc_num <= n; proc_num++) {
@@ -330,6 +331,27 @@ function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
 # is formed by separating the directives with "+".
 #
 function gen_litmus(s,  i, line_num, n, name, ptemp) {
+
+	# Delete arrays to avoid possible old cruft.
+	delete f_op;
+	delete f_mod;
+	delete f_operand1;
+	delete f_operand2;
+	delete i_op;
+	delete i_mod;
+	delete i_operand1;
+	delete i_operand2;
+	delete l_op;
+	delete l_mod;
+	delete l_operand1;
+	delete l_operand2;
+	delete o_op;
+	delete o_mod;
+	delete o_operand1;
+	delete o_operand2;
+	delete stmts;
+
+	# Generate each process's code.
 	n = split(s, ptemp, " ");
 	for (i = 1; i <= n; i++) {
 		if (name == "")
@@ -338,7 +360,8 @@ function gen_litmus(s,  i, line_num, n, name, ptemp) {
 			name = name "+" ptemp[i];
 		gen_proc(i, n, ptemp[i]);
 	}
-	exists = "";
+
+	# Generate auxiliary process and exists clause, then dump it out.
 	gen_aux_proc(n);
 	gen_exists(n);
 	output_lisa(name, "", "", stmts, exists);
