@@ -3,9 +3,9 @@
 # Usage:
 #	generate_lisa(desc);
 #
-# The "desc" argument is a string describing the litmus test.  This
-# string is a space-separated list of per-process descriptions, which
-# are of the form X-Y-Z, where X, Y, and Z are as follows:
+# The "desc" argument is a string describing the litmus test.  This string
+# is a space-separated (or "+"-separated) list of per-process descriptions,
+# which are of the form X-Y-Z, where X, Y, and Z are as follows:
 #
 # X:	RR: A read of the incoming variable followed by a read of
 #		the outgoing variable.
@@ -352,7 +352,10 @@ function gen_litmus(s,  i, line_num, n, name, ptemp) {
 	delete stmts;
 
 	# Generate each process's code.
-	n = split(s, ptemp, " ");
+	if (s ~ /+/)
+		n = split(s, ptemp, "+");
+	else
+		n = split(s, ptemp, " ");
 	for (i = 1; i <= n; i++) {
 		if (name == "")
 			name = ptemp[i];
