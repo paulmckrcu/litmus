@@ -81,7 +81,7 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " bad read-write specifier: " x > "/dev/stderr";
 		exit;
 	}
-	if (y !~ /[aBCDGIlRrs]/) {
+	if (y ~ /[^aBCDGIlRrs]/) {
 		print "Process " p - 1 " bad modifier: " y > "/dev/stderr";
 		exit;
 	}
