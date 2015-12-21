@@ -108,27 +108,27 @@
 function gen_proc_syntax(p, x, y,  i) {
 	if (x !~ /[RW][RW]/) {
 		print "Process " p - 1 " bad read-write specifier: " x > "/dev/stderr";
-		exit;
+		exit 1;
 	}
 	if (y ~ /[^aBCDGIlRrs]/) {
 		print "Process " p - 1 " bad modifier: " y > "/dev/stderr";
-		exit;
+		exit 1;
 	}
 	if (x ~ /^W/ && y ~ /alCD/ && y !~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
-		exit;
+		exit 1;
 	}
 	if (x ~ /R$/ && y ~ /rsCD/ && y !~ /I/) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
-		exit;
+		exit 1;
 	}
 	if (x ~ /W$/ && y ~ /alCD/ && y ~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
-		exit;
+		exit 1;
 	}
 	if (x ~ /^R/ && y ~ /rsCD/ && y ~ /I/) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
-		exit;
+		exit 1;
 	}
 	i = 0;
 	if (y ~ /B/)
@@ -141,7 +141,7 @@ function gen_proc_syntax(p, x, y,  i) {
 		i++;
 	if (i > 1) {
 		print "Process " p - 1 " too many ordering directives! " y > "/dev/stderr";
-		exit;
+		exit 1;
 	}
 }
 
@@ -349,6 +349,19 @@ function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
 
 ########################################################################
 #
+# Add a line to the comment.
+#
+# s: String to add, may contain newline character.
+#
+function gen_add_comment(s) {
+	if (comment == "")
+		comment = s;
+	else
+		comment = comment "\n" s;
+}
+
+########################################################################
+#
 # If the litmus test is subject to RCU self-deadlock, make a comment
 # that says so.
 #
@@ -376,8 +389,8 @@ function gen_comment_deadlock(ptemp, n, proc_num, deadlock, plural) {
 			deadlock = gensub(/,/, " and", 1, deadlock);
 			plural = "";
 		}
-		comment = "Result: DEADLOCK\n";
-		comment = comment "\nRCU self-deadlock on process" plural " " deadlock ".";
+		gen_add_comment("Result: DEADLOCK");
+		gen_add_comment("\nRCU self-deadlock on process" plural " " deadlock ".");
 		print " result: DEADLOCK";
 		return 1;
 	}
@@ -421,12 +434,12 @@ function prev_gp(t) {
 
 ########################################################################
 #
-# Analyze timing and generate comment, which is returned.
+# Analyze timing.
 #
 # ptemp: Array of per-process directives.
 # n: Number of processes.
 #
-function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
+function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 
 	# Find first RCU operation to determine starting point.
 	t = 1000500;
@@ -484,11 +497,78 @@ function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
 			o_t[proc_num] -= t_min;
 		# print proc_num ": " ptemp[proc_num] " i: " i_t[proc_num] " o: " o_t[proc_num];
 	}
+}
 
-	# Generate the comment.
+########################################################################
+#
+# Convert timing into grace-period-relative string.
+#
+# t: Timestamp
+#
+function timing_to_gp_str(t,  gp_num) {
+	gp_num = int(t / 2000);
+	if (t % 2000 == 0)
+		return "the beginning of grace period " gp_num " (t=" t ")";
+	if (int(t / 1000) % 2)
+		return "the end of grace period " gp_num " (t=" t ")";
+	else
+		return "the middle of grace period " gp_num " (t=" t ")";
+}
+
+########################################################################
+#
+# Produce timing-related comment.
+#
+# ptemp: Array of per-process directives.
+# n: Number of processes.
+#
+function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
+	gen_timing(ptemp, n);
+
+	# Generate the result-summary comment.
 	result = i_t[1] >= o_t[n] ? "Sometimes" : "Never";
-	comment = "Result: " result "\n";
+	comment = "Result: " result;
 	print " result: " result;
+
+	# Analyze timestamps and produce comments.
+	gen_add_comment("\nProcess 0 starts at " timing_to_gp_str(i_t[1]) ".");
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		y = extract_mod(ptemp[proc_num]);
+		if (y !~ /I/ && y ~ /G/) {
+			# RCU grace period constrains.
+			gen_add_comment("\nP" proc_num - 1 " advances to " timing_to_gp_str(o_t[proc_num]) ".");
+		} else if ((y ~ /I/ && y !~ /R/) || y == "") {
+			# No ordering whatsoever, back to beginning of time.
+			gen_add_comment("\nP" proc_num - 1 " is unordered, therefore cycle is allowed.");
+			gen_add_comment("Skipping remainder of analysis.");
+			break;
+		} else if ((y ~ /I/ && y ~ /R/) || y == "R") {
+			# RCU read-side critical section constrains.
+			gen_add_comment("\nP" proc_num - 1 " goes back to " timing_to_gp_str(o_t[proc_num]) ".");
+		} else {
+			# Normal CPU-based ordering constrains.
+			gen_add_comment("\nP" proc_num - 1 " advances slightly to " timing_to_gp_str(o_t[proc_num]) ".");
+		}
+
+		# If already at the beginning of time, stay there.
+		if (t == 0)
+			o_t[proc_num] = 0;
+
+		# Compute non-beginning-of-time minimum.
+		if (o_t[proc_num] < t_min && o_t[proc_num] != 0)
+			t_min = o_t[proc_num];
+
+		# Advance one step for memory-reference propagation.
+		# Yes, this is a gross approximation, but works for
+		# current subset of operations.
+		t = next_step(o_t[proc_num]);
+	}
+
+	# Summarize cycle status, if not already summarized.
+	if (o_t[n] == 0)
+		return;
+	result = i_t[1] >= o_t[n] ? "allowed" : "forbidden";
+	gen_add_comment("\nProcess 0 start at t=" i_t[1] ", process 1 end at t=" o_t[n] ": Cycle " result ".");
 }
 
 ########################################################################
@@ -502,8 +582,7 @@ function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
 function gen_comment(ptemp, n,  proc_num, deadlock, plural) {
 	if (gen_comment_deadlock(ptemp, n))
 		return;
-	gen_timing(ptemp, n);
-
+	gen_comment_timing(ptemp, n);
 }
 
 ########################################################################
@@ -511,9 +590,12 @@ function gen_comment(ptemp, n,  proc_num, deadlock, plural) {
 # Parse the specified process's directive string and set up that
 # process's LISA statements.  The directive string is the single
 # argument, and the litmus test is output to the file whose name
-# is formed by separating the directives with "+".
+# is formed by separating the directives with "+".  Arguments:
 #
-function gen_litmus(s,  i, line_num, n, name, ptemp) {
+# prefix: Filename prefix for litmus-file output.
+# s: Directive string.
+#
+function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 
 	# Delete arrays to avoid possible old cruft.
 	delete f_op;
@@ -539,9 +621,13 @@ function gen_litmus(s,  i, line_num, n, name, ptemp) {
 		n = split(s, ptemp, "+");
 	else
 		n = split(s, ptemp, " ");
+	if (n < 1) {
+		print "Error: No directives!";
+		exit 1;
+	}
 	for (i = 1; i <= n; i++) {
 		if (name == "")
-			name = ptemp[i];
+			name = prefix ptemp[i];
 		else
 			name = name "+" ptemp[i];
 		gen_proc(i, n, ptemp[i]);
