@@ -75,6 +75,8 @@
 #
 # Global variables:
 #
+# comment: String containing the comment field, which may be multi-line.
+# exists: String containing the "exists" clause, which may be multi-line.
 # f_op[proc_num]: First operand ("r" or "w")
 # f_mod[proc_num]: First modifier ("once", "acquire", ...)
 # f_operand1[proc_num]: First first operand (register or variable)
@@ -325,6 +327,54 @@ function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
 
 ########################################################################
 #
+# If the litmus test is subject to RCU self-deadlock, make a comment
+# that says so.
+#
+# ptemp: Array of per-process directives.
+# n: Number of processes.
+#
+function gen_comment_deadlock(ptemp, n, proc_num, deadlock, plural) {
+	comment = "";
+
+	# Check for RCU self-deadlock.
+	deadlock = "";
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		if (ptemp[proc_num] ~ /G/ && ptemp[proc_num] ~ /R/) {
+			if (deadlock == "")
+				deadlock = proc_num - 1 "";
+			else
+				deadlock = deadlock ", " proc_num - 1;
+		}
+	}
+	if (deadlock != "") {
+		if (deadlock ~ / [0-9][0-9]*, /) {
+			deadlock = gensub(/, ([0-9][0-9]*)$/, ", and \\1", 1, deadlock);
+			plural = "es";
+		} else {
+			deadlock = gensub(/,/, " and", 1, deadlock);
+			plural = "";
+		}
+		comment = "Result: DEADLOCK\n";
+		comment = comment "\nRCU self-deadlock on process" plural " " deadlock ".";
+		return 1;
+	}
+	return 0;
+}
+
+########################################################################
+#
+# Generate the comment, which predicts the test result with a rationale
+# for that prediction.
+#
+# n: Number of processes.
+#
+function gen_comment(ptemp, n,  proc_num, deadlock, plural) {
+	if (gen_comment_deadlock(ptemp, n))
+		return;
+}
+
+########################################################################
+#
 # Parse the specified process's directive string and set up that
 # process's LISA statements.  The directive string is the single
 # argument, and the litmus test is output to the file whose name
@@ -367,6 +417,7 @@ function gen_litmus(s,  i, line_num, n, name, ptemp) {
 	# Generate auxiliary process and exists clause, then dump it out.
 	gen_aux_proc(n);
 	gen_exists(n);
-	output_lisa(name, "", "", stmts, exists);
+	gen_comment(ptemp, n);
+	output_lisa(name, comment, "", stmts, exists);
 	print "name: " name ".litmus";
 }
