@@ -406,7 +406,7 @@ function next_step(t) {
 # to 2000, and so on.
 #
 function next_gp(t) {
-	return 1000 + int((t + 3000) / 2000) * 2000;
+	return 1000 + int((t + 2000) / 2000) * 2000;
 }
 
 ########################################################################
@@ -427,8 +427,19 @@ function prev_gp(t) {
 #
 function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
 
-	# Start in the middle of a far-off grace period.
+	# Find first RCU operation to determine starting point.
 	t = 1000500;
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		y = extract_mod(ptemp[proc_num]);
+		if (y ~ /G/) {
+			t = 1001500;
+			break;
+		}
+		if (y ~ /R/)
+			break;
+	}
+
+	# Propagate timestamps
 	t_min = t;
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		i_t[proc_num] = t;
@@ -442,7 +453,6 @@ function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
 		} else if ((y ~ /I/ && y ~ /R/) || y == "R") {
 			# RCU read-side critical section constrains.
 			o_t[proc_num] = prev_gp(t);
-			print "RCU read-side critical section"
 		} else {
 			# Normal CPU-based ordering constrains.
 			o_t[proc_num] = next_step(t);
@@ -465,9 +475,7 @@ function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
 	# Normalize non-beginning-of-time values, but subtract an even
 	# number of even grace periods, but stay out of the low-order
 	# beginning-of-time area from 0 to 2000.
-	print "t_min was: " t_min
 	t_min = int((t_min - 1999) / 2000) * 2000;
-	print "t_min after normalization: " t_min
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		if (i_t[proc_num] != 0)
 			i_t[proc_num] -= t_min;
