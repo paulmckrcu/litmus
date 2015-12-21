@@ -265,21 +265,82 @@ function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 
 ########################################################################
 #
+# Generate the auxiliary process for the current litmus test, if one
+# is required.  One is required if both the outgoing and the incoming
+# operations for a given variable are reads, in which case an auxiliary
+# write is required to determine ordering.  This function also adds the
+# corresponding "exists" clauses.  Arguments:
+#
+# n: Number of processes (not counting possible auxiliary process).
+#
+function gen_aux_proc(n,  line_num, old_proc_num, proc_num) {
+	old_proc_num = n;
+	line_num = 0;
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		if (o_op[old_proc_num] == "r" && i_op[proc_num] == "r") {
+			stmts[n + 1 ":" ++line_num] = "w[once] " i_operand2[proc_num] " 1"
+		}
+		old_proc_num = proc_num;
+	}
+}
+
+########################################################################
+#
+# Add a term to the exists clause.  Terms are separated by AND.
+#
+# e: Exists clause to add.
+#
+function gen_add_exists(e) {
+	if (exists == "")
+		exists = e;
+	else
+		exists = exists " /\\ " e;
+}
+
+########################################################################
+#
+# Add a term to the exists clause.  Terms are separated by AND.
+#
+# e: Exists clause to add.
+#
+function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
+	old_proc_num = n;
+	line_num = 0;
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		old_op = o_op[old_proc_num];
+		op = i_op[proc_num];
+		if (old_op == "r" && op == "r") {
+			gen_add_exists(old_proc_num - 1 ":" o_operand1[old_proc_num] "=0 /\\ " proc_num - 1 ":" i_operand1[proc_num] "=1");
+		} else if (old_op == "r" && op == "w") {
+			gen_add_exists(old_proc_num - 1 ":" o_operand1[old_proc_num] "=0");
+		} else if (old_op == "w" && op == "r") {
+			gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=1");
+		} else if (old_op == "w" && op == "w") {
+			gen_add_exists(i_operand1[proc_num] "=2");
+		}
+		old_proc_num = proc_num;
+	}
+}
+
+########################################################################
+#
 # Parse the specified process's directive string and set up that
-# process's LISA statements.  Side-effects include the following:
+# process's LISA statements.  The directive string is the single
+# argument, and the litmus test is output to the file whose name
+# is formed by separating the directives with "+".
 #
 function gen_litmus(s,  i, line_num, n, name, ptemp) {
-	print "s = " s;
 	n = split(s, ptemp, " ");
-	print "n = " n;
 	for (i = 1; i <= n; i++) {
-		print "Current descriptor: " ptemp[i];
 		if (name == "")
 			name = ptemp[i];
 		else
 			name = name "+" ptemp[i];
 		gen_proc(i, n, ptemp[i]);
 	}
-	print "name: " name;
-	output_lisa(name, "", "", stmts, "");
+	exists = "";
+	gen_aux_proc(n);
+	gen_exists(n);
+	output_lisa(name, "", "", stmts, exists);
+	print "name: " name ".litmus";
 }
