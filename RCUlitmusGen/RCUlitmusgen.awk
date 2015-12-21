@@ -85,6 +85,7 @@
 # i_mod[proc_num]: Incoming modifier ("once", "acquire", ...)
 # i_operand1[proc_num]: Incoming first operand (register or variable)
 # i_operand2[proc_num]: Incoming second operand (register or variable)
+# i_t[proc_num]: Incoming operand timestamp.
 # l_op[proc_num]: Last operand ("r" or "w")
 # l_mod[proc_num]: Last modifier ("once", "acquire", ...)
 # l_operand1[proc_num]: Last first operand (register or variable)
@@ -93,6 +94,7 @@
 # o_mod[proc_num]: Outgoing modifier ("once", "acquire", ...)
 # o_operand1[proc_num]: Outgoing first operand (register or variable)
 # o_operand2[proc_num]: Outgoing second operand (register or variable)
+# o_t[proc_num]: Outgoing operand timestamp.
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
 #
 # Incoming is first and outgoing is last, unless "I" is specified, in
@@ -145,6 +147,30 @@ function gen_proc_syntax(p, x, y,  i) {
 
 ########################################################################
 #
+# Extract the read-write portion of the specified directive string.
+#
+function extract_rw(s,  x) {
+	# Extract read-write (x) and modifier (y) portions of directive.
+	x = s;
+	gsub(/-.*$/, "", x);
+	return x;
+}
+
+########################################################################
+#
+# Extract the modifier portion of the specified directive string.
+#
+function extract_mod(s,  y) {
+	# Extract read-write (x) and modifier (y) portions of directive.
+	y = s;
+	gsub(/^.*-/, "", y);
+	if (s !~ /-/)
+		y = "";
+	return y;
+}
+
+########################################################################
+#
 # Parse the specified process's directive string and set up that
 # process's LISA statements. Arguments are as follows:
 #
@@ -156,12 +182,8 @@ function gen_proc_syntax(p, x, y,  i) {
 #
 function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 	# Extract read-write (x) and modifier (y) portions of directive.
-	x = s;
-	gsub(/-.*$/, "", x);
-	y = s;
-	gsub(/^.*-/, "", y);
-	if (s !~ /-/)
-		y = "";
+	x = extract_rw(s);
+	y = extract_mod(s);
 
 	# Syntax check.
 	gen_proc_syntax(p, x, y);
@@ -339,7 +361,7 @@ function gen_comment_deadlock(ptemp, n, proc_num, deadlock, plural) {
 	# Check for RCU self-deadlock.
 	deadlock = "";
 	for (proc_num = 1; proc_num <= n; proc_num++) {
-		if (ptemp[proc_num] ~ /G/ && ptemp[proc_num] ~ /R/) {
+		if (ptemp[proc_num] ~ /-.*G/ && ptemp[proc_num] ~ /-.*R/) {
 			if (deadlock == "")
 				deadlock = proc_num - 1 "";
 			else
@@ -363,14 +385,115 @@ function gen_comment_deadlock(ptemp, n, proc_num, deadlock, plural) {
 
 ########################################################################
 #
+# Given a timestamp, advance to the next slot.  This is appropriate
+# when the process uses non-RCU ordering.
+#
+# The timestamp zero is special, and corresponds to the beginning of
+# time.  This is useful when there is no ordering constraint, so that
+# the outgoing variable might take on its value arbitrarily early.
+#
+function next_step(t) {
+	return t + 1;
+}
+
+########################################################################
+#
+# Given a timestamp, go forward to the end of the next grace period.
+#
+# A grace period ranges from an even thousand to one less than an odd
+# thousand.  Therefore, 2000..2999 is a grace period, so 2000..3999 maps
+# to zero.  4000-4999 is another grace period, so 4000..5999 maps
+# to 2000, and so on.
+#
+function next_gp(t) {
+	return 1000 + int((t + 3000) / 2000) * 2000;
+}
+
+########################################################################
+#
+# Given a timestamp, go back to the beginning of the previous grace
+# period.
+#
+function prev_gp(t) {
+	return int((t - 1000) / 2000) * 2000;
+}
+
+########################################################################
+#
+# Analyze timing and generate comment, which is returned.
+#
+# ptemp: Array of per-process directives.
+# n: Number of processes.
+#
+function gen_timing(ptemp, n,  proc_num, result, t, t_min, y) {
+
+	# Start in the middle of a far-off grace period.
+	t = 1000500;
+	t_min = t;
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		i_t[proc_num] = t;
+		y = extract_mod(ptemp[proc_num]);
+		if (y !~ /I/ && y ~ /G/) {
+			# RCU grace period constrains.
+			o_t[proc_num] = next_gp(t);
+		} else if ((y ~ /I/ && y !~ /R/) || y == "") {
+			# No ordering whatsoever, back to beginning of time.
+			o_t[proc_num] = 0;
+		} else if ((y ~ /I/ && y ~ /R/) || y == "R") {
+			# RCU read-side critical section constrains.
+			o_t[proc_num] = prev_gp(t);
+			print "RCU read-side critical section"
+		} else {
+			# Normal CPU-based ordering constrains.
+			o_t[proc_num] = next_step(t);
+		}
+
+		# If already at the beginning of time, stay there.
+		if (t == 0)
+			o_t[proc_num] = 0;
+
+		# Compute non-beginning-of-time minimum.
+		if (o_t[proc_num] < t_min && o_t[proc_num] != 0)
+			t_min = o_t[proc_num];
+
+		# Advance one step for memory-reference propagation.
+		# Yes, this is a gross approximation, but works for
+		# current subset of operations.
+		t = next_step(o_t[proc_num]);
+	}
+
+	# Normalize non-beginning-of-time values, but subtract an even
+	# number of even grace periods, but stay out of the low-order
+	# beginning-of-time area from 0 to 2000.
+	print "t_min was: " t_min
+	t_min = int((t_min - 1999) / 2000) * 2000;
+	print "t_min after normalization: " t_min
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		if (i_t[proc_num] != 0)
+			i_t[proc_num] -= t_min;
+		if (o_t[proc_num] != 0)
+			o_t[proc_num] -= t_min;
+		print proc_num ": " ptemp[proc_num] " i: " i_t[proc_num] " o: " o_t[proc_num];
+	}
+
+	# Generate the comment.
+	result = i_t[1] >= o_t[n] ? "Sometimes" : "Never";
+	comment = "Result: " result "\n";
+}
+
+########################################################################
+#
 # Generate the comment, which predicts the test result with a rationale
 # for that prediction.
 #
+# ptemp: Array of per-process directives.
 # n: Number of processes.
 #
 function gen_comment(ptemp, n,  proc_num, deadlock, plural) {
 	if (gen_comment_deadlock(ptemp, n))
 		return;
+	gen_timing(ptemp, n);
+
 }
 
 ########################################################################
