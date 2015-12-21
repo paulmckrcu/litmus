@@ -606,6 +606,7 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	delete i_mod;
 	delete i_operand1;
 	delete i_operand2;
+	delete i_t;
 	delete l_op;
 	delete l_mod;
 	delete l_operand1;
@@ -614,6 +615,7 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	delete o_mod;
 	delete o_operand1;
 	delete o_operand2;
+	delete o_t;
 	delete stmts;
 
 	# Generate each process's code.
