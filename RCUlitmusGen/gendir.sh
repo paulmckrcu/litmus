@@ -29,6 +29,6 @@ nproc=${2-4}
 
 echo "$dlist" | gawk -v nproc=$nproc -f necklace.awk -e '
 {
-	necklace($0, nproc, necklacebag);
-	necklace_print(necklacebag);
+	necklace($0, nproc);
+	necklace_print();
 }' | sort

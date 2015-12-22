@@ -102,7 +102,7 @@ function __ncklc(curnecklace, nbeads, ncolors, maxbeads, colors,  newnecklace, i
 # string representations of the necklaces.  The colors string is a
 # blank-separated list of the names of the desired colors.
 #
-function necklace(colorstr, maxbeads, necklacebag,  curnecklace, i, ncolors, colors) {
+function necklace(colorstr, maxbeads,  curnecklace, i, ncolors, colors) {
 	ncolors = split(colorstr, colors, " "); 
 	for (i in necklacebag)
 		if (necklacebag[i])
@@ -116,7 +116,7 @@ function necklace(colorstr, maxbeads, necklacebag,  curnecklace, i, ncolors, col
 # Recursive integer necklace construction.  Fills necklacebag with
 # corresponding string representations of the necklaces.
 #
-function necklace_int(ncolors, maxbeads, necklacebag,  curnecklace, i, colors) {
+function necklace_int(ncolors, maxbeads,  curnecklace, i, colors) {
 	for (i = 1; i <= ncolors; i++)
 		colors[i] = (i - 1) "";
 	for (i in necklacebag)
@@ -130,7 +130,7 @@ function necklace_int(ncolors, maxbeads, necklacebag,  curnecklace, i, colors) {
 #
 # Necklace print.
 #
-function necklace_print(necklacebag,  i) {
+function necklace_print(  i) {
 	for (i in necklacebag)
 		if (necklacebag[i])
 			print i;
