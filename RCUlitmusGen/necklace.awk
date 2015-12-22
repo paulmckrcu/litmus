@@ -104,9 +104,7 @@ function __ncklc(curnecklace, nbeads, ncolors, maxbeads, colors,  newnecklace, i
 #
 function necklace(colorstr, maxbeads,  curnecklace, i, ncolors, colors) {
 	ncolors = split(colorstr, colors, " "); 
-	for (i in necklacebag)
-		if (necklacebag[i])
-			delete necklacebag[i];
+	delete necklacebag;
 	curnecklace["0"] = "";
 	__ncklc(curnecklace, 0, ncolors, maxbeads, colors);
 }
@@ -119,9 +117,7 @@ function necklace(colorstr, maxbeads,  curnecklace, i, ncolors, colors) {
 function necklace_int(ncolors, maxbeads,  curnecklace, i, colors) {
 	for (i = 1; i <= ncolors; i++)
 		colors[i] = (i - 1) "";
-	for (i in necklacebag)
-		if (necklacebag[i])
-			delete necklacebag[i];
+	ncolors = split(colorstr, colors, " "); 
 	curnecklace["0"] = "";
 	__ncklc(curnecklace, 0, ncolors, maxbeads, colors);
 }
