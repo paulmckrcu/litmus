@@ -414,13 +414,15 @@ function next_step(t) {
 #
 # Given a timestamp, go forward to the end of the next grace period.
 #
-# A grace period ranges from an even thousand to one less than an odd
-# thousand.  Therefore, 2000..2999 is a grace period, so 2000..3999 maps
-# to zero.  4000-4999 is another grace period, so 4000..5999 maps
-# to 2000, and so on.
+# We cheat horribly here.  Because an RCU read-side critical section
+# cannot span an RCU grace period, we define an RCU grace period to be
+# slightly longer than an RCU read-side critical section.  This will result
+# in errors if there are too many processes, like more than about 100 or so.
+# This can be fixed by increasing the constants used to define grace-period
+# and critical-section duration.
 #
 function next_gp(t) {
-	return 1000 + int((t + 2000) / 2000) * 2000;
+	return t + 100000;
 }
 
 ########################################################################
@@ -429,7 +431,7 @@ function next_gp(t) {
 # period.
 #
 function prev_gp(t) {
-	return int((t - 1000) / 2000) * 2000;
+	return t - 99000;
 }
 
 ########################################################################
@@ -441,19 +443,8 @@ function prev_gp(t) {
 #
 function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 
-	# Find first RCU operation to determine starting point.
-	t = 1000500;
-	for (proc_num = 1; proc_num <= n; proc_num++) {
-		y = extract_mod(ptemp[proc_num]);
-		if (y ~ /G/) {
-			t = 1001500;
-			break;
-		}
-		if (y ~ /R/)
-			break;
-	}
-
-	# Propagate timestamps
+	# Pick large number as starting point and propagate timestamps.
+	t = 10000000;
 	t_min = t;
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		i_t[proc_num] = t;
@@ -489,7 +480,7 @@ function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 	# Normalize non-beginning-of-time values, but subtract an even
 	# number of even grace periods, but stay out of the low-order
 	# beginning-of-time area from 0 to 2000.
-	t_min = int((t_min - 1999) / 2000) * 2000;
+	t_min = t_min - 100000;
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		if (i_t[proc_num] != 0)
 			i_t[proc_num] -= t_min;
@@ -506,13 +497,7 @@ function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 # t: Timestamp
 #
 function timing_to_gp_str(t,  gp_num) {
-	gp_num = int(t / 2000);
-	if (t % 2000 == 0)
-		return "the beginning of grace period " gp_num " (t=" t ")";
-	if (int(t / 1000) % 2)
-		return "the end of grace period " gp_num " (t=" t ")";
-	else
-		return "the middle of grace period " gp_num " (t=" t ")";
+	return "(t=" t ")";
 }
 
 ########################################################################
@@ -531,12 +516,12 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 	print " result: " result;
 
 	# Analyze timestamps and produce comments.
-	gen_add_comment("\nProcess 0 starts at " timing_to_gp_str(i_t[1]) ".");
+	gen_add_comment("\nProcess 0 starts " timing_to_gp_str(i_t[1]) ".");
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		y = extract_mod(ptemp[proc_num]);
 		if (y !~ /I/ && y ~ /G/) {
 			# RCU grace period constrains.
-			gen_add_comment("\nP" proc_num - 1 " advances to " timing_to_gp_str(o_t[proc_num]) ".");
+			gen_add_comment("\nP" proc_num - 1 " advances one grace period " timing_to_gp_str(o_t[proc_num]) ".");
 		} else if ((y ~ /I/ && y !~ /R/) || y == "") {
 			# No ordering whatsoever, back to beginning of time.
 			gen_add_comment("\nP" proc_num - 1 " is unordered, therefore cycle is allowed.");
@@ -544,10 +529,10 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 			break;
 		} else if ((y ~ /I/ && y ~ /R/) || y == "R") {
 			# RCU read-side critical section constrains.
-			gen_add_comment("\nP" proc_num - 1 " goes back to " timing_to_gp_str(o_t[proc_num]) ".");
+			gen_add_comment("\nP" proc_num - 1 " goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
 		} else {
 			# Normal CPU-based ordering constrains.
-			gen_add_comment("\nP" proc_num - 1 " advances slightly to " timing_to_gp_str(o_t[proc_num]) ".");
+			gen_add_comment("\nP" proc_num - 1 " advances slightly " timing_to_gp_str(o_t[proc_num]) ".");
 		}
 
 		# If already at the beginning of time, stay there.
@@ -568,7 +553,7 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 	if (o_t[n] == 0)
 		return;
 	result = i_t[1] >= o_t[n] ? "allowed" : "forbidden";
-	gen_add_comment("\nProcess 0 start at t=" i_t[1] ", process 1 end at t=" o_t[n] ": Cycle " result ".");
+	gen_add_comment("\nProcess 0 start at t=" i_t[1] ", process " n " end at t=" o_t[n] ": Cycle " result ".");
 }
 
 ########################################################################
