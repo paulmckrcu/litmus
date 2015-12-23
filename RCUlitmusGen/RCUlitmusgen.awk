@@ -399,6 +399,21 @@ function gen_comment_deadlock(ptemp, n, proc_num, deadlock, plural) {
 
 ########################################################################
 #
+# Produce uniprocess timing-related comment.
+#
+# ptemp: Array of per-process directives.
+#
+function gen_comment_timing_up(ptemp, result, t, y) {
+	if (ptemp[1] ~ /-.*I/)
+		result = "Always";
+	else
+		result = "Never";
+	comment = "Result: " result;
+	print " result: " result;
+}
+
+########################################################################
+#
 # Given a timestamp, advance to the next slot.  This is appropriate
 # when the process uses non-RCU ordering.
 #
@@ -508,6 +523,14 @@ function timing_to_gp_str(t,  gp_num) {
 # n: Number of processes.
 #
 function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
+
+	# Special-case uni-process litmus tests
+	if (n == 1) {
+		gen_comment_timing_up(ptemp);
+		return;
+	}
+
+	# Generate SMP timing
 	gen_timing(ptemp, n);
 
 	# Generate the result-summary comment.
