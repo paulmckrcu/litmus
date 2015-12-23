@@ -89,8 +89,10 @@ function output_lisa(litname, comments, varinit, stmts, exists,  aux_max_line, c
 	for (i in stmts) {
 		proc_num = i;
 		gsub(/:.*$/, "", proc_num);
+		proc_num = proc_num + 0;
 		line_out = i;
 		gsub(/^.*:/, "", line_out);
+		line_out = line_out + 0;
 		if (proc_num > nproc)
 			nproc = proc_num;
 		if (line_out > max_stmts[proc_num])
