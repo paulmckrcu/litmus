@@ -35,7 +35,7 @@
 		sed -n -e 's/RW-R RW-R/RW-Rs RW-RD/p'
 
 	sh gendir.sh "RW-G RW-RI" 8
-	sh gendir.sh "RR-G RR-R" 7
+	sh gendir.sh "RR-G RR-R" 8
 	sh gendir.sh "WR-G WR-R" 8
 	sh gendir.sh "WW-G WW-R" 8
 	sh gendir.sh "WW-G WW-R" 8 |
