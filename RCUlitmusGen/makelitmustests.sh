@@ -24,6 +24,7 @@
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
 {
+	# Load-buffering RCU tests, and with added ordering.
 	sh gendir.sh "RW-G RW-R" 8
 	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R/RW-RB/p'
@@ -34,6 +35,21 @@
 	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rs RW-RD/p'
 
+	# A few larger load-buffering RCU tests.
+	sh gendir.sh "RW-G+RW-G+RW-G+RW-G RW-R+RW-R+RW-R+RW-R" 4 |
+		awk '{ if (NF >= 3) print }' |
+		tr '+' ' '
+
+	# Load-buffering tests involving RCU grace periods and full barriers.
+	sh gendir.sh "RW-G RW-B" 8
+	sh gendir.sh "RW-G RW-B" 8 |
+		sed -n -e 's/RW-B RW-B/RW-r RW-a/p'
+	sh gendir.sh "RW-G RW-B" 8 |
+		sed -n -e 's/RW-B RW-B/RW-r RW-C/p'
+	sh gendir.sh "RW-G RW-B" 8 |
+		sed -n -e 's/RW-B RW-B/RW-r RW-D/p'
+
+	# Non-load-buffering RCU tests.
 	sh gendir.sh "RW-G RW-RI" 8
 	sh gendir.sh "RR-G RR-R" 8
 	sh gendir.sh "WR-G WR-R" 8
