@@ -36,9 +36,12 @@
 		sed -n -e 's/RW-R RW-R/RW-Rs RW-RD/p'
 
 	# A few larger load-buffering RCU tests.
-	sh gendir.sh "RW-G+RW-G+RW-G+RW-G RW-R+RW-R+RW-R+RW-R" 4 |
-		awk '{ if (NF >= 3) print }' |
-		tr '+' ' '
+	sh gendir.sh "RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G RW-G RW-R" 5 |
+		tr '+' ' ' |
+		awk '{ if (NF < 20) print }'
+	sh gendir.sh "RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R RW-G RW-R" 5 |
+		tr '+' ' ' |
+		awk '{ if (NF < 20) print }'
 
 	# Load-buffering tests involving RCU grace periods and full barriers.
 	sh gendir.sh "RW-G RW-B" 8
@@ -56,4 +59,4 @@
 	sh gendir.sh "WW-G WW-R" 8
 	sh gendir.sh "WW-G WW-R" 8 |
 		sed -n -e 's/WW-R/WW-B/p'
-} | sh dir2litmus.sh litmus/
+} | sort -u | sh dir2litmus.sh litmus/
