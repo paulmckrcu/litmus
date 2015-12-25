@@ -49,7 +49,7 @@
 #	will be emitted without any sort of ordering control.
 #
 # Summary: X: RR, RW, WR, WW
-#	   Y: a, B, C, D, G, I, R, r, s.
+#	   Y: a, B, C, D, G, I, l, R, r, s.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
