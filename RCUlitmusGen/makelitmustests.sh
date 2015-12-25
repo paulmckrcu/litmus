@@ -29,11 +29,13 @@
 	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R/RW-RB/p'
 	sh gendir.sh "RW-G RW-R" 8 |
-		sed -n -e 's/RW-R/RW-RC/p'
-	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rr RW-Ra/p'
 	sh gendir.sh "RW-G RW-R" 8 |
+		sed -n -e 's/RW-R RW-R/RW-Rr RW-RC/p'
+	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rs RW-RD/p'
+	sh gendir.sh "RW-G RW-R" 8 |
+		sed -n -e 's/RW-R RW-R/RW-Rr RW-Rl/p'
 
 	# A few larger load-buffering RCU tests.
 	sh gendir.sh "RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G RW-G RW-R" 5 |
