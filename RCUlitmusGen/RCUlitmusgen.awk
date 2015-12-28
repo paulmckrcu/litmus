@@ -5,7 +5,7 @@
 #
 # The "desc" argument is a string describing the litmus test.  This string
 # is a space-separated (or "+"-separated) list of per-process descriptions,
-# which are of the form X-Y-Z, where X, Y, and Z are as follows:
+# which are of the form X-Y, where X and Y are as follows:
 #
 # X:	RR: A read of the incoming variable followed by a read of
 #		the outgoing variable.

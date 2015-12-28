@@ -5,7 +5,15 @@
 # Usage:
 #	sh RunAllLitmus.sh [ ncpus ] < makelitmustests.sh.out
 #
+# The value of ncpus defaults to all online CPUs on the system.
+#
 # Can specify LINUX_BELL_FILE and LINUX_CAT_FILE environment variables.
+#
+# You could also do this:
+#
+#	sh makelitmustests.sh | sh RunAllLitmus.sh [ ncpus ]
+#
+# However, it is convenient to have the makelitmustests.sh output handy.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -29,7 +37,7 @@ nonline=`getconf _NPROCESSORS_ONLN`
 ncpu=${1-$nonline}
 
 T=/tmp/RunAllLitmus.sh.$$
-# trap 'rm -rf $T' 0
+trap 'rm -rf $T' 0
 mkdir $T
 
 for ((i=0;i<$ncpu;i++))
