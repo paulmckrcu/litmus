@@ -38,12 +38,12 @@
 		sed -n -e 's/RW-R RW-R/RW-Rr RW-Rl/p'
 
 	# A few larger load-buffering RCU tests.
-	sh gendir.sh "RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G RW-G RW-R" 5 |
-		tr '+' ' ' |
-		awk '{ if (NF < 20) print }'
-	sh gendir.sh "RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R RW-G RW-R" 5 |
-		tr '+' ' ' |
-		awk '{ if (NF < 20) print }'
+	# sh gendir.sh "RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G RW-G RW-R" 5 |
+	# 	tr '+' ' ' |
+	# 	awk '{ if (NF < 20) print }'
+	# sh gendir.sh "RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R RW-G RW-R" 5 |
+	# 	tr '+' ' ' |
+	# 	awk '{ if (NF < 20) print }'
 
 	# Load-buffering tests involving RCU grace periods and full barriers.
 	sh gendir.sh "RW-G RW-B" 8
