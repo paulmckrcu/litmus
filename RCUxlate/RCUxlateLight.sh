@@ -45,14 +45,14 @@ gawk $rcu_deadlock '
 #
 # Litmus-test variables and registers:
 #
-# gpstartGG: Has grace period GG started yet?  (GG count is one-based.)
-# gpendGG: Has grace period GG ended yet?
+# gpGG: Grace period GG status?  (GG count is one-based.)
+#	0=none, 1=started, 2=finished.
 #
 # @@@ r1001:  Always 1 (to emulate unconditional branch).
 # @@@ r1008:  Scratch register for conditionals.
 # @@@ r1009:  Scratch register for conditionals.
-# r1GG0:  Holds gpstartGG.
-# r1GG1:  Holds gpendGG.
+# r1GG0:  Holds gpGG, first read.
+# r1GG1:  Holds gpGG, second read.
 
 
 ########################################################################
@@ -62,7 +62,7 @@ gawk $rcu_deadlock '
 function emit_one_preamble(proc_num, gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* preamble " gp_num " *)";
-	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0 gpstart%02d", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d0 gp%02d", gp_num, gp_num);
 	aux[proc_num ":" line++] = "(* end preamble " gp_num " *)";
 	preamble[proc_num ":" gp_num]++;
 	return line;
@@ -87,7 +87,7 @@ function emit_one_postamble(proc_num, gp_num, line_out,  line, cpa) {
 	line = line_out;
 	cpa = postamble[proc_num ":" gp_num];
 	aux[proc_num ":" line++] = "(* postamble " gp_num " *)";
-	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gpend%02d", gp_num, gp_num);
+	aux[proc_num ":" line++] = sprintf("r[once] r1%02d1 gp%02d", gp_num, gp_num);
 	aux[proc_num ":" line++] = "(* end postamble " gp_num " *)";
 	postamble[proc_num ":" gp_num]++;
 	return line;
@@ -112,9 +112,9 @@ function emit_sync(gp_num, line_out,  line) {
 	line = line_out;
 	aux[proc_num ":" line++] = "(* GP " gp_num " *)";
 	aux[proc_num ":" line++] = "f[mb]";
-	aux[proc_num ":" line++] = sprintf("w[once] gpstart%02d 1", gp_num);
-	aux[proc_num ":" line++] = "f[gp]";
-	aux[proc_num ":" line++] = sprintf("w[once] gpend%02d 1", gp_num);
+	aux[proc_num ":" line++] = sprintf("w[once] gp%02d 1", gp_num);
+	aux[proc_num ":" line++] = "call[sync]";
+	aux[proc_num ":" line++] = sprintf("w[once] gp%02d 2", gp_num);
 	aux[proc_num ":" line++] = "f[mb]";
 	aux[proc_num ":" line++] = "(* end GP " gp_num " *)";
 	return line;
