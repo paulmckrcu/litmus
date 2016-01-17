@@ -1,3 +1,4 @@
 *.litmus
 litmus
+litmus.*
 shortlitmus.sh

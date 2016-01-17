@@ -32,6 +32,8 @@
 #	D: Maintain an RCU data dependency betweeen the first access (which
 #		must be a load) and the second access (which must be
 #		a store).
+#	d: Set up for dependency ordering at the next link in the chain.
+#		Implied by "s".
 #	G: Separate the X accesses with an RCU grace period.
 #	I: Invert the order of the accesses so that the outgoing
 #		variable is first and the incoming variable is second.
@@ -76,6 +78,7 @@
 # Global variables:
 #
 # comment: String containing the comment field, which may be multi-line.
+# initializers: String containing initializers, which may be multi-line.
 # exists: String containing the "exists" clause, which may be multi-line.
 # f_op[proc_num]: First operand ("r" or "w")
 # f_mod[proc_num]: First modifier ("once", "acquire", ...)
@@ -96,6 +99,7 @@
 # o_operand2[proc_num]: Outgoing second operand (register or variable)
 # o_t[proc_num]: Outgoing operand timestamp.
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
+# wrval[proc_num]: Read-to-write check value for exists clause.
 #
 # Incoming is first and outgoing is last, unless "I" is specified, in
 # which case outgoing is first and incoming is last.
@@ -110,23 +114,27 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " bad read-write specifier: " x > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^aBCDGIlRrs]/) {
+	if (y ~ /[^aBCdDGIlRrs]/) {
 		print "Process " p - 1 " bad modifier: " y > "/dev/stderr";
 		exit 1;
 	}
-	if (x ~ /^W/ && y ~ /alCD/ && y !~ /I/) {
+	if (y ~ /[dlsD]/ && y ~ /I/) {
+		print "Process " p - 1 " Cannot invert data dependencies! " y > "/dev/stderr";
+		exit 1;
+	}
+	if (x ~ /^W/ && y ~ /[alCD]/ && y !~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
 		exit 1;
 	}
-	if (x ~ /R$/ && y ~ /rsCD/ && y !~ /I/) {
+	if (x ~ /R$/ && y ~ /[drsCD]/ && y !~ /I/) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
 		exit 1;
 	}
-	if (x ~ /W$/ && y ~ /alCD/ && y ~ /I/) {
+	if (x ~ /W$/ && y ~ /[alCD]/ && y ~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
 		exit 1;
 	}
-	if (x ~ /^R/ && y ~ /rsCD/ && y ~ /I/) {
+	if (x ~ /^R/ && y ~ /[drsCD]/ && y ~ /I/) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
 		exit 1;
 	}
@@ -180,7 +188,7 @@ function extract_mod(s,  y) {
 #
 # This function operates primarily by side effects on global variables.
 #
-function gen_proc(p, n, s,  i, line_num, x, y, vn) {
+function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 	# Extract read-write (x) and modifier (y) portions of directive.
 	x = extract_rw(s);
 	y = extract_mod(s);
@@ -188,29 +196,43 @@ function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 	# Syntax check.
 	gen_proc_syntax(p, x, y);
 
+	v = p - 1;
+	vn = (v + 1) % n;
+	vnn = (vn + 1) % n;
+
 	# Form incoming statement base.
 	i_mod[p] = "once";
 	if (x ~ /^R/) {
 		i_op[p] = "r";
 		i_operand1[p] = "r1";
-		i_operand2[p] = "x" p - 1;
+		i_operand2[p] = "x" v;
 	} else {
 		i_op[p] = "w";
-		i_operand1[p] = "x" p - 1;
+		i_operand1[p] = "x" v;
 		i_operand2[p] = "2";
 	}
 
 	# Form outgoing statement base.
 	o_mod[p] = "once";
-	vn = p == n ? 0 : p;
 	if (x ~ /R$/) {
 		o_op[p] = "r";
 		o_operand1[p] = "r2";
 		o_operand2[p] = "x" vn;
 	} else {
 		o_op[p] = "w";
-		o_operand1[p] = "x" vn;
-		o_operand2[p] = "1";
+		if (y ~ /[Dl]/) {
+			o_operand1[p] = "r1";
+			wrval[p] = "x" vn;
+		} else {
+			o_operand1[p] = "x" vn;
+			wrval[p] = "1";
+		}
+		if (y ~ /[ds]/) {
+			o_operand2[p] = "r3";
+			initializers = initializers " " p - 1 ":r3=x" vnn "; x" vn "=y" vnn;
+		} else {
+			o_operand2[p] = "1";
+		}
 	}
 
 	# Apply modifiers.
@@ -235,14 +257,10 @@ function gen_proc(p, n, s,  i, line_num, x, y, vn) {
 	}
 	if (y ~ /a/)
 		f_mod[p] = "acquire";	/* smp_load_acquire() */
-	if (y ~ /D/) {
+	if (y ~ /D/)
 		f_mod[p] = "deref";	/* rcu_dereference() */
-		l_operand2[p] = "r1";
-	}
-	if (y ~ /l/) {
+	if (y ~ /l/)
 		f_mod[p] = "lderef";	/* lockless_dereference() */
-		l_operand2[p] = "r1";
-	}
 	if (y ~ /r/)
 		l_mod[p] = "release";	/* smp_store_release() */
 	if (y ~ /s/)
@@ -339,7 +357,7 @@ function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
 		} else if (old_op == "r" && op == "w") {
 			gen_add_exists(old_proc_num - 1 ":" o_operand1[old_proc_num] "=0");
 		} else if (old_op == "w" && op == "r") {
-			gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=1");
+			gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=" wrval[proc_num]);
 		} else if (old_op == "w" && op == "w") {
 			gen_add_exists(i_operand1[proc_num] "=2");
 		}
@@ -625,6 +643,9 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	delete o_operand2;
 	delete o_t;
 	delete stmts;
+	delete wrval;
+
+	initializers = "";
 
 	# Generate each process's code.
 	if (s ~ /+/)
@@ -648,5 +669,5 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	gen_exists(n);
 	printf "%s ", "name: " name ".litmus";
 	gen_comment(ptemp, n);
-	output_lisa(name, comment, "", stmts, exists);
+	output_lisa(name, comment, initializers, stmts, exists);
 }
