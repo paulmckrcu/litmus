@@ -99,7 +99,6 @@
 # o_operand2[proc_num]: Outgoing second operand (register or variable)
 # o_t[proc_num]: Outgoing operand timestamp.
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
-# wrval[proc_num]: Read-to-write check value for exists clause.
 #
 # Incoming is first and outgoing is last, unless "I" is specified, in
 # which case outgoing is first and incoming is last.
@@ -222,10 +221,8 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		o_op[p] = "w";
 		if (y ~ /[Dl]/) {
 			o_operand1[p] = "r1";
-			wrval[p] = "x" vn;
 		} else {
 			o_operand1[p] = "x" vn;
-			wrval[p] = "1";
 		}
 		if (y ~ /[ds]/) {
 			o_operand2[p] = "r3";
@@ -345,7 +342,7 @@ function gen_add_exists(e) {
 #
 # n: Number of processes.
 #
-function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
+function gen_exists(n,  old_op, op, old_proc_num, proc_num,  wrcmp) {
 	exists = "";
 	old_proc_num = n;
 	line_num = 0;
@@ -357,7 +354,11 @@ function gen_exists(n,  old_op, op, old_proc_num, proc_num) {
 		} else if (old_op == "r" && op == "w") {
 			gen_add_exists(old_proc_num - 1 ":" o_operand1[old_proc_num] "=0");
 		} else if (old_op == "w" && op == "r") {
-			gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=" wrval[proc_num]);
+			if (o_operand2[old_proc_num] == "r3")
+				wrcmp = "x" (proc_num == n ? 0 : proc_num);
+			else
+				wrcmp = 1;
+			gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=" wrcmp);
 		} else if (old_op == "w" && op == "w") {
 			gen_add_exists(i_operand1[proc_num] "=2");
 		}
@@ -643,7 +644,6 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	delete o_operand2;
 	delete o_t;
 	delete stmts;
-	delete wrval;
 
 	initializers = "";
 
