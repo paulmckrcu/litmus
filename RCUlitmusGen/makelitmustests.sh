@@ -37,13 +37,21 @@
 	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rrd RW-Rl/p'
 
+	# Load-buffering RCU tests with partial or multiple critical sections
+	sh gendir.sh "RW-G RW-R1" 4 | grep -e -R
+	sh gendir.sh "RW-G RW-R2" 4 | grep -e -R
+	sh gendir.sh "RW-G RW-R3" 4 | grep -e -R
+	sh gendir.sh "RW-G RW-R1I" 4 | grep -e -R
+	sh gendir.sh "RW-G RW-R2I" 4 | grep -e -R
+	sh gendir.sh "RW-G RW-R3I" 4 | grep -e -R
+
 	# A few larger load-buffering RCU tests.
-	# sh gendir.sh "RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G RW-G RW-R" 5 |
-	# 	tr '+' ' ' |
-	# 	awk '{ if (NF < 20) print }'
-	# sh gendir.sh "RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R RW-G RW-R" 5 |
-	# 	tr '+' ' ' |
-	# 	awk '{ if (NF < 20) print }'
+	sh gendir.sh "RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G RW-G RW-R" 5 |
+		tr '+' ' ' |
+		awk '{ if (NF < 20) print }'
+	sh gendir.sh "RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R RW-G RW-R" 5 |
+		tr '+' ' ' |
+		awk '{ if (NF < 20) print }'
 
 	# Load-buffering tests involving RCU grace periods and full barriers.
 	sh gendir.sh "RW-G RW-B" 8

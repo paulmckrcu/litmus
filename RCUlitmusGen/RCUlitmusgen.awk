@@ -23,6 +23,12 @@
 #	Only one of the X values may be specified for a given process.
 #
 # Y:
+#	1: Modify "R" to enclose only the first access in an RCU read-side
+#		critical section.
+#	2: Modify "R" to enclose only the last access in an RCU read-side
+#		critical section.
+#	3: Modify "R" to enclose each access in its own RCU read-side
+#		critical section.
 #	a: Use an acquire load.  May be used only if the first accesses
 #		is a load.
 #	B: Separate the X accesses with a full memory barrier.
@@ -41,6 +47,7 @@
 #		(which must be a load) and the second access (which must
 #		be a store).
 #	R: Enclose the X accesses in an RCU read-side critical section.
+#		May be modified by 1, 2, or 3 as noted above.
 #	r: Use an release store.  May be used only if the second accesses
 #		is a store.
 #	s: Use an assign store, as in rcu_assign_poiner.  May be used
@@ -51,7 +58,7 @@
 #	will be emitted without any sort of ordering control.
 #
 # Summary: X: RR, RW, WR, WW
-#	   Y: a, B, C, D, G, I, l, R, r, s.
+#	   Y: 1, 2, 3, a, B, C, D, d, G, I, l, R, r, s.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -113,7 +120,7 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " bad read-write specifier: " x > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^aBCdDGIlRrs]/) {
+	if (y ~ /[^123aBCdDGIlRrs]/) {
 		print "Process " p - 1 " bad modifier: " y > "/dev/stderr";
 		exit 1;
 	}
@@ -137,6 +144,10 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
 		exit 1;
 	}
+	if (y ~ /[123]/ && y !~ /R/) {
+		print "Process " p - 1 " Modifier w/out RCU read-side critical section! " y > "/dev/stderr";
+		exit 1;
+	}
 	i = 0;
 	if (y ~ /B/)
 		i++;
@@ -148,6 +159,17 @@ function gen_proc_syntax(p, x, y,  i) {
 		i++;
 	if (i > 1) {
 		print "Process " p - 1 " too many ordering directives! " y > "/dev/stderr";
+		exit 1;
+	}
+	i = 0;
+	if (y ~ /1/)
+		i++;
+	if (y ~ /2/)
+		i++;
+	if (y ~ /3/)
+		i++;
+	if (i > 1) {
+		print "Process " p - 1 " too many modifier directives! " y > "/dev/stderr";
 		exit 1;
 	}
 }
@@ -265,9 +287,11 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 
 	# Output statements
 	line_num = 0;
-	if (y ~ /R/)
+	if (y ~ /R/ && (y ~ /[13]/ || y !~ /2/))
 		stmts[p ":" ++line_num] = "f[lock]";
 	stmts[p ":" ++line_num] = f_op[p] "[" f_mod[p] "] " f_operand1[p] " " f_operand2[p];
+	if (y ~ /R/ && y ~ /[13]/)
+		stmts[p ":" ++line_num] = "f[unlock]";
 	if (y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
 	if (y ~ /C/) {
@@ -276,8 +300,10 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 	}
 	if (y ~ /G/)
 		stmts[p ":" ++line_num] = "call[sync]";
+	if (y ~ /R/ && y ~ /[23]/)
+		stmts[p ":" ++line_num] = "f[lock]";
 	stmts[p ":" ++line_num] = l_op[p] "[" l_mod[p] "] " l_operand1[p] " " l_operand2[p];
-	if (y ~ /R/)
+	if (y ~ /R/ && (y ~ /[23]/ || y !~ /1/))
 		stmts[p ":" ++line_num] = "f[unlock]";
 
 	# Update incoming and outgoing data for later reference.
@@ -486,10 +512,10 @@ function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 		if (y !~ /I/ && y ~ /G/) {
 			# RCU grace period constrains.
 			o_t[proc_num] = next_gp(t);
-		} else if ((y ~ /I/ && y !~ /R/) || y == "") {
+		} else if ((y ~ /I/ && (y !~ /R/ || y ~ /[123]/)) || y == "") {
 			# No ordering whatsoever, back to beginning of time.
 			o_t[proc_num] = 0;
-		} else if ((y ~ /I/ && y ~ /R/) || y == "R") {
+		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
 			o_t[proc_num] = prev_gp(t);
 		} else {
@@ -564,12 +590,12 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 		if (y !~ /I/ && y ~ /G/) {
 			# RCU grace period constrains.
 			gen_add_comment("\nP" proc_num - 1 " advances one grace period " timing_to_gp_str(o_t[proc_num]) ".");
-		} else if ((y ~ /I/ && y !~ /R/) || y == "") {
+		} else if ((y ~ /I/ && (y !~ /R/ || y ~ /[123]/)) || y == "") {
 			# No ordering whatsoever, back to beginning of time.
 			gen_add_comment("\nP" proc_num - 1 " is unordered, therefore cycle is allowed.");
 			gen_add_comment("Skipping remainder of analysis.");
 			break;
-		} else if ((y ~ /I/ && y ~ /R/) || y == "R") {
+		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
 			gen_add_comment("\nP" proc_num - 1 " goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
 		} else {
