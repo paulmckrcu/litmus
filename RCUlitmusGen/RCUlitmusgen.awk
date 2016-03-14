@@ -295,14 +295,16 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 	if (y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
 	if (y ~ /C/) {
-		stmts[p ":" ++line_num] = "b[] " f_operand1[p] " CTRL" p - 1;
-		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
+		stmts[p ":" ++line_num] = "mov r4 (eq r1 0)";
+		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
 	if (y ~ /G/)
 		stmts[p ":" ++line_num] = "call[sync]";
 	if (y ~ /R/ && y ~ /[23]/)
 		stmts[p ":" ++line_num] = "f[lock]";
 	stmts[p ":" ++line_num] = l_op[p] "[" l_mod[p] "] " l_operand1[p] " " l_operand2[p];
+	if (y ~ /C/)
+		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
 	if (y ~ /R/ && (y ~ /[23]/ || y !~ /1/))
 		stmts[p ":" ++line_num] = "f[unlock]";
 
