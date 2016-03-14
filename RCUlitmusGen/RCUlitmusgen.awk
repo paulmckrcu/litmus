@@ -151,9 +151,7 @@ function gen_proc_syntax(p, x, y,  i) {
 	i = 0;
 	if (y ~ /B/)
 		i++;
-	if (y ~ /C/)
-		i++;
-	if (y ~ /D/)
+	if (y ~ /[CD]/)
 		i++;
 	if (y ~ /G/)
 		i++;
@@ -248,7 +246,7 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		}
 		if (y ~ /[ds]/) {
 			o_operand2[p] = "r3";
-			initializers = initializers " " p - 1 ":r3=x" vnn "; x" vn "=y" vnn;
+			initializers = initializers " " p - 1 ":r3=x" vnn "; x" vn "=y" vnn "; " vn ":r4=x" vnn;
 		} else {
 			o_operand2[p] = "1";
 		}
@@ -295,7 +293,7 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 	if (y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
 	if (y ~ /C/) {
-		stmts[p ":" ++line_num] = "mov r4 (eq r1 0)";
+		stmts[p ":" ++line_num] = "mov r4 (eq r1 r4)";
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
 	if (y ~ /G/)
