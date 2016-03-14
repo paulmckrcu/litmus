@@ -35,7 +35,15 @@
 	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rs RW-RD/p'
 	sh gendir.sh "RW-G RW-R" 8 |
+		sed -n -e 's/RW-R RW-R/RW-Rs RW-RCD/p'
+	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rrd RW-Rl/p'
+	sh gendir.sh "RW-G RW-R" 8 |
+		sed -n -e 's/RW-R RW-R/RW-Rrd RW-RCl/p'
+	sh gendir.sh "RW-G RW-R" 8 |
+		sed -n -e 's/RW-R RW-R/RW-Rrd RW-l/p'
+	sh gendir.sh "RW-G RW-R" 8 |
+		sed -n -e 's/RW-R RW-R/RW-Rrd RW-Cl/p'
 
 	# Load-buffering RCU tests with partial or multiple critical sections
 	sh gendir.sh "RW-G RW-R1" 4 | grep -e -R
