@@ -63,16 +63,82 @@
 # initializers: String containing initializers, which may be multi-line.
 # exists: String containing the "exists" clause, which may be multi-line.
 # i_dir[proc_num]: Incoming (read) directive
-# i_op[proc_num]: Incoming operand ("r" or "w") @@@ Always "r"
+# i_op[proc_num]: Incoming operand ("r" or "w")
 # i_mod[proc_num]: Incoming modifier ("once", "acquire", ...)
-# i_operand1[proc_num]: Incoming first operand (register or variable) @@@ Always "r1"
+# i_operand1[proc_num]: Incoming first operand (register or variable)
 # i_operand2[proc_num]: Incoming second operand (register or variable)
 # o_dir[proc_num]: Outgoing (write) directive
-# o_op[proc_num]: Outgoing operand ("r" or "w") @@@ Always "w".
+# o_op[proc_num]: Outgoing operand ("r" or "w")
 # o_mod[proc_num]: Outgoing modifier ("once", "acquire", ...)
 # o_operand1[proc_num]: Outgoing first operand (register or variable)
 # o_operand2[proc_num]: Outgoing second operand (register or variable)
+# rf[rf_num]: Read-from directive
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
+
+########################################################################
+#
+# Initialize cycle-evaluation arrays and matrices.  Reads-from and
+# in-process transitions are handled by cycle_rf and cycle_proc,
+# respectively.  First-process in-process transitions are special:
+# cycle_proc1.  Last-process in-process transitions depend on the type of
+# the trailing access: cycle_procnR and cycl_procnW.  Each element
+# is of the form "X:reason", where "X" is Sometimes, Maybe, or Never.
+# The "reason" can be empty and normally will be for Never.
+#
+function initialize_cycle_evaluation() {
+	# First-process transitions
+	cycle_proc1["A"] = "Never";
+	cycle_proc1["O"] = "Sometimes:No ordering";
+	cycle_proc1["R"] = "Never";
+
+	# Last-process transitions for trailing read
+	cycle_procnR["A"] = "Never";
+	cycle_procnR["C"] = "Sometimes:Control dependencies do not order reads";
+	cycle_procnR["D"] = "Never";
+	cycle_procnR["l"] = "Never";
+	cycle_procnR["O"] = "Sometimes:No ordering";
+
+	# Last-process transitions for trailing write
+	cycle_procnW["A"] = "Never";
+	cycle_procnW["C"] = "Never";
+	cycle_procnW["D"] = "Never";
+	cycle_procnW["l"] = "Never";
+	cycle_procnW["O"] = "Sometimes:No ordering";
+
+	# Read-from transitions
+	cycle_rf["A:A"] = "Never";
+	cycle_rf["A:C"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["A:D"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["A:l"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["A:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["R:A"] = "Never";
+	cycle_rf["R:C"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["R:D"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["R:l"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["R:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["O:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["O:C"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["O:D"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["O:l"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["O:O"] = "Maybe:Does ARM need paired release-acquire?";
+
+	# Process transitions
+	cycle_proc["A:A"] = "Never";
+	cycle_proc["A:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["A:R"] = "Never";
+	cycle_proc["C:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["C:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["C:R"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["D:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["D:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["D:R"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["l:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["l:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["l:R"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["O:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["O:O"] = "Sometimes:No ordering";
+	cycle_proc["O:R"] = "Maybe:Does ARM need paired release-acquire?";
+}
 
 ########################################################################
 #
@@ -322,133 +388,95 @@ function gen_add_comment(s) {
 
 ########################################################################
 #
-# Given a timestamp, advance to the next slot.  This is appropriate
-# when the process uses non-RCU ordering.
+# Update the running result based on the current transition
 #
-# The timestamp zero is special, and corresponds to the beginning of
-# time.  This is useful when there is no ordering constraint, so that
-# the outgoing variable might take on its value arbitrarily early.
+# oldresult: Prior running result
+# desc: Description of current transition
+# reasres: Reason-result combination from appropriate array
 #
-function next_step(t) {
-	return t + 1;
+function result_update(oldresult, desc, reasres,  reason, result) {
+	result = reasres;
+	gsub(/:.*$/, "", result);
+	reason = reasres;
+	gsub(/^.*:/, "", reason);
+
+	# "Things can only get worse!"  ;-)
+	if (oldresult == "Sometimes" ||
+	    (oldresult == "Maybe" && result == "Never"))
+		result = oldresult;
+
+	if (reason != "" && result != oldresult)
+		gen_add_comment(desc ": " oldresult "->" result ": " reason);
+	else if (reason != "" && result == oldresult)
+		gen_add_comment(desc ": " reason);
+	else if (reason == "" && result != oldresult)
+		gen_add_comment(desc ": " oldresult "->" result);
+
+	return result;
 }
 
 ########################################################################
 #
-# Analyze timing.  @@@ Should not need timing...
+# Find the strongest in-bound ordering constraint
 #
-# ptemp: Array of per-process directives.
+# cur_rf: String containing constraints
+#
+function best_rfin(cur_rf,  rfin) {
+	if (cur_rf ~ /A/)
+		rfin = "A";
+	else if (cur_rf ~ /l/)
+		rfin = "l";
+	else if (cur_rf ~ /D/)
+		rfin = "D";
+	else if (cur_rf ~ /C/)
+		rfin = "C";
+	else
+		rfin = "O";
+	return rfin;
+}
+
+########################################################################
+#
+# Produce timing-related comment.
+#
+# gdir: Global directive
 # n: Number of processes.
 #
-function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
+function gen_comment(gdir, n,  desc, result, rfin, rfn) {
 
-	# Pick large number as starting point and propagate timestamps.
-	t = 10000000;
-	t_min = t;
-	for (proc_num = 1; proc_num <= n; proc_num++) {
-		i_t[proc_num] = t;
-		y = extract_mod(ptemp[proc_num]);
-		@@@ } else if ((y ~ /I/ && (y !~ /R/ || y ~ /[123]/)) || y == "") {
-			# No ordering whatsoever, back to beginning of time.
-			o_t[proc_num] = 0;
-		} else {
-			# Normal CPU-based ordering constrains.
-			o_t[proc_num] = next_step(t);
-		}
+	result = "Never";
 
-		# If already at the beginning of time, stay there.
-		if (t == 0)
-			o_t[proc_num] = 0;
+	# Handle global directive ordering constraints
+	if (gdir == "GWR")
+		result = result_update(result, "GWR", "Sometimes:Power rel-acq does not provide write-to-read global transitivity");
+	if (gdir ~ /^G/)
+		result = result_update(result, gdir, "Maybe:Should rel-acq provide any global transitivity?");
 
-		# Compute non-beginning-of-time minimum.
-		if (o_t[proc_num] < t_min && o_t[proc_num] != 0)
-			t_min = o_t[proc_num];
+	# Handle first-process ordering constraints
+	result = result_update(result, o_dir[1], cycle_proc1[o_dir[1]]);
 
-		# Advance one step for memory-reference propagation.
-		# Yes, this is a gross approximation, but works for
-		# current subset of operations.
-		t = next_step(o_t[proc_num]);
-	}
-
-	# Normalize non-beginning-of-time values, but subtract an even
-	# number of even grace periods, but stay out of the low-order
-	# beginning-of-time area from 0 to 2000.
-	t_min = t_min - 100000;
-	for (proc_num = 1; proc_num <= n; proc_num++) {
-		if (i_t[proc_num] != 0)
-			i_t[proc_num] -= t_min;
-		if (o_t[proc_num] != 0)
-			o_t[proc_num] -= t_min;
-		# print proc_num ": " ptemp[proc_num] " i: " i_t[proc_num] " o: " o_t[proc_num];
-	}
-}
-
-########################################################################
-#
-# Convert timing into grace-period-relative string. @@@ should not need!
-#
-# t: Timestamp
-#
-function timing_to_gp_str(t,  gp_num) {
-	return "(t=" t ")";
-}
-
-########################################################################
-#
-# Produce timing-related comment.  @@@ Should just use ordering and matching
-#
-# ptemp: Array of per-process directives.  @@@ Needed?
-# n: Number of processes.
-#
-function gen_comment(ptemp, n,  proc_num, result, t, y) {
-
-	# Generate SMP timing
-	gen_timing(ptemp, n);
-
-	# Generate the result-summary comment.
-	result = i_t[1] >= o_t[n] ? "Sometimes" : "Never";
-	comment = "Result: " result;
-	print " result: " result;
-
-	# Analyze timestamps and produce comments.
-	gen_add_comment("\nProcess 0 starts " timing_to_gp_str(i_t[1]) ".");
-	for (proc_num = 1; proc_num <= n; proc_num++) {
-		y = extract_mod(ptemp[proc_num]);
-		if (y !~ /I/ && y ~ /G/) {
-			# RCU grace period constrains.
-			gen_add_comment("\nP" proc_num - 1 " advances one grace period " timing_to_gp_str(o_t[proc_num]) ".");
-		} else if ((y ~ /I/ && (y !~ /R/ || y ~ /[123]/)) || y == "") {
-			# No ordering whatsoever, back to beginning of time.
-			gen_add_comment("\nP" proc_num - 1 " is unordered, therefore cycle is allowed.");
-			gen_add_comment("Skipping remainder of analysis.");
+	# Handle rf and in-process constraints
+	for (rfn = 1; rfn < n; rfn++) {
+		rfin = best_rfin(i_dir[rfn + 1]);
+		desc = "rf" rfn " " rf[rfn];
+		result = result_update(result, desc, cycle_rf[o_dir[rfn] ":" rfin]);
+		if (rfn == n - 1)
 			break;
-		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
-			# RCU read-side critical section constrains.
-			gen_add_comment("\nP" proc_num - 1 " goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
-		} else {
-			# Normal CPU-based ordering constrains.
-			gen_add_comment("\nP" proc_num - 1 " advances slightly " timing_to_gp_str(o_t[proc_num]) ".");
-		}
-
-		# If already at the beginning of time, stay there.
-		if (t == 0)
-			o_t[proc_num] = 0;
-
-		# Compute non-beginning-of-time minimum.
-		if (o_t[proc_num] < t_min && o_t[proc_num] != 0)
-			t_min = o_t[proc_num];
-
-		# Advance one step for memory-reference propagation.
-		# Yes, this is a gross approximation, but works for
-		# current subset of operations.
-		t = next_step(o_t[proc_num]);
+		desc = "P" rfn " " i_dir[rfn + 1] ":" o_dir[rfn + 1];
+		result = result_update(result, desc, cycle_rf[rfin ":" o_dir[rfn + 1]);
 	}
 
-	# Summarize cycle status, if not already summarized.
-	if (o_t[n] == 0)
-		return;
-	result = i_t[1] >= o_t[n] ? "allowed" : "forbidden";
-	gen_add_comment("\nProcess 0 start at t=" i_t[1] ", process " n " end at t=" o_t[n] ": Cycle " result ".");
+	# Handle last-process ordering constraints
+	rfin = best_rfin(idir[n]);
+	desc = "P" n - 1 " " i_dir[n] ":" gdir;
+	if (gdir ~ /R$/)
+		result = result_update(result, desc, cycle_procnR[rfin]);
+	else
+		result = result_update(result, desc, cycle_procnW[rfin]);
+
+	# Print the result and stick it on the front of the comment.
+	comment = "Result: " result "\n" comment;
+	print " result: " result;
 }
 
 ########################################################################
@@ -468,16 +496,16 @@ function gen_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	delete i_mod;
 	delete i_operand1;
 	delete i_operand2;
-	@@@ delete i_t;
 	delete o_op;
 	delete o_mod;
 	delete o_operand1;
 	delete o_operand2;
-	@@@ delete o_t;
 	delete stmts;
-	exists = "";
 
+	exists = "";
 	initializers = "";
+
+	initialize_cycle_evaluation();
 
 	# Generate each process's code.
 	if (s ~ /+/)
@@ -495,6 +523,7 @@ function gen_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	o_dir[n] = "";
 	i_dir[n + 1] = "";
 	for (i = 2; i <= n; i++) {
+		rf[i - 1] = ptemp[i];
 		o_dir[i - 1] = ptemp[i];
 		gsub(/-.*$/, "", o_dir[i - 1]);
 		i_dir[i] = ptemp[i];
@@ -503,7 +532,7 @@ function gen_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	}
 	for (i = 1; i <= n; i++) {
 		if (name == "")
-			name = prefix ptemp[i];
+			name = prefix "LB-" ptemp[i];
 		else
 			name = name "+" ptemp[i];
 		gen_proc(i, n, gdir, i_dir[i], o_dir[i], i_dir[i + 1]);
@@ -513,6 +542,6 @@ function gen_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	gen_aux_proc(gdir, n);
 	gen_exists(n);
 	printf "%s ", "name: " name ".litmus";
-	gen_comment(ptemp, n);
+	gen_comment(gdir, n);
 	output_lisa(name, comment, initializers, stmts, exists);
 }
