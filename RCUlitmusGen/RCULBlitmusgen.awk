@@ -25,13 +25,14 @@
 #	Only one of "A", "O", or "R" may be specified for a given rf link.
 #
 # R:	A: Use smp_read_acquire(), AKA r[acquire].
-#	C: Use control dependency.
-#	D: Use data dependency.
-#	l: Use lderef data dependency.
+#	c: Impose control dependency.
+#	d: Impose data dependency.
+#	D: Use data dependency, AKA r[deref].
+#	L: Use non-RCU data dependency, AKA r[lderef].
 #	O: Use READ_ONCE(), AKA r[once].
 #
-#	Exactly one of "A", "l", or "O" may be specified for a given rf link,
-#	but either or both of "C" and "D" may be added in either case.
+#	Exactly one of "A", "D", "L", or "O" may be specified for a given
+#	rf link, but either or both of "c" and "d" may be added in either case.
 #
 # A litmus test with N processes will have N-1 W-R per-rf descriptors.
 #
@@ -95,31 +96,26 @@ function initialize_cycle_evaluation() {
 	cycle_procnR["A"] = "Never";
 	cycle_procnR["C"] = "Sometimes:Control dependencies do not order reads";
 	cycle_procnR["D"] = "Never";
-	cycle_procnR["l"] = "Never";
 	cycle_procnR["O"] = "Sometimes:No ordering";
 
 	# Last-process transitions for trailing write
 	cycle_procnW["A"] = "Never";
 	cycle_procnW["C"] = "Never";
 	cycle_procnW["D"] = "Never";
-	cycle_procnW["l"] = "Never";
 	cycle_procnW["O"] = "Sometimes:No ordering";
 
 	# Read-from transitions
 	cycle_rf["A:A"] = "Never";
 	cycle_rf["A:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["A:D"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["A:l"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["A:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["R:A"] = "Never";
 	cycle_rf["R:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["R:D"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["R:l"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["R:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["O:A"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["O:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["O:D"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["O:l"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["O:O"] = "Maybe:Does ARM need paired release-acquire?";
 
 	# Process transitions
@@ -132,9 +128,6 @@ function initialize_cycle_evaluation() {
 	cycle_proc["D:A"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["D:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["D:R"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["l:A"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["l:O"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["l:R"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["O:A"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["O:O"] = "Sometimes:No ordering";
 	cycle_proc["O:R"] = "Maybe:Does ARM need paired release-acquire?";
@@ -159,15 +152,15 @@ function gen_global_syntax(x) {
 #
 function gen_rf_syntax(rfn, x, y) {
 	if (x != "A" && x != "O" && x != "R") {
-		print "Reads-from edge " rfn " bad write-side specifier: " x > "/dev/stderr";
+		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^ACDlO]/) {
-		print "Reads-from edge " rfn " bad read-side specifier: " y > "/dev/stderr";
+	if (y ~ /[^AcdDLO]/) {
+		print "Reads-from edge " rfn " bad read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if ((y ~ /A/) + (y ~ /l/) + (y ~ /O/) != 1) {
-		print "Reads-from edge " rfn " only one of "AlO" in read-side specifier: " x > "/dev/stderr";
+	if ((y ~ /A/) + (y ~ /D/) + (y ~ /L/) + (y ~ /O/) != 1) {
+		print "Reads-from edge " rfn " only one of \"ADLO\" in read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
 }
@@ -201,16 +194,18 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		if (g ~ /R[RW]$/) {
 			i_op[p] = "r";
 			i_operand1[p] = "r1";
-			i_operand2[p] = "y0";
+			i_operand2[p] = "u0";
 		} else {
 			i_op[p] = "w";
-			i_operand1[p] = "y0";
+			i_operand1[p] = "u0";
 			i_operand2[p] = "1";
 		}
 	} else {
 		if (x ~ /A/)
 			i_mod[p] = "acquire";
-		else if (x ~ /l/)
+		else if (x ~ /D/)
+			i_mod[p] = "lderef";
+		else if (x ~ /L/)
 			i_mod[p] = "lderef";
 		else
 			i_mod[p] = "once";
@@ -239,19 +234,19 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		else
 			o_mod[p] = "once";
 		o_op[p] = "w";
-		if (x ~ /[Dl]/) {
+		if (x ~ /d/) {
 			o_operand1[p] = "r1";
 		} else {
 			o_operand1[p] = "x" vn;
 		}
-		if (xn ~ /[Dl]/) {
+		if (xn ~ /d/) {
 			o_operand2[p] = "r3";
-			initializers = initializers " " p - 1 ":r3=x" vnn ";
-			initializers = initializers x" vn "=y" vnn ";
+			initializers = initializers " " p - 1 ":r3=x" vnn;
+			initializers = initializers " x" vn "=y" vnn;
 			if (p == n - 1)
-				initializers = initializers " vn ":r4=y" vnn;
+				initializers = initializers " " vn ":r4=y" vnn;
 			else
-				initializers = initializers " vn ":r4=" tvar;
+				initializers = initializers " " vn ":r4=" tvar;
 		} else {
 			o_operand2[p] = "1";
 		}
@@ -260,12 +255,12 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 	# Output statements
 	line_num = 0;
 	stmts[p ":" ++line_num] = i_op[p] "[" i_mod[p] "] " i_operand1[p] " " i_operand2[p];
-	if (x ~ /C/) {
+	if (x ~ /c/) {
 		stmts[p ":" ++line_num] = "mov r4 (eq r1 r4)";
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
 	stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand2[p];
-	if (x ~ /C/)
+	if (x ~ /c/)
 		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
 }
 
@@ -295,18 +290,18 @@ function gen_add_exists(e) {
 function gen_aux_proc_global(g, n,  line_num) {
 	line_num = 0;
 	if (g ~ /^G[RW]R$/) {
-		stmts[n + 1 ":" ++line_num] = "w[once] z0 1"
+		stmts[n + 1 ":" ++line_num] = "w[once] v0 1"
 		gen_add_exists(n - 1 ":r2=0");
 	} else {
-		stmts[n + 1 ":" ++line_num] = "r[once] r1 z0"
+		stmts[n + 1 ":" ++line_num] = "r[once] r1 v0"
 		gen_add_exists(n ":r1=2");
 	}
 	stmts[n + 1 ":" ++line_num] = "f[mb]"
 	if (g ~ /^GR[RW]$/) {
-		stmts[n + 1 ":" ++line_num] = "w[once] y0 1"
+		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
 		gen_add_exists("0:r1=1");
 	} else {
-		stmts[n + 1 ":" ++line_num] = "r[once] r2 y0"
+		stmts[n + 1 ":" ++line_num] = "r[once] r2 u0"
 		gen_add_exists(n ":r2=0");
 	}
 }
@@ -324,7 +319,7 @@ function gen_aux_proc_global(g, n,  line_num) {
 function gen_aux_proc_local(g, n,  line_num) {
 	line_num = 0;
 	if (g == "LRR") {
-		stmts[n + 1 ":" ++line_num] = "w[once] y0 1"
+		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
 		gen_add_exists("0:r1=1");
 		gen_add_exists(n - 1 ":r2=0");
 	} else if (g == "LRW") {
@@ -332,7 +327,7 @@ function gen_aux_proc_local(g, n,  line_num) {
 	} else if (g == "LWR") {
 		gen_add_exists(n - 1 ":r2=0");
 	} else {
-		gen_add_exists("y0=1");
+		gen_add_exists("u0=1");
 	}
 }
 
@@ -401,6 +396,10 @@ function result_update(oldresult, desc, reasres,  reason, result) {
 	gsub(/^.*:/, "", reason);
 
 	# "Things can only get worse!"  ;-)
+	if (result != "Never" && result != "Maybe" && result != "Sometimes") {
+		print "Internal error: Bad result \"" result "\" in initialize_cycle_evaluation() table: \"" reasres "\"" > "/dev/stderr";
+		exit 1;
+	}
 	if (oldresult == "Sometimes" ||
 	    (oldresult == "Maybe" && result == "Never"))
 		result = oldresult;
@@ -417,18 +416,19 @@ function result_update(oldresult, desc, reasres,  reason, result) {
 
 ########################################################################
 #
-# Find the strongest in-bound ordering constraint
+# Find the strongest in-bound ordering constraint.  Note that DEC Alpha
+# must have a full memory barrier for read-read data dependencies.
+# Therefore, without one of "L" or "D", a "d" is only as good as is
+# a "c".
 #
 # cur_rf: String containing constraints
 #
 function best_rfin(cur_rf,  rfin) {
 	if (cur_rf ~ /A/)
 		rfin = "A";
-	else if (cur_rf ~ /l/)
-		rfin = "l";
-	else if (cur_rf ~ /D/)
+	else if ((cur_rf ~ /L/ || cur_rf ~ /D/) && cur_rf ~ /d/)
 		rfin = "D";
-	else if (cur_rf ~ /C/)
+	else if (cur_rf ~ /[cd]/)
 		rfin = "C";
 	else
 		rfin = "O";
@@ -437,7 +437,7 @@ function best_rfin(cur_rf,  rfin) {
 
 ########################################################################
 #
-# Produce timing-related comment.
+# Produce ordering-prediction comment.
 #
 # gdir: Global directive
 # n: Number of processes.
@@ -448,27 +448,27 @@ function gen_comment(gdir, n,  desc, result, rfin, rfn) {
 
 	# Handle global directive ordering constraints
 	if (gdir == "GWR")
-		result = result_update(result, "GWR", "Sometimes:Power rel-acq does not provide write-to-read global transitivity");
+		result = result_update(result, "P0 GWR", "Sometimes:Power rel-acq does not provide write-to-read global transitivity");
 	if (gdir ~ /^G/)
-		result = result_update(result, gdir, "Maybe:Should rel-acq provide any global transitivity?");
+		result = result_update(result, "P0 " gdir, "Maybe:Should rel-acq provide any global transitivity?");
 
 	# Handle first-process ordering constraints
-	result = result_update(result, o_dir[1], cycle_proc1[o_dir[1]]);
+	result = result_update(result, "P0 " gdir "," o_dir[1], cycle_proc1[o_dir[1]]);
 
 	# Handle rf and in-process constraints
 	for (rfn = 1; rfn < n; rfn++) {
 		rfin = best_rfin(i_dir[rfn + 1]);
-		desc = "rf" rfn " " rf[rfn];
+		desc = "P" rfn - 1 "-P" rfn " rf " rf[rfn];
 		result = result_update(result, desc, cycle_rf[o_dir[rfn] ":" rfin]);
 		if (rfn == n - 1)
 			break;
-		desc = "P" rfn " " i_dir[rfn + 1] ":" o_dir[rfn + 1];
-		result = result_update(result, desc, cycle_rf[rfin ":" o_dir[rfn + 1]);
+		desc = "P" rfn " " i_dir[rfn + 1] "," o_dir[rfn + 1];
+		result = result_update(result, desc, cycle_proc[rfin ":" o_dir[rfn + 1]]);
 	}
 
 	# Handle last-process ordering constraints
-	rfin = best_rfin(idir[n]);
-	desc = "P" n - 1 " " i_dir[n] ":" gdir;
+	rfin = best_rfin(i_dir[n]);
+	desc = "P" n - 1 " " i_dir[n] "," gdir;
 	if (gdir ~ /R$/)
 		result = result_update(result, desc, cycle_procnR[rfin]);
 	else
@@ -489,7 +489,7 @@ function gen_comment(gdir, n,  desc, result, rfin, rfn) {
 # prefix: Filename prefix for litmus-file output.
 # s: Directive string.
 #
-function gen_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
+function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 
 	# Delete arrays to avoid possible old cruft.
 	delete i_op;
@@ -502,19 +502,20 @@ function gen_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	delete o_operand2;
 	delete stmts;
 
+	comment = "";
 	exists = "";
 	initializers = "";
 
 	initialize_cycle_evaluation();
 
-	# Generate each process's code.
+	# Crack the directive strings and do error checking
 	if (s ~ /+/)
 		n = split(s, ptemp, "+");
 	else
 		n = split(s, ptemp, " ");
 	if (n < 3) {
 		# Smaller configurations don't rely on transitivity
-		print "Not enough directives: Need global and at least two rf!";
+		print "Insufficient directives: Need global and at least two rf!";
 		exit 1;
 	}
 	gdir = ptemp[1];
@@ -530,6 +531,8 @@ function gen_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 		gsub(/^.*-/, "", i_dir[i]);
 		gen_rf_syntax(ptemp[i], o_dir[i - 1], i_dir[i]);
 	}
+
+	# Generate each process's code.
 	for (i = 1; i <= n; i++) {
 		if (name == "")
 			name = prefix "LB-" ptemp[i];
