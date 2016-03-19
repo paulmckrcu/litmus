@@ -513,12 +513,15 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 		n = split(s, ptemp, "+");
 	else
 		n = split(s, ptemp, " ");
-	if (n < 3) {
-		# Smaller configurations don't rely on transitivity
-		print "Insufficient directives: Need global and at least two rf!";
+	gdir = ptemp[1];
+	# Smaller configurations don't rely on transitivity
+	if ((gdir ~ /^L/) && n < 3) {
+		print "Locally transitive tests need at least two rf!";
+		exit 1;
+	} else if ((gdir ~ /^G/) && n < 2) {
+		print "Globally transitive tests need at least one rf!";
 		exit 1;
 	}
-	gdir = ptemp[1];
 	gen_global_syntax(gdir);
 	i_dir[1] = "";
 	o_dir[n] = "";
