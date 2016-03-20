@@ -19,10 +19,12 @@
 # W-R as follows:
 #
 # W:	A: Use rcu_assign_pointer(), AKA w[assign].
+#	B: Use smp_assign_pointer, AKA f[mb].
 # 	O: Use WRITE_ONCE(), AKA w[once].
 #	R: Use smp_write_release(), AKA w[release].
 #
 #	Only one of "A", "O", or "R" may be specified for a given rf link.
+#	It is legal to add "B" to any of them.
 #
 # R:	A: Use smp_read_acquire(), AKA r[acquire].
 #	c: Impose control dependency.
@@ -89,6 +91,7 @@
 function initialize_cycle_evaluation() {
 	# First-process transitions
 	cycle_proc1["A"] = "Never";
+	cycle_proc1["B"] = "Never";
 	cycle_proc1["O"] = "Sometimes:No ordering";
 	cycle_proc1["R"] = "Never";
 
@@ -109,6 +112,10 @@ function initialize_cycle_evaluation() {
 	cycle_rf["A:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["A:D"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["A:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["B:A"] = "Never";
+	cycle_rf["B:C"] = "Never";
+	cycle_rf["B:D"] = "Never";
+	cycle_rf["B:O"] = "Never";
 	cycle_rf["R:A"] = "Never";
 	cycle_rf["R:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["R:D"] = "Maybe:Does ARM need paired release-acquire?";
@@ -120,15 +127,19 @@ function initialize_cycle_evaluation() {
 
 	# Process transitions
 	cycle_proc["A:A"] = "Never";
+	cycle_proc["A:B"] = "Never";
 	cycle_proc["A:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["A:R"] = "Never";
 	cycle_proc["C:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["C:B"] = "Never";
 	cycle_proc["C:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["C:R"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["D:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["D:B"] = "Never";
 	cycle_proc["D:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["D:R"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["O:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["O:B"] = "Never";
 	cycle_proc["O:O"] = "Sometimes:No ordering";
 	cycle_proc["O:R"] = "Maybe:Does ARM need paired release-acquire?";
 }
@@ -151,7 +162,9 @@ function gen_global_syntax(x) {
 # Complain and exit if there is a problem.
 #
 function gen_rf_syntax(rfn, x, y) {
-	if (x != "A" && x != "O" && x != "R") {
+	if ((x !~ /^[AOR]B$/) &&
+	    (x !~ /^B[AOR]$/) &&
+	    (x !~ /^[AOR]$/)) {
 		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
 		exit 1;
 	}
@@ -227,9 +240,9 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 			o_operand2[p] = "2";
 		}
 	} else {
-		if (y == "A")
+		if (y ~ /A/)
 			o_mod[p] = "assign";
-		else if (y == "R")
+		else if (y ~ /R/)
 			o_mod[p] = "release";
 		else
 			o_mod[p] = "once";
@@ -259,6 +272,8 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		stmts[p ":" ++line_num] = "mov r4 (eq r1 r4)";
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
+	if (y ~ /B/)
+		stmts[p ":" ++line_num] = "f[mb]";
 	stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand2[p];
 	if (x ~ /c/)
 		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
@@ -437,33 +452,62 @@ function best_rfin(cur_rf,  rfin) {
 
 ########################################################################
 #
+# Find the strongest out-bound ordering constraint.
+#
+# cur_rf: String containing constraints
+#
+function best_rfout(cur_rf,  rfout) {
+	if (cur_rf ~ /B/)
+		rfout = "B";
+	else if (cur_rf ~ /R/)
+		rfout = "R";
+	else if (cur_rf ~ /A/)
+		rfout = "A";
+	else
+		rfout = "O";
+	return rfout;
+}
+
+########################################################################
+#
 # Produce ordering-prediction comment.
 #
 # gdir: Global directive
 # n: Number of processes.
 #
-function gen_comment(gdir, n,  desc, result, rfin, rfn) {
+function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout) {
 
-	result = "Never";
-
-	# Handle global directive ordering constraints
-	if (gdir == "GWR")
+	# Handle global directive ordering constraints,
+	# one full barrier is all it takes to enforce ordering
+	result = "";
+	for (rfn = 1; rfn < n; rfn++) {
+		if (o_dir[rfn] ~ /B/)
+			result = "Never";
+	}
+	if (result == "" && gdir == "GWR") {
+		result = "Never";
 		result = result_update(result, "P0 GWR", "Sometimes:Power rel-acq does not provide write-to-read global transitivity");
-	if (gdir ~ /^G/)
+	}
+	if (result == "" && gdir ~ /^G/) {
+		result = "Never";
 		result = result_update(result, "P0 " gdir, "Maybe:Should rel-acq provide any global transitivity?");
+	}
 
 	# Handle first-process ordering constraints
-	result = result_update(result, "P0 " gdir "," o_dir[1], cycle_proc1[o_dir[1]]);
+	rfout = best_rfout(o_dir[1]);
+	result = result_update(result, "P0 " gdir "," o_dir[1], cycle_proc1[rfout]);
 
 	# Handle rf and in-process constraints
 	for (rfn = 1; rfn < n; rfn++) {
 		rfin = best_rfin(i_dir[rfn + 1]);
+		rfout = best_rfout(o_dir[rfn]);
 		desc = "P" rfn - 1 "-P" rfn " rf " rf[rfn];
-		result = result_update(result, desc, cycle_rf[o_dir[rfn] ":" rfin]);
+		result = result_update(result, desc, cycle_rf[rfout ":" rfin]);
 		if (rfn == n - 1)
 			break;
+		rfout = best_rfout(o_dir[rfn]);
 		desc = "P" rfn " " i_dir[rfn + 1] "," o_dir[rfn + 1];
-		result = result_update(result, desc, cycle_proc[rfin ":" o_dir[rfn + 1]]);
+		result = result_update(result, desc, cycle_proc[rfin ":" rfout]);
 	}
 
 	# Handle last-process ordering constraints
