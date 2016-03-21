@@ -38,6 +38,24 @@
 #
 # A litmus test with N processes will have N-1 W-R per-rf descriptors.
 #
+#
+# These tests map into the "periodic table" set of tests as follows
+# (https://www.cl.cam.ac.uk/~pes20/ppc-supplemental/test6.pdf):
+#
+# GRR R-A: ISA2
+# GRW R-A: 3.LB
+# GWR R-A: W+WRC (allowed on Power)
+# GWW R-A: ISA2
+#
+# LRR R-A: WRC
+# LRW R-A R-A: 3.LB
+# LWR R-A R-A: ISA2
+# LWW R-A R-A: Z6.2
+#
+# I am currently assuming that adding release-acquire segments to a
+# forbidden litmus test results in another forbidden litmus test.
+#
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
