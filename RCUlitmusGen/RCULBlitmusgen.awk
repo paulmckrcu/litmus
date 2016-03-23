@@ -115,30 +115,36 @@ function initialize_cycle_evaluation() {
 
 	# Last-process transitions for trailing read
 	cycle_procnR["A"] = "Never";
+	cycle_procnR["B"] = "Never";
 	cycle_procnR["C"] = "Sometimes:Control dependencies do not order reads";
 	cycle_procnR["D"] = "Never";
 	cycle_procnR["O"] = "Sometimes:No ordering";
 
 	# Last-process transitions for trailing write
 	cycle_procnW["A"] = "Never";
+	cycle_procnW["B"] = "Never";
 	cycle_procnW["C"] = "Never";
 	cycle_procnW["D"] = "Never";
 	cycle_procnW["O"] = "Sometimes:No ordering";
 
 	# Read-from transitions
 	cycle_rf["A:A"] = "Never";
+	cycle_rf["A:B"] = "Never";
 	cycle_rf["A:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["A:D"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["A:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["B:A"] = "Never";
+	cycle_rf["B:B"] = "Never";
 	cycle_rf["B:C"] = "Never";
 	cycle_rf["B:D"] = "Never";
 	cycle_rf["B:O"] = "Never";
 	cycle_rf["R:A"] = "Never";
+	cycle_rf["R:B"] = "Never";
 	cycle_rf["R:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["R:D"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["R:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["O:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["O:B"] = "Never";
 	cycle_rf["O:C"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["O:D"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_rf["O:O"] = "Maybe:Does ARM need paired release-acquire?";
@@ -148,6 +154,10 @@ function initialize_cycle_evaluation() {
 	cycle_proc["A:B"] = "Never";
 	cycle_proc["A:O"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["A:R"] = "Never";
+	cycle_proc["B:A"] = "Never";
+	cycle_proc["B:B"] = "Never";
+	cycle_proc["B:O"] = "Never";
+	cycle_proc["B:R"] = "Never";
 	cycle_proc["C:A"] = "Maybe:Does ARM need paired release-acquire?";
 	cycle_proc["C:B"] = "Never";
 	cycle_proc["C:O"] = "Maybe:Does ARM need paired release-acquire?";
@@ -457,7 +467,9 @@ function result_update(oldresult, desc, reasres,  reason, result) {
 # cur_rf: String containing constraints
 #
 function best_rfin(cur_rf,  rfin) {
-	if (cur_rf ~ /A/)
+	if (cur_rf ~ /B/)
+		rfin = "B";
+	else if (cur_rf ~ /A/)
 		rfin = "A";
 	else if ((cur_rf ~ /L/ || cur_rf ~ /D/) && cur_rf ~ /d/)
 		rfin = "D";
@@ -595,6 +607,8 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 		i_dir[i] = ptemp[i];
 		gsub(/^.*-/, "", i_dir[i]);
 		gen_rf_syntax(ptemp[i], o_dir[i - 1], i_dir[i]);
+		if (o_dir[i - 1] ~ /B/ && i_dir[i - 1] !~ /B/)
+			i_dir[i - 1] = i_dir[i - 1] "B";
 	}
 
 	# Generate each process's code.
