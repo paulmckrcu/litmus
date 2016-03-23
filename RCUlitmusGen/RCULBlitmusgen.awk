@@ -27,14 +27,16 @@
 #	It is legal to add "B" to any of them.
 #
 # R:	A: Use smp_read_acquire(), AKA r[acquire].
+#	B: Use smp_assign_pointer, AKA f[mb].
 #	c: Impose control dependency.
 #	d: Impose data dependency.
 #	D: Use data dependency, AKA r[deref].
 #	L: Use non-RCU data dependency, AKA r[lderef].
 #	O: Use READ_ONCE(), AKA r[once].
 #
-#	Exactly one of "A", "D", "L", or "O" may be specified for a given
-#	rf link, but either or both of "c" and "d" may be added in either case.
+#	Exactly one of "A", "D", "L", or "O" may be specified for a
+#	given rf link, but any or all of "B", "c", and "d" may be added
+#	in either case.
 #
 # A litmus test with N processes will have N-1 W-R per-rf descriptors.
 #
@@ -196,7 +198,7 @@ function gen_rf_syntax(rfn, x, y) {
 		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^AcdDLO]/) {
+	if (y ~ /[^ABcdDLO]/) {
 		print "Reads-from edge " rfn " bad read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
@@ -300,7 +302,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		stmts[p ":" ++line_num] = "mov r4 (eq r1 r4)";
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
-	if (y ~ /B/)
+	if (x ~ /B/ || y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
 	stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand2[p];
 	if (x ~ /c/)
