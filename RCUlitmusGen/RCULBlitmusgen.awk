@@ -509,11 +509,11 @@ function best_rfout(cur_rf,  rfout) {
 #
 function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout) {
 
-	# Handle global directive ordering constraints,
-	# one full barrier is all it takes to enforce ordering
+	# Handle global directive ordering constraints, one full barrier
+	# is all it takes to promote local to global transitivity.
 	result = "";
 	for (rfn = 1; rfn < n; rfn++) {
-		if (o_dir[rfn] ~ /B/)
+		if (i_dir[rfn] ~ /B/ || o_dir[rfn] ~ /B/)
 			result = "Never";
 	}
 	if (result == "" && gdir == "GWR") {
