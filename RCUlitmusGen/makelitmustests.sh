@@ -78,3 +78,22 @@
 	sh gendir.sh "WW-G WW-R" 8 |
 		sed -n -e 's/WW-R/WW-B/p'
 } | sort -u | sh dir2litmus.sh litmus/
+
+{
+	# Properly paired tests
+	sh gendir.sh "A-Dd A-Ld R-A R-Oc OB-O" 4 |
+		sed -e 's/OB-O$/OB-OB/'
+} | awk '{
+    	if (NF > 1) {
+		print "LRR " $0;
+		print "LRW " $0;
+		print "LWR " $0;
+		print "LWW " $0;
+	}
+    	print "GRR " $0;
+    	print "GRW " $0;
+    	print "GWR " $0;
+    	print "GWW " $0;
+    }' |
+    sort -u |
+    awk -f RCULBlitmusgen.awk -e '{ gen_lb_litmus("litmus/", $0); }'
