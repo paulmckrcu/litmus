@@ -132,46 +132,46 @@ function initialize_cycle_evaluation() {
 	# Read-from transitions
 	cycle_rf["A:A"] = "Never";
 	cycle_rf["A:B"] = "Never";
-	cycle_rf["A:C"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["A:D"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["A:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["A:C"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["A:D"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["A:O"] = "Never:Note lack of C11 guarantee";
 	cycle_rf["B:A"] = "Never";
 	cycle_rf["B:B"] = "Never";
-	cycle_rf["B:C"] = "Never";
+	cycle_rf["B:C"] = "Never:Note lack of C11 guarantee";
 	cycle_rf["B:D"] = "Never";
-	cycle_rf["B:O"] = "Never";
+	cycle_rf["B:O"] = "Never:Note lack of C11 guarantee";
 	cycle_rf["R:A"] = "Never";
 	cycle_rf["R:B"] = "Never";
-	cycle_rf["R:C"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["R:D"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["R:O"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["O:A"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["O:B"] = "Never";
-	cycle_rf["O:C"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["O:D"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_rf["O:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_rf["R:C"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["R:D"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["R:O"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["O:A"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["O:B"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["O:C"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["O:D"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["O:O"] = "Never:Note lack of C11 guarantee";
 
 	# Process transitions
 	cycle_proc["A:A"] = "Never";
 	cycle_proc["A:B"] = "Never";
-	cycle_proc["A:O"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["A:O"] = "Never";
 	cycle_proc["A:R"] = "Never";
 	cycle_proc["B:A"] = "Never";
 	cycle_proc["B:B"] = "Never";
 	cycle_proc["B:O"] = "Never";
 	cycle_proc["B:R"] = "Never";
-	cycle_proc["C:A"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["C:B"] = "Never";
-	cycle_proc["C:O"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["C:R"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["D:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["C:A"] = "Never:Note lack of C11 guarantee";
+	cycle_proc["C:B"] = "Never:Note lack of C11 guarantee";
+	cycle_proc["C:O"] = "Never:Note lack of C11 guarantee";
+	cycle_proc["C:R"] = "Never:Note lack of C11 guarantee";
+	cycle_proc["D:A"] = "Never";
 	cycle_proc["D:B"] = "Never";
-	cycle_proc["D:O"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["D:R"] = "Maybe:Does ARM need paired release-acquire?";
-	cycle_proc["O:A"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["D:O"] = "Never";
+	cycle_proc["D:R"] = "Never";
+	cycle_proc["O:A"] = "Never:Note lack of C11 guarantee";
 	cycle_proc["O:B"] = "Never";
 	cycle_proc["O:O"] = "Sometimes:No ordering";
-	cycle_proc["O:R"] = "Maybe:Does ARM need paired release-acquire?";
+	cycle_proc["O:R"] = "Never:Note lack of C11 guarantee";
 }
 
 ########################################################################
