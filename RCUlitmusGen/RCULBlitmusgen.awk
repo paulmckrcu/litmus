@@ -90,11 +90,13 @@
 # i_mod[proc_num]: Incoming modifier ("once", "acquire", ...)
 # i_operand1[proc_num]: Incoming first operand (register or variable)
 # i_operand2[proc_num]: Incoming second operand (register or variable)
+# i_var[proc_num]: Incoming variable
 # o_dir[proc_num]: Outgoing (write) directive
 # o_op[proc_num]: Outgoing operand ("r" or "w")
 # o_mod[proc_num]: Outgoing modifier ("once", "acquire", ...)
 # o_operand1[proc_num]: Outgoing first operand (register or variable)
 # o_operand2[proc_num]: Outgoing second operand (register or variable)
+# o_var[proc_num]: Outgoing variable
 # rf[rf_num]: Read-from directive
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
 
@@ -210,6 +212,36 @@ function gen_rf_syntax(rfn, x, y) {
 
 ########################################################################
 #
+# Generate the incoming and outgoing variable names for each process and
+# place them into the i_dir[] and o_dir[] arrays.
+#
+function gen_vars(g, n,  p, tvar, v, vn) {
+	# Form the name of the last process's test variable
+	if (g ~ /^L/)
+		tvar = "u0";
+	else
+		tvar = "v0";
+
+	for (p = 1; p <= n; p++) {
+		v = p - 1;
+		vn = v + 1;
+
+		# Incoming variable
+		if (p == 1)
+			i_var[p] = "u0";
+		else
+			i_var[p] = "x" v;
+
+		# Outgoing variable
+		if (p == n)
+			o_var[p] = tvar;
+		else
+			o_var[p] = "x" vn;
+	}
+}
+
+########################################################################
+#
 # Parse the specified process's directive string and set up that
 # process's LISA statements. Arguments are as follows:
 #
@@ -222,14 +254,10 @@ function gen_rf_syntax(rfn, x, y) {
 #
 # This function operates primarily by side effects on global variables.
 #
-function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
-	if (g ~ /^L/)
-		tvar = "u0";
-	else
-		tvar = "v0";
-	v = p - 1;
-	vn = (v + 1) % n;
-	vnn = (vn + 1) % n;
+function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
+	vi = i_var[p]; /* Input variable. */
+	vo = o_var[p]; /* Output variable. */
+	vno = o_var[p == n ? 1 : p + 1]; /* Next process's output variable. */
 
 	# Form incoming statement base.
 	if (p == 1) {
@@ -237,24 +265,24 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		if (g ~ /R[RW]$/) {
 			i_op[p] = "r";
 			i_operand1[p] = "r1";
-			i_operand2[p] = "u0";
+			i_operand2[p] = i_var[p];
 		} else {
 			i_op[p] = "w";
-			i_operand1[p] = "u0";
+			i_operand1[p] = i_var[p];
 			i_operand2[p] = "1";
 		}
 	} else {
 		if (x ~ /A/)
 			i_mod[p] = "acquire";
 		else if (x ~ /D/)
-			i_mod[p] = "lderef";
+			i_mod[p] = "deref";
 		else if (x ~ /L/)
 			i_mod[p] = "lderef";
 		else
 			i_mod[p] = "once";
 		i_op[p] = "r";
 		i_operand1[p] = "r1";
-		i_operand2[p] = "x" v;
+		i_operand2[p] = i_var[p];
 	}
 
 	# Form outgoing statement base.
@@ -263,10 +291,16 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		if (g ~ /R$/) {
 			o_op[p] = "r";
 			o_operand1[p] = "r2";
-			o_operand2[p] = tvar;
+			if (x ~ /d/)
+				o_operand2[p] = "r1";
+			else
+				o_operand2[p] = o_var[p];
 		} else {
 			o_op[p] = "w";
-			o_operand1[p] = tvar;
+			if (x ~ /d/)
+				o_operand1[p] = "r1";
+			else
+				o_operand1[p] = o_var[p];
 			o_operand2[p] = "2";
 		}
 	} else {
@@ -277,19 +311,14 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		else
 			o_mod[p] = "once";
 		o_op[p] = "w";
-		if (x ~ /d/) {
+		if (x ~ /d/)
 			o_operand1[p] = "r1";
-		} else {
-			o_operand1[p] = "x" vn;
-		}
+		else
+			o_operand1[p] = o_var[p];
 		if (xn ~ /d/) {
 			o_operand2[p] = "r3";
-			initializers = initializers " " p - 1 ":r3=x" vnn ";";
-			initializers = initializers " x" vn "=y" vnn ";";
-			if (p == n - 1)
-				initializers = initializers " " vn ":r4=y" vnn ";";
-			else
-				initializers = initializers " " vn ":r4=" tvar ";";
+			initializers = initializers " " p - 1 ":r3=" o_var[p + 1] ";";
+			initializers = initializers " " o_var[p] "=y" p ";";
 		} else {
 			o_operand2[p] = "1";
 		}
@@ -406,7 +435,7 @@ function gen_aux_proc(g, n) {
 function gen_exists(n,  proc_num, wrcmp) {
 	for (proc_num = 2; proc_num <= n; proc_num++) {
 		if (o_operand2[proc_num - 1] == "r3")
-			wrcmp = "x" proc_num;
+			wrcmp = o_var[proc_num];
 		else
 			wrcmp = 1;
 		gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=" wrcmp);
@@ -614,6 +643,7 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	}
 
 	# Generate each process's code.
+	gen_vars(gdir, n);
 	for (i = 1; i <= n; i++) {
 		if (name == "")
 			name = prefix "LB-" ptemp[i];
