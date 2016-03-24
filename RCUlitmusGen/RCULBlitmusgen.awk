@@ -284,12 +284,12 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, v, vn, vnn) {
 		}
 		if (xn ~ /d/) {
 			o_operand2[p] = "r3";
-			initializers = initializers " " p - 1 ":r3=x" vnn;
-			initializers = initializers " x" vn "=y" vnn;
+			initializers = initializers " " p - 1 ":r3=x" vnn ";";
+			initializers = initializers " x" vn "=y" vnn ";";
 			if (p == n - 1)
-				initializers = initializers " " vn ":r4=y" vnn;
+				initializers = initializers " " vn ":r4=y" vnn ";";
 			else
-				initializers = initializers " " vn ":r4=" tvar;
+				initializers = initializers " " vn ":r4=" tvar ";";
 		} else {
 			o_operand2[p] = "1";
 		}
