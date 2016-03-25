@@ -467,7 +467,10 @@ function result_update(oldresult, desc, reasres,  reason, result) {
 	result = reasres;
 	gsub(/:.*$/, "", result);
 	reason = reasres;
-	gsub(/^.*:/, "", reason);
+	if (reason ~ /:/)
+		gsub(/^.*:/, "", reason);
+	else
+		reason = "";
 
 	# "Things can only get worse!"  ;-)
 	if (result != "Never" && result != "Maybe" && result != "Sometimes") {
