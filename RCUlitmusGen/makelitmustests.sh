@@ -100,10 +100,18 @@
 			dir = $0;
 			sub(/ R-Dd /, " R-Od ", dir);
 			print "LRW " dir;
-			# Produce a few with deref, but no dependency
+		}
+		if ($0 ~ / R-Dd$/) {
+			# Produce a few at end with deref, but no dependency
 			dir = $0;
-			sub(/ R-Dd /, " R-D ", dir);
+			sub(/ R-Dd$/, " R-D", dir);
 			print "LRW " dir;
+		}
+		if ($0 ~ / R-Dd$/) {
+			# Produce a few at end with dependency, but no deref 
+			dir = $0;
+			sub(/ R-Dd$/, " R-Od", dir);
+			print "LRR " dir;
 		}
 	}
     	print "GRR " $0;
