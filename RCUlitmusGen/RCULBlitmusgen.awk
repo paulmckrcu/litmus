@@ -549,6 +549,10 @@ function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout) {
 		result = "Never";
 		result = result_update(result, "P0 GWR", "Sometimes:Power rel-acq does not provide write-to-read global transitivity");
 	}
+	if (result == "" && gdir == "GRW") {
+		result = "Never";
+		result = result_update(result, "P0 GRW", "Never:B-cumulativity provides guarantee");
+	}
 	if (result == "" && gdir ~ /^G/) {
 		result = "Never";
 		result = result_update(result, "P0 " gdir, "Maybe:Should rel-acq provide any global transitivity?");
