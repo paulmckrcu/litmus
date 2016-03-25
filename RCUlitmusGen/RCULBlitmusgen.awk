@@ -553,6 +553,8 @@ function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout) {
 		result = "Never";
 		result = result_update(result, "P0 " gdir, "Maybe:Should rel-acq provide any global transitivity?");
 	}
+	if (result == "")
+		result = "Never";
 
 	# Handle first-process ordering constraints
 	rfout = best_rfout(o_dir[1]);
