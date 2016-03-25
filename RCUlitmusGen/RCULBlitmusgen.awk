@@ -18,7 +18,7 @@
 # The per-rf information describes a write-to-read operation of the form
 # W-R as follows:
 #
-# W:	A: Use rcu_assign_pointer(), AKA w[assign].
+# W:	A: Use rcu_assign_pointer(), AKA w[assign].  Deprecated, use "R".
 #	B: Use smp_assign_pointer, AKA f[mb].
 # 	O: Use WRITE_ONCE(), AKA w[once].
 #	R: Use smp_write_release(), AKA w[release].
@@ -31,7 +31,7 @@
 #	c: Impose control dependency.
 #	d: Impose data dependency.
 #	D: Use data dependency, AKA r[deref].
-#	L: Use non-RCU data dependency, AKA r[lderef].
+#	L: Use non-RCU data dependency, AKA r[lderef].  Deprecated, use "D".
 #	O: Use READ_ONCE(), AKA r[once].
 #
 #	Exactly one of "A", "D", "L", or "O" may be specified for a
@@ -112,7 +112,7 @@
 #
 function initialize_cycle_evaluation() {
 	# First-process transitions
-	cycle_proc1["A"] = "Never";
+	cycle_proc1["A"] = "Never:Deprecated, use \"R\" instead";
 	cycle_proc1["B"] = "Never";
 	cycle_proc1["O"] = "Sometimes:No ordering";
 	cycle_proc1["R"] = "Never";
@@ -127,50 +127,50 @@ function initialize_cycle_evaluation() {
 	# Last-process transitions for trailing write
 	cycle_procnW["A"] = "Never";
 	cycle_procnW["B"] = "Never";
-	cycle_procnW["C"] = "Never";
+	cycle_procnW["C"] = "Maybe:Note lack of C11 guarantee, control dependency";
 	cycle_procnW["D"] = "Never";
 	cycle_procnW["O"] = "Sometimes:No ordering";
 
 	# Read-from transitions
 	cycle_rf["A:A"] = "Never";
 	cycle_rf["A:B"] = "Never";
-	cycle_rf["A:C"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["A:D"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["A:O"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["A:C"] = "Never:Note lack of C11 guarantee, control dependency";
+	cycle_rf["A:D"] = "Never";
+	cycle_rf["A:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["B:A"] = "Never";
 	cycle_rf["B:B"] = "Never";
-	cycle_rf["B:C"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["B:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
 	cycle_rf["B:D"] = "Never";
-	cycle_rf["B:O"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["B:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["R:A"] = "Never";
 	cycle_rf["R:B"] = "Never";
-	cycle_rf["R:C"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["R:D"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["R:O"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["O:A"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["O:B"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["O:C"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["O:D"] = "Never:Note lack of C11 guarantee";
-	cycle_rf["O:O"] = "Never:Note lack of C11 guarantee";
+	cycle_rf["R:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
+	cycle_rf["R:D"] = "Never";
+	cycle_rf["R:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:A"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:B"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:C"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:D"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
 
 	# Process transitions
-	cycle_proc["A:A"] = "Never";
+	cycle_proc["A:A"] = "Never:Deprecated, use \"R\" instead of Assign";
 	cycle_proc["A:B"] = "Never";
 	cycle_proc["A:O"] = "Never";
 	cycle_proc["A:R"] = "Never";
-	cycle_proc["B:A"] = "Never";
+	cycle_proc["B:A"] = "Never:Deprecated, use \"R\" instead of Assign";
 	cycle_proc["B:B"] = "Never";
 	cycle_proc["B:O"] = "Never";
 	cycle_proc["B:R"] = "Never";
-	cycle_proc["C:A"] = "Never:Note lack of C11 guarantee";
-	cycle_proc["C:B"] = "Never:Note lack of C11 guarantee";
-	cycle_proc["C:O"] = "Never:Note lack of C11 guarantee";
-	cycle_proc["C:R"] = "Never:Note lack of C11 guarantee";
-	cycle_proc["D:A"] = "Never";
+	cycle_proc["C:A"] = "Maybe:Note lack of C11 guarantee\n\tDeprecated, use \"R\" instead of Assign";
+	cycle_proc["C:B"] = "Maybe:Note lack of C11 guarantee";
+	cycle_proc["C:O"] = "Maybe:Note lack of C11 guarantee";
+	cycle_proc["C:R"] = "Maybe:Note lack of C11 guarantee";
+	cycle_proc["D:A"] = "Never:Deprecated, use \"R\" instead of Assign";
 	cycle_proc["D:B"] = "Never";
 	cycle_proc["D:O"] = "Never";
 	cycle_proc["D:R"] = "Never";
-	cycle_proc["O:A"] = "Never:Note lack of C11 guarantee";
+	cycle_proc["O:A"] = "Never:Note lack of C11 guarantee\n\tDeprecated, use \"R\" instead of Assign";
 	cycle_proc["O:B"] = "Never";
 	cycle_proc["O:O"] = "Sometimes:No ordering";
 	cycle_proc["O:R"] = "Never:Note lack of C11 guarantee";

@@ -81,7 +81,7 @@
 
 {
 	# Properly paired tests
-	sh gendir.sh "A-Dd A-Ld R-A R-Oc OB-O" 4 |
+	sh gendir.sh "R-Dd R-A R-Oc OB-O" 4 |
 		sed -e 's/OB-O$/OB-OB/'
 } | awk '{
     	if (NF > 1) {
