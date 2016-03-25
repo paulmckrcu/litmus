@@ -89,6 +89,22 @@
 		print "LRW " $0;
 		print "LWR " $0;
 		print "LWW " $0;
+		if ($0 ~ / OB-O OB-O /) {
+			# Produce a few once-once examples
+			dir = $0;
+			sub(/ OB-O /, " O-O ", dir);
+			print "LRW " dir;
+		}
+		if ($0 ~ / R-Dd R-Dd /) {
+			# Produce a few with dependency, but no deref
+			dir = $0;
+			sub(/ R-Dd /, " R-Od ", dir);
+			print "LRW " dir;
+			# Produce a few with deref, but no dependency
+			dir = $0;
+			sub(/ R-Dd /, " R-D ", dir);
+			print "LRW " dir;
+		}
 	}
     	print "GRR " $0;
     	print "GRW " $0;
