@@ -105,6 +105,7 @@
 # o_operand1[proc_num]: Outgoing first operand (register or variable)
 # o_operand2[proc_num]: Outgoing second operand (register or variable)
 # o_t[proc_num]: Outgoing operand timestamp.
+# r_maybe: An indeterminantly ordered operation was encountered
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
 #
 # Incoming is first and outgoing is last, unless "I" is specified, in
@@ -506,6 +507,7 @@ function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 	# Pick large number as starting point and propagate timestamps.
 	t = 10000000;
 	t_min = t;
+	r_maybe = 0;
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		i_t[proc_num] = t;
 		y = extract_mod(ptemp[proc_num]);
@@ -518,6 +520,8 @@ function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
 			o_t[proc_num] = prev_gp(t);
+			if (y ~ /^[R12]*$/)
+				r_maybe = 1;
 		} else {
 			# Normal CPU-based ordering constrains.
 			o_t[proc_num] = next_step(t);
@@ -579,7 +583,10 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 	gen_timing(ptemp, n);
 
 	# Generate the result-summary comment.
-	result = i_t[1] >= o_t[n] ? "Sometimes" : "Never";
+	if (i_t[1] >= o_t[n])
+		result = "Sometimes"
+	else
+		result = r_maybe ? "Maybe" : "Never";
 	comment = "Result: " result;
 	print " result: " result;
 
@@ -597,7 +604,10 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 			break;
 		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
-			gen_add_comment("\nP" proc_num - 1 " goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
+			if (y ~ /^[R12]*$/)
+				gen_add_comment("\nP" proc_num - 1 " -maybe- goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
+			else
+				gen_add_comment("\nP" proc_num - 1 " goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
 		} else {
 			# Normal CPU-based ordering constrains.
 			gen_add_comment("\nP" proc_num - 1 " advances slightly " timing_to_gp_str(o_t[proc_num]) ".");
