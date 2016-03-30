@@ -328,7 +328,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 	line_num = 0;
 	stmts[p ":" ++line_num] = i_op[p] "[" i_mod[p] "] " i_operand1[p] " " i_operand2[p];
 	if (x ~ /c/) {
-		stmts[p ":" ++line_num] = "mov r4 (eq r1 r4)";
+		stmts[p ":" ++line_num] = "mov r4 (neq r1 r4)";
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
 	if (x ~ /B/ || y ~ /B/)
