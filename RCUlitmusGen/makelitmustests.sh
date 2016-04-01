@@ -112,6 +112,10 @@
 			dir = $0;
 			sub(/ R-Dd$/, " R-Od", dir);
 			print "LRR " dir;
+			# Produce a few at end with both control and dependency
+			dir = $0;
+			sub(/ R-Dd$/, " R-Dcd", dir);
+			print "LRW " dir;
 		}
 	}
     	print "GRR " $0;
