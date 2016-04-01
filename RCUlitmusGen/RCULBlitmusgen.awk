@@ -286,7 +286,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		if (x ~ /c/ && x !~ /d/)
 			initializers = initializers " " p - 1 ":r4=" o_operand2[p - 1] ";";
 		else if (x ~ /c/)
-			initializers = initializers " " p - 1 ":r4=x" p ";";
+			initializers = initializers " " p - 1 ":r4=" o_var[p] ";";
 	}
 
 	# Form outgoing statement base.
