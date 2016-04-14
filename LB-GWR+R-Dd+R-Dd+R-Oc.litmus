@@ -3,7 +3,7 @@ LISA litmus/LB-GWR+R-Dd+R-Dd+R-Oc
  * Result: Sometimes
  * P0 GWR: Never->Sometimes: Power rel-acq does not provide write-to-read global transitivity
  * P2-P3 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P3 Oc,GWR: Control dependencies do not order reads
+ * P3 Oc,GWR: Control dependencies do not order trailing reads
  *)
 {
  0:r3=x2; x1=y1; 1:r3=x3; x2=y2; 3:r4=1;

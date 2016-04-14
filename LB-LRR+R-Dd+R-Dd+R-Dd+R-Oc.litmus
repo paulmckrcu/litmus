@@ -2,7 +2,7 @@ LISA litmus/LB-LRR+R-Dd+R-Dd+R-Dd+R-Oc
 (*
  * Result: Sometimes
  * P3-P4 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P4 Oc,LRR: Maybe->Sometimes: Control dependencies do not order reads
+ * P4 Oc,LRR: Maybe->Sometimes: Control dependencies do not order trailing reads
  *)
 {
  0:r3=x2; x1=y1; 1:r3=x3; x2=y2; 2:r3=x4; x3=y3; 4:r4=1;

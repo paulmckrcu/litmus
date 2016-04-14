@@ -1,7 +1,7 @@
 LISA litmus/LB-LRW+R-A+O-O+OB-O+OB-OB
 (*
- * Result: Never
- * P1-P2 rf O-O: Note lack of C11 guarantee, no synchronizes-with
+ * Result: Maybe
+ * P1-P2 rf O-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
  *)
 {
 }

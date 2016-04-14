@@ -1,9 +1,9 @@
 LISA litmus/LB-LWR+R-A+R-Oc+OB-O+R-Oc
 (*
  * Result: Sometimes
- * P2-P3 rf OB-O: Note lack of C11 guarantee, no synchronizes-with
- * P3-P4 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P4 Oc,LWR: Maybe->Sometimes: Control dependencies do not order reads
+ * P2-P3 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
+ * P3-P4 rf R-Oc: Note lack of C11 guarantee, control dependency
+ * P4 Oc,LWR: Maybe->Sometimes: Control dependencies do not order trailing reads
  *)
 {
  2:r4=1; 4:r4=1;

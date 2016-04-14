@@ -3,7 +3,7 @@ LISA litmus/LB-GRR+R-A+R-Oc
  * Result: Sometimes
  * P0 GRR: Never->Maybe: Should rel-acq provide any global transitivity?
  * P1-P2 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P2 Oc,GRR: Maybe->Sometimes: Control dependencies do not order reads
+ * P2 Oc,GRR: Maybe->Sometimes: Control dependencies do not order trailing reads
  *)
 {
  2:r4=1;
