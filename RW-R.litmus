@@ -1,0 +1,11 @@
+LISA litmus/RW-R
+(* Result: Never *)
+{
+}
+ P0            ;
+ f[lock]       ;
+ r[once] r1 x0 ;
+ w[once] x0 1  ;
+ f[unlock]     ;
+exists
+(0:r1=1)

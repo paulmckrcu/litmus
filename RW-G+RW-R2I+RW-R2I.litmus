@@ -1,0 +1,20 @@
+LISA litmus/RW-G+RW-R2I+RW-R2I
+(*
+ * Result: Sometimes
+ * 
+ * Process 0 starts (t=100000).
+ * 
+ * P0 advances one grace period (t=200000).
+ * 
+ * P1 is unordered, therefore cycle is allowed.
+ * Skipping remainder of analysis.
+ *)
+{
+}
+ P0            | P1            | P2            ;
+ r[once] r1 x0 | w[once] x2 1  | w[once] x0 1  ;
+ call[sync]    | f[lock]       | f[lock]       ;
+ w[once] x1 1  | r[once] r1 x1 | r[once] r1 x2 ;
+               | f[unlock]     | f[unlock]     ;
+exists
+(0:r1=1 /\ 1:r1=1 /\ 2:r1=1)
