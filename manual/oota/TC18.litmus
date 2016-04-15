@@ -12,8 +12,6 @@ LISA TC18
  *
  * Note: Maybe for Java, but relaxed atomics in C11 prohibit violating
  *	cache coherence.  Adjusted result accordingly.
- *
- * Note: Gives "0:r1=S10; 0:r3=0; 1:r2=S10;".  Intentional?
  *)
 {
 x = 0;
@@ -27,5 +25,6 @@ y = 0;
  SKIP0:             |              ;
  r[once] r1 x       |              ;
  w[once] y r1       |              ;
-exists (0:r1=42 /\ 0:r3=42 /\ 1:r2=42)
+exists (0:r1=1:r2 /\ ~1:r2=0 /\ ~1:r2=42 /\ 0:r3=0:r3)
+(* exists (0:r1=42 /\ 0:r3=42 /\ 1:r2=42) Note: fails to note S results. *)
 

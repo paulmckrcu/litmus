@@ -8,9 +8,6 @@ LISA TC5
  *	even if there are other executions in which the thin-air value
  *	would have been written to that variable by some not out-of-thin
  *	air means.
- *
- * Note: herd7 claims Never, but lists "0:r1=S4; 1:r2=S4; 3:r3=1;"
- *	Help?
  *)
 {
 x = 0;
@@ -20,5 +17,6 @@ z = 0;
  P0           | P1           | P2          | P3           ;
  r[once] r1 x | r[once] r2 y | w[once] z 1 | r[once] r3 z ;
  w[once] y r1 | w[once] x r2 |             | w[once] x r3 ;
-exists (0:r1=1 /\ 1:r2=1 /\ 3:r3=0)
+exists (0:r1=1:r2 /\ ~1:r2=0 /\ ~1:r2=1 /\ 3:r3=3:r3)
+(* exists (0:r1=1 /\ 1:r2=1 /\ 3:r3=0) Note: Fails to note S values. *)
 
