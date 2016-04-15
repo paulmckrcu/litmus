@@ -1,6 +1,6 @@
 LISA TC9
 (*
- * Result: Sometimes
+ * Result: Sometimes (but requires modeling the compiler)
  *
  * http://www.cs.umd.edu/~pugh/java/memoryModel/unifiedProposal/testcases.html
  *
