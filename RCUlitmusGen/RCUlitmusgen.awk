@@ -41,6 +41,8 @@
 #	d: Set up for dependency ordering at the next link in the chain.
 #		Implied by "s".
 #	G: Separate the X accesses with an RCU grace period.
+#	H: Separate the X accesses with a pair of RCU grace period.
+#		When combined with G, make that three grace periods!
 #	I: Invert the order of the accesses so that the outgoing
 #		variable is first and the incoming variable is second.
 #	l: Maintain a lockless data dependency betweeen the first access
@@ -121,7 +123,7 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " bad read-write specifier: " x > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^123aBCdDGIlRrs]/) {
+	if (y ~ /[^123aBCdDGHIlRrs]/) {
 		print "Process " p - 1 " bad modifier: " y > "/dev/stderr";
 		exit 1;
 	}
@@ -154,7 +156,7 @@ function gen_proc_syntax(p, x, y,  i) {
 		i++;
 	if (y ~ /[CD]/)
 		i++;
-	if (y ~ /G/)
+	if (y ~ /G/ || y ~ /H/)
 		i++;
 	if (i > 1) {
 		print "Process " p - 1 " too many ordering directives! " y > "/dev/stderr";
@@ -299,6 +301,10 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 	}
 	if (y ~ /G/)
 		stmts[p ":" ++line_num] = "call[sync]";
+	if (y ~ /H/) {
+		stmts[p ":" ++line_num] = "call[sync]";
+		stmts[p ":" ++line_num] = "call[sync]";
+	}
 	if (y ~ /R/ && y ~ /[23]/)
 		stmts[p ":" ++line_num] = "f[lock]";
 	stmts[p ":" ++line_num] = l_op[p] "[" l_mod[p] "] " l_operand1[p] " " l_operand2[p];
@@ -420,7 +426,7 @@ function gen_comment_deadlock(ptemp, n, proc_num, deadlock, plural) {
 	# Check for RCU self-deadlock.
 	deadlock = "";
 	for (proc_num = 1; proc_num <= n; proc_num++) {
-		if (ptemp[proc_num] ~ /-.*G/ && ptemp[proc_num] ~ /-.*R/) {
+		if (ptemp[proc_num] ~ /-.*[GH]/ && ptemp[proc_num] ~ /-.*R/ && ptemp[proc_num] !~ /-.*[123]/) {
 			if (deadlock == "")
 				deadlock = proc_num - 1 "";
 			else
@@ -511,16 +517,22 @@ function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		i_t[proc_num] = t;
 		y = extract_mod(ptemp[proc_num]);
-		if (y !~ /I/ && y ~ /G/) {
-			# RCU grace period constrains.
-			o_t[proc_num] = next_gp(t);
+		if (y !~ /I/ && (y ~ /G/ || y ~ /H/)) {
+			# RCU grace period(s) constrain(s).
+			if (y ~ /G/)
+				t = next_gp(t);
+			if (y ~ /H/) {
+				t = next_gp(t);
+				t = next_gp(t);
+			}
+			o_t[proc_num] = t;
 		} else if ((y ~ /I/ && (y !~ /R/ || y ~ /[123]/)) || y == "") {
 			# No ordering whatsoever, back to beginning of time.
 			o_t[proc_num] = 0;
 		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
 			o_t[proc_num] = prev_gp(t);
-			if (y ~ /^[R12]*$/)
+			if (y ~ /^[R123]*$/ && y ~ /[12]/)
 				r_maybe = 1;
 		} else {
 			# Normal CPU-based ordering constrains.
@@ -571,7 +583,7 @@ function timing_to_gp_str(t,  gp_num) {
 # ptemp: Array of per-process directives.
 # n: Number of processes.
 #
-function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
+function gen_comment_timing(ptemp, n,  proc_num, result, s, t, y) {
 
 	# Special-case uni-process litmus tests
 	if (n == 1) {
@@ -594,9 +606,14 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 	gen_add_comment("\nProcess 0 starts " timing_to_gp_str(i_t[1]) ".");
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		y = extract_mod(ptemp[proc_num]);
-		if (y !~ /I/ && y ~ /G/) {
-			# RCU grace period constrains.
-			gen_add_comment("\nP" proc_num - 1 " advances one grace period " timing_to_gp_str(o_t[proc_num]) ".");
+		if (y !~ /I/ && (y ~ /G/ || y ~ /H/)) {
+			# RCU grace period(s) constrain(s).
+			s = " one grace period ";
+			if (y ~ /G/ && y ~ /H/)
+				s = " three grace periods ";
+			else if (y ~ /H/)
+				s = " two grace periods ";
+			gen_add_comment("\nP" proc_num - 1 " advances" s timing_to_gp_str(o_t[proc_num]) ".");
 		} else if ((y ~ /I/ && (y !~ /R/ || y ~ /[123]/)) || y == "") {
 			# No ordering whatsoever, back to beginning of time.
 			gen_add_comment("\nP" proc_num - 1 " is unordered, therefore cycle is allowed.");
@@ -604,7 +621,7 @@ function gen_comment_timing(ptemp, n,  proc_num, result, t, y) {
 			break;
 		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
-			if (y ~ /^[R12]*$/)
+			if (y ~ /^[R123]*$/ && y ~ /[12]/)
 				gen_add_comment("\nP" proc_num - 1 " -maybe- goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
 			else
 				gen_add_comment("\nP" proc_num - 1 " goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
