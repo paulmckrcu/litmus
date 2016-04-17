@@ -77,6 +77,27 @@
 	sh gendir.sh "WW-G WW-R" 8
 	sh gendir.sh "WW-G WW-R" 8 |
 		sed -n -e 's/WW-R/WW-B/p'
+
+	# Combinations of grace periods and critical sections on one thread
+	echo RW-GR RW-R
+	echo RW-GR1 RW-R
+	echo RW-GR2 RW-R
+	echo RW-GR3 RW-R
+	echo RW-GR RW-R RW-R
+	echo RW-GR1 RW-R RW-R
+	echo RW-GR2 RW-R RW-R
+	echo RW-GR3 RW-R RW-R
+	echo RW-H RW-R
+	echo RW-H RW-R RW-R
+	echo RW-H RW-R RW-R RW-R
+	echo RW-H RW-R RW-R RW-G RW-R
+	echo RW-H RW-R RW-R RW-G RW-R RW-R
+	echo RW-GH RW-R
+	echo RW-GH RW-R RW-R
+	echo RW-GH RW-R RW-R RW-R
+	echo RW-GH RW-R RW-R RW-R RW-R
+	echo RW-GH RW-R RW-R RW-R RW-G RW-R
+	echo RW-GH RW-R RW-R RW-R RW-G RW-R RW-R
 } | sort -u | sh dir2litmus.sh litmus/
 
 {
