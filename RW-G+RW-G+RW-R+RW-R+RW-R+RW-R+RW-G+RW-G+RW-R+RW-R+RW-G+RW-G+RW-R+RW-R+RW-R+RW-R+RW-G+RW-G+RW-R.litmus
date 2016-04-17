@@ -8,39 +8,39 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-R+RW-R+RW-G+RW-G+RW-R+RW-
  * 
  * P1 advances one grace period (t=689986).
  * 
- * P2 -maybe- goes back a bit less than one grace period (t=590987).
+ * P2 goes back a bit less than one grace period (t=590987).
  * 
- * P3 -maybe- goes back a bit less than one grace period (t=491988).
+ * P3 goes back a bit less than one grace period (t=491988).
  * 
- * P4 -maybe- goes back a bit less than one grace period (t=392989).
+ * P4 goes back a bit less than one grace period (t=392989).
  * 
- * P5 -maybe- goes back a bit less than one grace period (t=293990).
+ * P5 goes back a bit less than one grace period (t=293990).
  * 
  * P6 advances one grace period (t=393991).
  * 
  * P7 advances one grace period (t=493992).
  * 
- * P8 -maybe- goes back a bit less than one grace period (t=394993).
+ * P8 goes back a bit less than one grace period (t=394993).
  * 
- * P9 -maybe- goes back a bit less than one grace period (t=295994).
+ * P9 goes back a bit less than one grace period (t=295994).
  * 
  * P10 advances one grace period (t=395995).
  * 
  * P11 advances one grace period (t=495996).
  * 
- * P12 -maybe- goes back a bit less than one grace period (t=396997).
+ * P12 goes back a bit less than one grace period (t=396997).
  * 
- * P13 -maybe- goes back a bit less than one grace period (t=297998).
+ * P13 goes back a bit less than one grace period (t=297998).
  * 
- * P14 -maybe- goes back a bit less than one grace period (t=198999).
+ * P14 goes back a bit less than one grace period (t=198999).
  * 
- * P15 -maybe- goes back a bit less than one grace period (t=100000).
+ * P15 goes back a bit less than one grace period (t=100000).
  * 
  * P16 advances one grace period (t=200001).
  * 
  * P17 advances one grace period (t=300002).
  * 
- * P18 -maybe- goes back a bit less than one grace period (t=201003).
+ * P18 goes back a bit less than one grace period (t=201003).
  * 
  * Process 0 start at t=489985, process 19 end at t=201003: Cycle allowed.
  *)

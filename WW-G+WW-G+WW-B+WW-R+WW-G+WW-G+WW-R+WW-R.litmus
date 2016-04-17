@@ -1,6 +1,6 @@
 LISA litmus/WW-G+WW-G+WW-B+WW-R+WW-G+WW-G+WW-R+WW-R
 (*
- * Result: Maybe
+ * Result: Never
  * 
  * Process 0 starts (t=100000).
  * 
@@ -10,15 +10,15 @@ LISA litmus/WW-G+WW-G+WW-B+WW-R+WW-G+WW-G+WW-R+WW-R
  * 
  * P2 advances slightly (t=300003).
  * 
- * P3 -maybe- goes back a bit less than one grace period (t=201004).
+ * P3 goes back a bit less than one grace period (t=201004).
  * 
  * P4 advances one grace period (t=301005).
  * 
  * P5 advances one grace period (t=401006).
  * 
- * P6 -maybe- goes back a bit less than one grace period (t=302007).
+ * P6 goes back a bit less than one grace period (t=302007).
  * 
- * P7 -maybe- goes back a bit less than one grace period (t=203008).
+ * P7 goes back a bit less than one grace period (t=203008).
  * 
  * Process 0 start at t=100000, process 8 end at t=203008: Cycle forbidden.
  *)

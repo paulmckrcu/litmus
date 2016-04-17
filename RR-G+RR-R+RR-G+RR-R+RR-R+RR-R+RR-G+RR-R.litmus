@@ -6,19 +6,19 @@ LISA litmus/RR-G+RR-R+RR-G+RR-R+RR-R+RR-R+RR-G+RR-R
  * 
  * P0 advances one grace period (t=395995).
  * 
- * P1 -maybe- goes back a bit less than one grace period (t=296996).
+ * P1 goes back a bit less than one grace period (t=296996).
  * 
  * P2 advances one grace period (t=396997).
  * 
- * P3 -maybe- goes back a bit less than one grace period (t=297998).
+ * P3 goes back a bit less than one grace period (t=297998).
  * 
- * P4 -maybe- goes back a bit less than one grace period (t=198999).
+ * P4 goes back a bit less than one grace period (t=198999).
  * 
- * P5 -maybe- goes back a bit less than one grace period (t=100000).
+ * P5 goes back a bit less than one grace period (t=100000).
  * 
  * P6 advances one grace period (t=200001).
  * 
- * P7 -maybe- goes back a bit less than one grace period (t=101002).
+ * P7 goes back a bit less than one grace period (t=101002).
  * 
  * Process 0 start at t=295995, process 8 end at t=101002: Cycle allowed.
  *)

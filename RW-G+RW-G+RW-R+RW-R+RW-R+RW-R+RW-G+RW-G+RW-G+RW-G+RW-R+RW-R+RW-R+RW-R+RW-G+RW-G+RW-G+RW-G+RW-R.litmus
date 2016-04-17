@@ -1,6 +1,6 @@
 LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R
 (*
- * Result: Maybe
+ * Result: Never
  * 
  * Process 0 starts (t=295995).
  * 
@@ -8,13 +8,13 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-
  * 
  * P1 advances one grace period (t=495996).
  * 
- * P2 -maybe- goes back a bit less than one grace period (t=396997).
+ * P2 goes back a bit less than one grace period (t=396997).
  * 
- * P3 -maybe- goes back a bit less than one grace period (t=297998).
+ * P3 goes back a bit less than one grace period (t=297998).
  * 
- * P4 -maybe- goes back a bit less than one grace period (t=198999).
+ * P4 goes back a bit less than one grace period (t=198999).
  * 
- * P5 -maybe- goes back a bit less than one grace period (t=100000).
+ * P5 goes back a bit less than one grace period (t=100000).
  * 
  * P6 advances one grace period (t=200001).
  * 
@@ -24,13 +24,13 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-
  * 
  * P9 advances one grace period (t=500004).
  * 
- * P10 -maybe- goes back a bit less than one grace period (t=401005).
+ * P10 goes back a bit less than one grace period (t=401005).
  * 
- * P11 -maybe- goes back a bit less than one grace period (t=302006).
+ * P11 goes back a bit less than one grace period (t=302006).
  * 
- * P12 -maybe- goes back a bit less than one grace period (t=203007).
+ * P12 goes back a bit less than one grace period (t=203007).
  * 
- * P13 -maybe- goes back a bit less than one grace period (t=104008).
+ * P13 goes back a bit less than one grace period (t=104008).
  * 
  * P14 advances one grace period (t=204009).
  * 
@@ -40,7 +40,7 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-
  * 
  * P17 advances one grace period (t=504012).
  * 
- * P18 -maybe- goes back a bit less than one grace period (t=405013).
+ * P18 goes back a bit less than one grace period (t=405013).
  * 
  * Process 0 start at t=295995, process 19 end at t=405013: Cycle forbidden.
  *)

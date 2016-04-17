@@ -8,13 +8,13 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-
  * 
  * P1 advances one grace period (t=588983).
  * 
- * P2 -maybe- goes back a bit less than one grace period (t=489984).
+ * P2 goes back a bit less than one grace period (t=489984).
  * 
- * P3 -maybe- goes back a bit less than one grace period (t=390985).
+ * P3 goes back a bit less than one grace period (t=390985).
  * 
- * P4 -maybe- goes back a bit less than one grace period (t=291986).
+ * P4 goes back a bit less than one grace period (t=291986).
  * 
- * P5 -maybe- goes back a bit less than one grace period (t=192987).
+ * P5 goes back a bit less than one grace period (t=192987).
  * 
  * P6 advances one grace period (t=292988).
  * 
@@ -24,23 +24,23 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-
  * 
  * P9 advances one grace period (t=592991).
  * 
- * P10 -maybe- goes back a bit less than one grace period (t=493992).
+ * P10 goes back a bit less than one grace period (t=493992).
  * 
- * P11 -maybe- goes back a bit less than one grace period (t=394993).
+ * P11 goes back a bit less than one grace period (t=394993).
  * 
- * P12 -maybe- goes back a bit less than one grace period (t=295994).
+ * P12 goes back a bit less than one grace period (t=295994).
  * 
- * P13 -maybe- goes back a bit less than one grace period (t=196995).
+ * P13 goes back a bit less than one grace period (t=196995).
  * 
  * P14 advances one grace period (t=296996).
  * 
  * P15 advances one grace period (t=396997).
  * 
- * P16 -maybe- goes back a bit less than one grace period (t=297998).
+ * P16 goes back a bit less than one grace period (t=297998).
  * 
- * P17 -maybe- goes back a bit less than one grace period (t=198999).
+ * P17 goes back a bit less than one grace period (t=198999).
  * 
- * P18 -maybe- goes back a bit less than one grace period (t=100000).
+ * P18 goes back a bit less than one grace period (t=100000).
  * 
  * Process 0 start at t=388982, process 19 end at t=100000: Cycle allowed.
  *)

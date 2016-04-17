@@ -1,6 +1,6 @@
 LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G
 (*
- * Result: Maybe
+ * Result: Never
  * 
  * Process 0 starts (t=295995).
  * 
@@ -8,13 +8,13 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-G+RW-G+RW-R+RW-
  * 
  * P1 advances one grace period (t=495996).
  * 
- * P2 -maybe- goes back a bit less than one grace period (t=396997).
+ * P2 goes back a bit less than one grace period (t=396997).
  * 
- * P3 -maybe- goes back a bit less than one grace period (t=297998).
+ * P3 goes back a bit less than one grace period (t=297998).
  * 
- * P4 -maybe- goes back a bit less than one grace period (t=198999).
+ * P4 goes back a bit less than one grace period (t=198999).
  * 
- * P5 -maybe- goes back a bit less than one grace period (t=100000).
+ * P5 goes back a bit less than one grace period (t=100000).
  * 
  * P6 advances one grace period (t=200001).
  * 
@@ -28,13 +28,13 @@ LISA litmus/RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-G+RW-G+RW-R+RW-
  * 
  * P11 advances one grace period (t=700006).
  * 
- * P12 -maybe- goes back a bit less than one grace period (t=601007).
+ * P12 goes back a bit less than one grace period (t=601007).
  * 
- * P13 -maybe- goes back a bit less than one grace period (t=502008).
+ * P13 goes back a bit less than one grace period (t=502008).
  * 
- * P14 -maybe- goes back a bit less than one grace period (t=403009).
+ * P14 goes back a bit less than one grace period (t=403009).
  * 
- * P15 -maybe- goes back a bit less than one grace period (t=304010).
+ * P15 goes back a bit less than one grace period (t=304010).
  * 
  * P16 advances one grace period (t=404011).
  * 

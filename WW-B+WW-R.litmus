@@ -6,7 +6,7 @@ LISA litmus/WW-B+WW-R
  * 
  * P0 advances slightly (t=198999).
  * 
- * P1 -maybe- goes back a bit less than one grace period (t=100000).
+ * P1 goes back a bit less than one grace period (t=100000).
  * 
  * Process 0 start at t=198998, process 2 end at t=100000: Cycle allowed.
  *)

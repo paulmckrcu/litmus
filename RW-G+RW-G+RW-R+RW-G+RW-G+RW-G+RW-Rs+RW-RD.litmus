@@ -1,6 +1,6 @@
 LISA litmus/RW-G+RW-G+RW-R+RW-G+RW-G+RW-G+RW-Rs+RW-RD
 (*
- * Result: Maybe
+ * Result: Never
  * 
  * Process 0 starts (t=100000).
  * 
@@ -8,7 +8,7 @@ LISA litmus/RW-G+RW-G+RW-R+RW-G+RW-G+RW-G+RW-Rs+RW-RD
  * 
  * P1 advances one grace period (t=300001).
  * 
- * P2 -maybe- goes back a bit less than one grace period (t=201002).
+ * P2 goes back a bit less than one grace period (t=201002).
  * 
  * P3 advances one grace period (t=301003).
  * 

@@ -1,6 +1,6 @@
 LISA litmus/RW-G+RW-Rs+RW-RCD+RW-R
 (*
- * Result: Maybe
+ * Result: Never
  * 
  * Process 0 starts (t=100000).
  * 
@@ -10,7 +10,7 @@ LISA litmus/RW-G+RW-Rs+RW-RCD+RW-R
  * 
  * P2 advances slightly (t=200004).
  * 
- * P3 -maybe- goes back a bit less than one grace period (t=101005).
+ * P3 goes back a bit less than one grace period (t=101005).
  * 
  * Process 0 start at t=100000, process 4 end at t=101005: Cycle forbidden.
  *)
