@@ -120,7 +120,7 @@ function initialize_cycle_evaluation() {
 	# Last-process transitions for trailing read
 	cycle_procnR["A"] = "Never";
 	cycle_procnR["B"] = "Never";
-	cycle_procnR["C"] = "Sometimes:Control dependencies do not order reads";
+	cycle_procnR["C"] = "Sometimes:Control dependencies do not order trailing reads";
 	cycle_procnR["D"] = "Never";
 	cycle_procnR["O"] = "Sometimes:No ordering";
 
@@ -134,24 +134,24 @@ function initialize_cycle_evaluation() {
 	# Read-from transitions
 	cycle_rf["A:A"] = "Never";
 	cycle_rf["A:B"] = "Never";
-	cycle_rf["A:C"] = "Never:Note lack of C11 guarantee, control dependency";
+	cycle_rf["A:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
 	cycle_rf["A:D"] = "Never";
-	cycle_rf["A:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["A:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["B:A"] = "Never";
 	cycle_rf["B:B"] = "Never";
 	cycle_rf["B:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
 	cycle_rf["B:D"] = "Never";
-	cycle_rf["B:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["B:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["R:A"] = "Never";
 	cycle_rf["R:B"] = "Never";
 	cycle_rf["R:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
 	cycle_rf["R:D"] = "Never";
-	cycle_rf["R:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
-	cycle_rf["O:A"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
-	cycle_rf["O:B"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
-	cycle_rf["O:C"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
-	cycle_rf["O:D"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
-	cycle_rf["O:O"] = "Never:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["R:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:A"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:B"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:C"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:D"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 
 	# Process transitions
 	cycle_proc["A:A"] = "Never:Deprecated, use \"R\" instead of Assign";
@@ -170,10 +170,10 @@ function initialize_cycle_evaluation() {
 	cycle_proc["D:B"] = "Never";
 	cycle_proc["D:O"] = "Never";
 	cycle_proc["D:R"] = "Never";
-	cycle_proc["O:A"] = "Never:Note lack of C11 guarantee\n\tDeprecated, use \"R\" instead of Assign";
+	cycle_proc["O:A"] = "Maybe:Note lack of C11 guarantee\n\tDeprecated, use \"R\" instead of Assign";
 	cycle_proc["O:B"] = "Never";
 	cycle_proc["O:O"] = "Sometimes:No ordering";
-	cycle_proc["O:R"] = "Never:Note lack of C11 guarantee";
+	cycle_proc["O:R"] = "Maybe:Note lack of C11 guarantee";
 }
 
 ########################################################################
