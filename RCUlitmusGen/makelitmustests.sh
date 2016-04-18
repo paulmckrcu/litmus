@@ -79,25 +79,28 @@
 		sed -n -e 's/WW-R/WW-B/p'
 
 	# Combinations of grace periods and critical sections on one thread
-	echo RW-GR RW-R
-	echo RW-GR1 RW-R
-	echo RW-GR2 RW-R
-	echo RW-GR3 RW-R
-	echo RW-GR RW-R RW-R
-	echo RW-GR1 RW-R RW-R
-	echo RW-GR2 RW-R RW-R
-	echo RW-GR3 RW-R RW-R
-	echo RW-H RW-R
-	echo RW-H RW-R RW-R
-	echo RW-H RW-R RW-R RW-R
-	echo RW-H RW-R RW-R RW-G RW-R
-	echo RW-H RW-R RW-R RW-G RW-R RW-R
-	echo RW-GH RW-R
-	echo RW-GH RW-R RW-R
-	echo RW-GH RW-R RW-R RW-R
-	echo RW-GH RW-R RW-R RW-R RW-R
-	echo RW-GH RW-R RW-R RW-R RW-G RW-R
-	echo RW-GH RW-R RW-R RW-R RW-G RW-R RW-R
+	for i in RR RW WR WW
+	do
+		echo $i-GR $i-R
+		echo $i-GR1 $i-R
+		echo $i-GR2 $i-R
+		echo $i-GR3 $i-R
+		echo $i-GR $i-R $i-R
+		echo $i-GR1 $i-R $i-R
+		echo $i-GR2 $i-R $i-R
+		echo $i-GR3 $i-R $i-R
+		echo $i-H $i-R
+		echo $i-H $i-R $i-R
+		echo $i-H $i-R $i-R $i-R
+		echo $i-H $i-R $i-R $i-G $i-R
+		echo $i-H $i-R $i-R $i-G $i-R $i-R
+		echo $i-GH $i-R
+		echo $i-GH $i-R $i-R
+		echo $i-GH $i-R $i-R $i-R
+		echo $i-GH $i-R $i-R $i-R $i-R
+		echo $i-GH $i-R $i-R $i-R $i-G $i-R
+		echo $i-GH $i-R $i-R $i-R $i-G $i-R $i-R
+	done
 } | sort -u | sh dir2litmus.sh litmus/
 
 {
