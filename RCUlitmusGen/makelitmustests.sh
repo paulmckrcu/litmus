@@ -23,6 +23,7 @@
 #
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
+# RCU-related tests
 {
 	# Load-buffering RCU tests, and with added ordering.
 	sh gendir.sh "RW-G RW-R" 8
@@ -103,11 +104,13 @@
 	done
 } | sort -u | sh dir2litmus.sh litmus/
 
+# LB tests
 {
 	# Properly paired tests
 	sh gendir.sh "R-Dd R-A R-Oc OB-O" 4 |
 		sed -e 's/OB-O$/OB-OB/'
-} | awk '{
+} | {
+awk '{
     	if (NF > 1) {
 		print "LRR " $0;
 		print "LRW " $0;
@@ -146,6 +149,10 @@
     	print "GRW " $0;
     	print "GWR " $0;
     	print "GWW " $0;
-    }' |
-    sort -u |
+    }'
+for i in GRR GRW GWR GWW LRR LRW LWR LWW
+do
+	echo $i R-A O-Dd
+done
+} | sort -u |
     awk -f RCULBlitmusgen.awk -e '{ gen_lb_litmus("litmus/", $0); }'
