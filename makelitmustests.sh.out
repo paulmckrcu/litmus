@@ -1648,6 +1648,7 @@ name: litmus/LB-GRR+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRR+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRR+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRR+R-A.litmus  result: Maybe
+name: litmus/LB-GRR+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-GRR+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-GRR+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRR+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -1757,6 +1758,7 @@ name: litmus/LB-GRW+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRW+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRW+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRW+R-A.litmus  result: Never
+name: litmus/LB-GRW+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-GRW+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-GRW+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GRW+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -1866,6 +1868,7 @@ name: litmus/LB-GWR+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWR+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWR+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWR+R-A.litmus  result: Sometimes
+name: litmus/LB-GWR+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-GWR+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-GWR+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWR+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -1975,6 +1978,7 @@ name: litmus/LB-GWW+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWW+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWW+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWW+R-A.litmus  result: Maybe
+name: litmus/LB-GWW+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-GWW+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-GWW+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-GWW+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -2082,6 +2086,7 @@ name: litmus/LB-GWW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
 name: litmus/LB-LRR+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LRR+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LRR+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
+name: litmus/LB-LRR+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-LRR+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-LRR+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LRR+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -2192,6 +2197,7 @@ name: litmus/LB-LRW+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LRW+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LRW+O-O+OB-O+OB-OB.litmus  result: Sometimes
 name: litmus/LB-LRW+O-O+OB-O+OB-O+OB-OB.litmus  result: Sometimes
+name: litmus/LB-LRW+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-LRW+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-LRW+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LRW+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -2326,6 +2332,7 @@ name: litmus/LB-LRW+R-Od+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
 name: litmus/LB-LWR+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LWR+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LWR+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
+name: litmus/LB-LWR+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-LWR+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-LWR+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LWR+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -2431,6 +2438,7 @@ name: litmus/LB-LWR+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: litmus/LB-LWW+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LWW+OB-O+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LWW+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
+name: litmus/LB-LWW+R-A+OB-Dd.litmus  result: Never
 name: litmus/LB-LWW+R-A+OB-OB.litmus  result: Never
 name: litmus/LB-LWW+R-A+OB-O+OB-OB.litmus  result: Never
 name: litmus/LB-LWW+R-A+OB-O+OB-O+OB-OB.litmus  result: Never
