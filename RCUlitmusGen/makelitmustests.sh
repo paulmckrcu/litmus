@@ -153,6 +153,7 @@ awk '{
 for i in GRR GRW GWR GWW LRR LRW LWR LWW
 do
 	echo $i R-A O-Dd
+	echo $i R-A OB-Dd
 done
 } | sort -u |
     awk -f RCULBlitmusgen.awk -e '{ gen_lb_litmus("litmus/", $0); }'
