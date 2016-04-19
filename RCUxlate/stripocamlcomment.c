@@ -27,7 +27,7 @@
 
 int main(int argc, char *argv[])
 {
-	int state;
+	int state = NO_COMMENT;
 	int c;
 
 	while ((c = getchar()) != EOF) {

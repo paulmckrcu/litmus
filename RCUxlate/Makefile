@@ -19,7 +19,7 @@ PROGS =	stripocamlcomment
 all: $(PROGS)
 
 stripocamlcomment: stripocamlcomment.c
-	cc -g -o stripocamlcomment stripocamlcomment.c
+	cc -Wall -g -o stripocamlcomment stripocamlcomment.c
 
 clean:
 	rm -f $(PROGS)
