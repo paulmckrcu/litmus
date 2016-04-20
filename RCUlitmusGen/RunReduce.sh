@@ -1,1 +1,0 @@
-../RCUmodel/RunReduce.sh

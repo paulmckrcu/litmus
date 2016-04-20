@@ -1,1 +1,0 @@
-../RCUmodel/runAllCat.sh
