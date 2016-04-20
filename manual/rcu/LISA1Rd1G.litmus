@@ -1,0 +1,18 @@
+LISA LISA1Rd1G
+(*
+ * Simple RCU case with a single grace period and a single read-side
+ * critical section, the latter relying on dependency ordering.
+ * Cycle prohibited.
+ *)
+{
+x0 = x1;
+x1 = x2;
+x2 = 42;
+0:r5=x2;
+}
+ P0              | P1             ;
+ w[assign] x0 r5 | f[lock]        ;
+ call[sync]      | r[deref] r1 x0 ;
+ w[once] x1 7    | r[once] r2 r1  ;
+                 | f[unlock]      ;
+exists (1:r1=1:r1 /\ 1:r2=7)

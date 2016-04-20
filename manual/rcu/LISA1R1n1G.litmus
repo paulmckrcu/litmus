@@ -1,0 +1,18 @@
+LISA LISA1R1n1G
+(*
+ * Simple RCU case with a single grace period, but a nested RCU read-side
+ * critical section.  The nesting gets flattened so that this looks like
+ * a single RCU read-side critical section.  Cycle prohibited.
+ *)
+{
+x0 = 0;
+x1 = 0;
+}
+ P0            | P1            ;
+ f[lock]       | r[once] r1 x1 ;
+ w[once] x0 1  | call[sync]    ;
+ f[lock]       | r[once] r2 x0 ;
+ w[once] x1 1  |               ;
+ f[unlock]     |               ;
+ f[unlock]     |               ;
+exists (1:r1=1 /\ 1:r2=0)

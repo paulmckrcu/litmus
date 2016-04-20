@@ -1,0 +1,17 @@
+LISA LISA4R2t
+(*
+ * In the absence of grace periods, RCU read-side critical sections have
+ * no ordering properties whatsoever.
+ *)
+{
+x0 = 0;
+x1 = 0;
+}
+ P0            | P1            ;
+ f[lock]       | f[lock]       ;
+ w[once] x0 1  | r[once] r1 x1 ;
+ f[unlock]     | f[unlock]     ;
+ f[lock]       | f[lock]       ;
+ w[once] x1 1  | r[once] r2 x0 ;
+ f[unlock]     | f[unlock]     ;
+exists (1:r1=1 /\ 1:r2=0)
