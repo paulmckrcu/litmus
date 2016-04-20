@@ -1,3 +1,11 @@
 *.litmus.out
 *.swp
 *.swo
+*.pdf
+*.aux
+*.blg
+*.log
+*.out
+*-Aux.litmus
+*-AuxCat.litmus
+*~

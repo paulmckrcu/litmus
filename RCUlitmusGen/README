@@ -1,0 +1,19 @@
+Quick start:  Read the RunAllLitmus.sh comment header.
+	For directive syntax, see RCUlitmusgen.awk comment header.
+
+dir2litmus.sh -- Convert gendir.sh output to litmus tests.
+gendir.sh -- Invoke necklace.awk to create litmus-test directives.
+longlitmus.sh -- Empty file for script compatibility.  (Probably obsolete.)
+makelitmustests.sh -- Generate about 1,000 RCU-related litmus tests.
+necklace.awk -- Given an alphabet and length, create all "necklaces".
+necklace.sh -- Test script for early version of necklace generation.
+RCUlitmusgen.awk -- generate_lisa(dir) produces litmus test.
+RCUlitmusout.awk -- awk functions to generate a litmus test.
+RCUlitmusout-test.sh -- Test for above.
+runAllCat.sh -- Symbolic link to real version.  (Probably obsolete.)
+RunAllLitmus.sh -- Given makelitmustests.sh output, run the litmus tests.
+RunLitmus.sh -- Symbolic link to real version.
+RunReduce.sh -- Symbolic link to real version.
+shortlitmus.sh -- Temporary file used to kludge scripts.  (Probably obsolete.)
+
+See comment headers in the files for more information.

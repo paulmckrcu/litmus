@@ -1,0 +1,29 @@
+More litmus tests:
+
+> Locally transitive:
+> 
+> > o	smp_store_release() -> smp_load_acquire() (locally transitive)
+> 
+> Locally transitive chain termination:
+> 
+> (i.e. these can't be used to extend a chain)
+
+Agreed.
+
+> > o	smp_store_release() -> lockless_dereference() (???)
+> > o	rcu_assign_pointer() -> rcu_dereference()
+> > o	smp_store_release() -> READ_ONCE(); if
+
+I am OK with the first and last, but I believe that the middle one
+has real use cases.  So the rcu_assign_pointer() -> rcu_dereference()
+case needs to be locally transitive.
+
+> Globally transitive:
+> 
+> > o	smp_mb(); WRITE_ONCE() -> READ_ONCE(); (globally transitive)
+> > o	synchronize_rcu(); WRITE_ONCE() -> READ_ONCE(); (globally transitive)
+> 
+> RCU:
+> 
+> > o	synchronize_rcu(); WRITE_ONCE() -> rcu_read_lock(); READ_ONCE()
+> > 		(strange and wonderful properties)
