@@ -102,7 +102,7 @@
 		echo $i-GH $i-R $i-R $i-R $i-G $i-R
 		echo $i-GH $i-R $i-R $i-R $i-G $i-R $i-R
 	done
-} | sort -u | sh dir2litmus.sh litmus/
+} | sort -u | sh dir2litmus.sh auto/
 
 # LB tests
 {
