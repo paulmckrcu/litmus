@@ -24,7 +24,7 @@
 #
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
-prefix="${1-litmus/}"
+prefix="${1-auto/}"
 
 gawk -v prefix=$prefix -f RCUlitmusgen.awk -e '
 {

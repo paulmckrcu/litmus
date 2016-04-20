@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Run the automatically generated litmus tests in the litmus/ directory.
+# Run the automatically generated litmus tests specified on stdin.
 #
 # Usage:
 #	sh RunAllLitmus.sh [ ncpus ] < makelitmustests.sh.out

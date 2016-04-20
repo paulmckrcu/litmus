@@ -156,4 +156,4 @@ do
 	echo $i R-A OB-Dd
 done
 } | sort -u |
-    awk -f RCULBlitmusgen.awk -e '{ gen_lb_litmus("litmus/", $0); }'
+    awk -f RCULBlitmusgen.awk -e '{ gen_lb_litmus("auto/", $0); }'
