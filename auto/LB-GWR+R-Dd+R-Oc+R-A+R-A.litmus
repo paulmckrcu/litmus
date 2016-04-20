@@ -1,4 +1,4 @@
-LISA litmus/LB-GWR+R-Dd+R-Oc+R-A+R-A
+LISA auto/LB-GWR+R-Dd+R-Oc+R-A+R-A
 (*
  * Result: Sometimes
  * P0 GWR: Never->Sometimes: Power rel-acq does not provide write-to-read global transitivity

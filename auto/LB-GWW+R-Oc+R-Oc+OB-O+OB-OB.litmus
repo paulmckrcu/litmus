@@ -1,4 +1,4 @@
-LISA litmus/LB-GWW+R-Oc+R-Oc+OB-O+OB-OB
+LISA auto/LB-GWW+R-Oc+R-Oc+OB-O+OB-OB
 (*
  * Result: Maybe
  * P0-P1 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency

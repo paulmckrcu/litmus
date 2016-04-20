@@ -1,4 +1,4 @@
-LISA litmus/LB-LRR+R-A+R-A+R-Oc
+LISA auto/LB-LRR+R-A+R-A+R-Oc
 (*
  * Result: Sometimes
  * P2-P3 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency

@@ -1,4 +1,4 @@
-LISA litmus/LB-GWW+R-A+R-A+R-A+R-Oc
+LISA auto/LB-GWW+R-A+R-A+R-A+R-Oc
 (*
  * Result: Maybe
  * P0 GWW: Never->Maybe: Should rel-acq provide any global transitivity?

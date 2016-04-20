@@ -1,4 +1,4 @@
-LISA litmus/WW-G
+LISA auto/WW-G
 (* Result: Never *)
 {
 }

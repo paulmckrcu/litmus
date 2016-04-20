@@ -1,4 +1,4 @@
-LISA litmus/WR-GR+WR-R
+LISA auto/WR-GR+WR-R
 (*
  * Result: DEADLOCK
  * 

@@ -1,4 +1,4 @@
-LISA litmus/RW-RI+RW-RI
+LISA auto/RW-RI+RW-RI
 (*
  * Result: Sometimes
  * 

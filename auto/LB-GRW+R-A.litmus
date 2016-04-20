@@ -1,4 +1,4 @@
-LISA litmus/LB-GRW+R-A
+LISA auto/LB-GRW+R-A
 (*
  * Result: Never
  * P0 GRW: B-cumulativity provides guarantee

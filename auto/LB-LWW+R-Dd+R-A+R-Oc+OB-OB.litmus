@@ -1,4 +1,4 @@
-LISA litmus/LB-LWW+R-Dd+R-A+R-Oc+OB-OB
+LISA auto/LB-LWW+R-Dd+R-A+R-Oc+OB-OB
 (*
  * Result: Never
  * 

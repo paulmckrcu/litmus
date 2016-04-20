@@ -1,4 +1,4 @@
-LISA litmus/RW-r+RW-C+RW-B+RW-B+RW-B+RW-B+RW-B+RW-B
+LISA auto/RW-r+RW-C+RW-B+RW-B+RW-B+RW-B+RW-B+RW-B
 (*
  * Result: Never
  * 

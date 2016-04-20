@@ -1,4 +1,4 @@
-LISA litmus/LB-LRW+O-O+OB-O+OB-OB
+LISA auto/LB-LRW+O-O+OB-O+OB-OB
 (*
  * Result: Sometimes
  * P0 LRW,O: Never->Sometimes: No ordering

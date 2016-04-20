@@ -1,4 +1,4 @@
-LISA litmus/LB-LRW+R-Dd+O-O+OB-O+OB-OB
+LISA auto/LB-LRW+R-Dd+O-O+OB-O+OB-OB
 (*
  * Result: Maybe
  * P1-P2 rf O-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
