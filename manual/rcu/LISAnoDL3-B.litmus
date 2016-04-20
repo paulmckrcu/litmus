@@ -1,5 +1,7 @@
 LISA LISAnoDL3-B
 (*
+ * Result: Always
+ *
  * Simple RCU case with a single grace period within an RCU read-side
  * critical section.  Non-deadlock case, but cleverly disguised via
  * an unconditional branch over the grace period.  This will fool

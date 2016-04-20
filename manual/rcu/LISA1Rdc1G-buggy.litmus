@@ -1,5 +1,7 @@
 LISA LISA1Rdc1G
 (*
+ * Result: Never
+ *
  * Simple RCU case with a single grace period and a single read-side
  * critical section, the latter relying on dependency ordering, but
  * in turn relying on control dependency to communicate to another process.

@@ -1,5 +1,7 @@
 LISA LISA2qR1G
 (*
+ * Result: Never
+ *
  * A single RCU grace period with two RCU read-side critical sections,
  * however, with a release-acquire relationship between the first
  * critical section and the beginning of the grace period.  This

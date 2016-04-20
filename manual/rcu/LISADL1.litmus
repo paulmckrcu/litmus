@@ -1,5 +1,7 @@
 LISA LISADL1
 (*
+ * Result: DEADLOCK
+ *
  * Simple RCU case with a single grace period within an RCU read-side
  * critical section.  Deadlock case.
  *)

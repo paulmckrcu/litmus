@@ -1,5 +1,7 @@
 LISA LISA1Rib1G
 (*
+ * Result: Sometimes
+ *
  * Alan Stern test with code preceding an RCU read-side critical section
  * and a one-sided grace period.
  *)

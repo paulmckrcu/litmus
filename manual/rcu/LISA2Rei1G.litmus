@@ -1,5 +1,7 @@
 LISA LISA2Rei1G
 (*
+ * Result: Sometimes
+ *
  * One RCU grace period and two RCU read-side critical sections.
  * This would normally allow the cycle, but the first RCU read-side
  * critical section contains a memory barrier.  Unfortunately, this

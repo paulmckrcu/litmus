@@ -1,5 +1,7 @@
 LISA LISA4R2t
 (*
+ * Result: Sometimes
+ *
  * In the absence of grace periods, RCU read-side critical sections have
  * no ordering properties whatsoever.
  *)

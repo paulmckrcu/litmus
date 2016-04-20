@@ -1,5 +1,7 @@
 LISA LISA1xR1GM
 (*
+ * Result: Sometimes
+ *
  * One RCU grace period and one RCU read-side critical section, but set
  * up to verify that RCU read-side critical sections provide no ordering
  * even when interacting with an earlier grace period.  Cycle allowed.

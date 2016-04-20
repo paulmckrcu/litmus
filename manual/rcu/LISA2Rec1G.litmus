@@ -1,5 +1,7 @@
 LISA LISA2Rec1G
 (*
+ * Result: Never
+ *
  * One RCU grace period with a pair of RCU read-side critical sections,
  * but with P0's memory barrier and RCU read-side critical section
  * having effect.  Cycle forbidden.

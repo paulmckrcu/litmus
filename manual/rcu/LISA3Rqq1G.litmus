@@ -1,5 +1,7 @@
 LISA LISA3Rqq1G
 (*
+ * Result: Never
+ *
  * One RCU grace period and three RCU read-side critical sections.
  * This would normally allow the cycle, but there is a release-acquire
  * relationship between P1 and P3, which forces all of P3 to follow

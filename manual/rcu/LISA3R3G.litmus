@@ -1,5 +1,7 @@
 LISA LISA3R3G
 (*
+ * Result: Never
+ *
  * Three RCU grace periods and three RCU read-side critical sections.
  * Cycle forbidden.
  *)

@@ -1,5 +1,7 @@
 LISA LISA2R2Gt
 (*
+ * Result: Never
+ *
  * Two RCU grace periods (in a single thread) and two RCU read-side
  * critical sections.  Cycle prohibited.
  *)

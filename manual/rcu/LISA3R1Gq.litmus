@@ -1,5 +1,7 @@
 LISA LISA3R1Gq
 (*
+ * Result: Sometimes
+ *
  * One grace period and three RCU read-side critical sections.  Ordering
  * from the RCU grace period to P2 could prohibit cycles, except that P3's
  * RCU read-side critical section still allows the needed misordering.

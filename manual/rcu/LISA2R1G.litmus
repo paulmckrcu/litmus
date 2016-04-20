@@ -1,5 +1,7 @@
 LISA LISA2R1G
 (*
+ * Result: Sometimes
+ *
  * One RCU grace period with a pair of RCU read-side critical sections.
  * These critical sections can therefore overlap.  Cycle allowed.
  *)

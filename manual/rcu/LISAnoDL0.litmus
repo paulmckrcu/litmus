@@ -1,5 +1,7 @@
 LISA LISADL1
 (*
+ * Result: Always
+ *
  * Simple RCU case with a single grace period before an RCU read-side
  * critical section.  Non-deadlock case.
  *)

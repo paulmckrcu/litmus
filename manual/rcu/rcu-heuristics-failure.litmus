@@ -1,5 +1,9 @@
 LISA rcu-heuristics-failure.litmus
-(* Should be forbidden, but allowed by kernel-alan *)
+(*
+ * Result: Maybe
+ *
+ * Should be forbidden, but allowed by kernel-alan
+ *)
 {
 }
  P0		| P1		| P2		| P3		;

@@ -1,5 +1,7 @@
 LISA LISA1Rr1G
 (*
+ * Result: Never
+ *
  * Simple RCU case with a single grace period and a single read-side
  * critical section.  Extraneous RCU read-side critical section on P0
  * exposes translation-script bug.  Cycle prohibited.

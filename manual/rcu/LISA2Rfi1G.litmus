@@ -1,5 +1,7 @@
 LISA LISA2Rfi1G
 (*
+ * Result: Sometimes
+ *
  * One RCU grace period and two RCU read-side critical sections, which
  * would normally allow the cycle.  P2's RCU read-side critical section
  * contains a memory barrier, however, this memory barrier is not

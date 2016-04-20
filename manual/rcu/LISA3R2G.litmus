@@ -1,5 +1,7 @@
 LISA LISA3R2G
 (*
+ * Result: Sometimes
+ *
  * Two RCU grace periods and three RCU read-side critical sections.
  * Cycle allowed.
  *

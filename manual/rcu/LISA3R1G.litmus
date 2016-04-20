@@ -1,5 +1,7 @@
 LISA LISA3R1G
 (*
+ * Result: Sometimes
+ *
  * One RCU grace period and three RCU read-side critical sections.
  * This is mostly used as a base case for studying the interaction
  * of RCU and release-acquire pairs.  Cycle allowed.

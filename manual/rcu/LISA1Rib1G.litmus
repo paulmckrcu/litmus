@@ -1,5 +1,7 @@
 LISA LISA1Rib1G
 (*
+ * Result: Sometimes
+ *
  * Simple RCU case with a single grace period and a single read-side
  * critical section, but with extraneous critical section.  Cycle allowed.
  *)

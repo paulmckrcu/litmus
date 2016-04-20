@@ -1,5 +1,7 @@
 LISA LISA2Rt1G
 (*
+ * Result: Never
+ *
  * One RCU grace period and two RCU read-side critical sections, however,
  * these two critical sections are contained in the same thread.  They
  * are not nested, however, if the second one precedes a given grace
