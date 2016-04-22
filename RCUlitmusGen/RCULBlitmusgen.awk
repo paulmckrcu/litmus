@@ -29,10 +29,11 @@
 # R:	A: Use smp_read_acquire(), AKA r[acquire].
 #	B: Use smp_assign_pointer, AKA f[mb].
 #	c: Impose control dependency.
-#	d: Impose data dependency.
+#	d: Impose dependency (address dependency, historical!).
 #	D: Use data dependency, AKA r[deref].
 #	L: Use non-RCU data dependency, AKA r[lderef].  Deprecated, use "D".
 #	O: Use READ_ONCE(), AKA r[once].
+#	v: Impose value dependency (data dependency, historical!)
 #
 #	Exactly one of "A", "D", "L", or "O" may be specified for a
 #	given rf link, but any or all of "B", "c", and "d" may be added
@@ -90,6 +91,7 @@
 # i_mod[proc_num]: Incoming modifier ("once", "acquire", ...)
 # i_operand1[proc_num]: Incoming first operand (register or variable)
 # i_operand2[proc_num]: Incoming second operand (register or variable)
+# i_val[proc_num]: Incoming variable expected value
 # i_var[proc_num]: Incoming variable
 # o_dir[proc_num]: Outgoing (write) directive
 # o_op[proc_num]: Outgoing operand ("r" or "w")
@@ -200,12 +202,16 @@ function gen_rf_syntax(rfn, x, y) {
 		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^ABcdDLO]/) {
+	if (y ~ /[^ABcdDLOv]/) {
 		print "Reads-from edge " rfn " bad read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
 	if ((y ~ /A/) + (y ~ /D/) + (y ~ /L/) + (y ~ /O/) != 1) {
 		print "Reads-from edge " rfn " only one of \"ADLO\" in read-side specifier: \"" y "\"" > "/dev/stderr";
+		exit 1;
+	}
+	if ((y ~ /d/) + (y ~ /v/) > 1) {
+		print "Reads-from edge " rfn " only one of \"dv\" in read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
 }
@@ -294,6 +300,10 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		o_mod[p] = "once";
 		if (g ~ /R$/) {
 			o_op[p] = "r";
+			if (x ~ /v/) {
+				print "Last reads-from edge: Cannot do value/data dependency (\"v\") to trailing read" > "/dev/stderr";
+				exit 1;
+			}
 			o_operand1[p] = "r2";
 			if (x ~ /d/)
 				o_operand2[p] = "r1";
@@ -305,7 +315,13 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 				o_operand1[p] = "r1";
 			else
 				o_operand1[p] = o_var[p];
-			o_operand2[p] = "2";
+			if (x ~ /v/) {
+				o_operand2[p] = "r1";
+				i_val[1] = i_val[p];
+			} else {
+				o_operand2[p] = "2";
+				i_val[1] = "2";
+			}
 		}
 	} else {
 		if (y ~ /A/)
@@ -323,8 +339,13 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 			o_operand2[p] = "r3";
 			initializers = initializers " " p - 1 ":r3=" o_var[p + 1] ";";
 			initializers = initializers " " o_var[p] "=y" p ";";
+			i_val[p + 1] = o_var[p + 1];
+		} else if (x ~ /v/) {
+			o_operand2[p] = "r1";
+			i_val[p + 1] = i_val[p];
 		} else {
 			o_operand2[p] = "1";
+			i_val[p + 1] = "1";
 		}
 	}
 
@@ -377,6 +398,7 @@ function gen_aux_proc_global(g, n,  line_num) {
 	stmts[n + 1 ":" ++line_num] = "f[mb]"
 	if (g ~ /^GR[RW]$/) {
 		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
+		i_val[1] = "1";
 		gen_add_exists("0:r1=1");
 	} else {
 		stmts[n + 1 ":" ++line_num] = "r[once] r2 u0"
@@ -398,10 +420,11 @@ function gen_aux_proc_local(g, n,  line_num) {
 	line_num = 0;
 	if (g == "LRR") {
 		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
+		i_val[1] = "1";
 		gen_add_exists("0:r1=1");
 		gen_add_exists(n - 1 ":r2=0");
 	} else if (g == "LRW") {
-		gen_add_exists("0:r1=2");
+		gen_add_exists("0:r1=" i_val[1]);
 	} else if (g == "LWR") {
 		gen_add_exists(n - 1 ":r2=0");
 	} else {
@@ -438,11 +461,7 @@ function gen_aux_proc(g, n) {
 #
 function gen_exists(n,  proc_num, wrcmp) {
 	for (proc_num = 2; proc_num <= n; proc_num++) {
-		if (o_operand2[proc_num - 1] == "r3")
-			wrcmp = o_var[proc_num];
-		else
-			wrcmp = 1;
-		gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=" wrcmp);
+		gen_add_exists(proc_num - 1 ":" i_operand1[proc_num] "=" i_val[proc_num]);
 	}
 }
 
@@ -509,7 +528,7 @@ function best_rfin(cur_rf,  rfin) {
 		rfin = "B";
 	else if (cur_rf ~ /A/)
 		rfin = "A";
-	else if ((cur_rf ~ /L/ || cur_rf ~ /D/) && cur_rf ~ /d/)
+	else if ((cur_rf ~ /L/ || cur_rf ~ /D/) && cur_rf ~ /[dv]/)
 		rfin = "D";
 	else if (cur_rf ~ /[cd]/)
 		rfin = "C";
