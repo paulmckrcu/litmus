@@ -6,7 +6,7 @@ LISA auto/LB-GWW+R-A+OB-O+R-A+OB-OB
 {
 }
  P0              | P1               | P2              | P3               | P4            | P5            ;
- w[once] u0 1    | r[acquire] r1 x1 | r[once] r1 x2   | r[acquire] r1 x3 | r[once] r1 x4 | r[once] r1 v0 ;
+ w[once] u0 3    | r[acquire] r1 x1 | r[once] r1 x2   | r[acquire] r1 x3 | r[once] r1 x4 | r[once] r1 v0 ;
  w[release] x1 1 | f[mb]            | w[release] x3 1 | f[mb]            | f[mb]         | f[mb]         ;
                  | w[once] x2 1     |                 | w[once] x4 1     | w[once] v0 2  | r[once] r2 u0 ;
 exists

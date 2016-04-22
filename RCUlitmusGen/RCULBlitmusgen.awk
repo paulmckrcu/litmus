@@ -275,7 +275,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		} else {
 			i_op[p] = "w";
 			i_operand1[p] = i_var[p];
-			i_operand2[p] = "1";
+			i_operand2[p] = "3";
 		}
 	} else {
 		if (x ~ /A/)
@@ -428,7 +428,7 @@ function gen_aux_proc_local(g, n,  line_num) {
 	} else if (g == "LWR") {
 		gen_add_exists(n - 1 ":r2=0");
 	} else {
-		gen_add_exists("u0=1");
+		gen_add_exists("u0=3");
 	}
 }
 

@@ -7,7 +7,7 @@ LISA auto/LB-GWR+R-Dd+R-A
  0:r3=x2; x1=y1;
 }
  P0               | P1              | P2               | P3            ;
- w[once] u0 1     | r[deref] r1 x1  | r[acquire] r1 x2 | w[once] v0 1  ;
+ w[once] u0 3     | r[deref] r1 x1  | r[acquire] r1 x2 | w[once] v0 1  ;
  w[release] x1 r3 | w[release] r1 1 | r[once] r2 v0    | f[mb]         ;
                   |                 |                  | r[once] r2 u0 ;
 exists

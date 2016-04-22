@@ -6,7 +6,7 @@ LISA auto/LB-LWR+R-A+R-A
 {
 }
  P0              | P1               | P2               ;
- w[once] u0 1    | r[acquire] r1 x1 | r[acquire] r1 x2 ;
+ w[once] u0 3    | r[acquire] r1 x1 | r[acquire] r1 x2 ;
  w[release] x1 1 | w[release] x2 1  | r[once] r2 u0    ;
 exists
 (2:r2=0 /\ 1:r1=1 /\ 2:r1=1)
