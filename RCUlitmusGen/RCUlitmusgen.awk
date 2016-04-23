@@ -52,7 +52,7 @@
 #		May be modified by 1, 2, or 3 as noted above.
 #	r: Use an release store.  May be used only if the second accesses
 #		is a store.
-#	s: Use an assign store, as in rcu_assign_poiner.  May be used
+#	s: Use an assign store, as in rcu_assign_pointer.  May be used
 #		only if the second accesses is a store.
 #
 #	Any combination of these may be used, though quite a few do not
