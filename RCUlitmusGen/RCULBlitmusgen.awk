@@ -530,7 +530,7 @@ function best_rfin(cur_rf,  rfin) {
 		rfin = "A";
 	else if ((cur_rf ~ /L/ || cur_rf ~ /D/) && cur_rf ~ /[dv]/)
 		rfin = "D";
-	else if (cur_rf ~ /[cd]/)
+	else if (cur_rf ~ /[cdv]/)
 		rfin = "C";
 	else
 		rfin = "O";
