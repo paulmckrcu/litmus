@@ -144,6 +144,22 @@ awk '{
 			sub(/ R-Dd$/, " R-Dcd", dir);
 			print "LRW " dir;
 		}
+		if ($0 ~ / R-Dd R-Dd /) {
+			# Produce a few with value dependency, but no deref
+			dir = $0;
+			sub(/ R-Dd /, " R-Ov ", dir);
+			print "LRW " dir;
+		}
+		if ($0 ~ / R-Dd$/) {
+			# Produce a few at end with value dep, but no deref 
+			dir = $0;
+			sub(/ R-Dd$/, " R-Ov", dir);
+			print "LRW " dir;
+			# Produce a few at end with both control and value
+			dir = $0;
+			sub(/ R-Dd$/, " R-Dcv", dir);
+			print "LRW " dir;
+		}
 	}
     	print "GRR " $0;
     	print "GRW " $0;
