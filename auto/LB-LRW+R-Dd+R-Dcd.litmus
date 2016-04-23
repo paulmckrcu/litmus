@@ -10,7 +10,7 @@ LISA auto/LB-LRW+R-Dd+R-Dcd
  r[once] r1 u0    | r[deref] r1 x1   | r[deref] r1 x2     ;
  w[release] x1 r3 | w[release] r1 r3 | mov r4 (neq r1 r4) ;
                   |                  | b[] r4 CTRL2       ;
-                  |                  | w[once] r1 2       ;
+                  |                  | w[once] r1 1       ;
                   |                  | CTRL2:             ;
 exists
-(0:r1=2 /\ 1:r1=x2 /\ 2:r1=u0)
+(0:r1=1 /\ 1:r1=x2 /\ 2:r1=u0)

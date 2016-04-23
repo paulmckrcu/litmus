@@ -319,8 +319,8 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 				o_operand2[p] = "r1";
 				i_val[1] = i_val[p];
 			} else {
-				o_operand2[p] = "2";
-				i_val[1] = "2";
+				o_operand2[p] = "1";
+				i_val[1] = "1";
 			}
 		}
 	} else {
