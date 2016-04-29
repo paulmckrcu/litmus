@@ -58,7 +58,7 @@ then
 		echo " ^^^ Unexpected non-$outcome verification"
 		ret=1
 	fi
-elif grep '^Observation' $litmus.out | grep -q $outcome
+elif grep '^Observation' $litmus.out | grep -q $outcome || test "$outcome" = Maybe
 then
 	ret=0
 else
