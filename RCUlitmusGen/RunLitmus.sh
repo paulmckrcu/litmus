@@ -3,7 +3,7 @@
 # Run a herd test specifying an expected outcome (Sometimes, Always, Never).
 #
 # Usage:
-#	sh runSometimes.sh file.litmus outcome
+#	sh RunLitmus.sh file.litmus outcome
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
