@@ -578,6 +578,41 @@ function timing_to_gp_str(t,  gp_num) {
 
 ########################################################################
 #
+# Check that the litmus test has a form that the timing analysis
+# handles correctly.
+#
+# ptemp: Array of per-process directives.
+# n: Number of processes.
+#
+function gen_comment_timing_check(ptemp, n,  proc_num, can_handle) {
+
+	# All processes RW?  If so, works fine!
+	can_handle = 1;
+	for (proc_num = 1; proc_num <= n; proc_num++)
+		if (ptemp[proc_num] !~ /^RW/)
+			can_handle = 0;
+	if (can_handle)
+		return 1;
+
+	# All processes contain strong barriers?  If so, works fine!
+	can_handle = 1;
+	for (proc_num = 1; proc_num <= n; proc_num++) {
+		if (ptemp[proc_num] ~ /^[RW][RW]$/) {
+			# No ordering, but analysis handles this.
+			continue;
+		}
+		if (ptemp[proc_num] ~ /-.*[BGHR]/) {
+			# Strong barriers or RCU read-side critical section,
+			# which analysis can handle.
+			continue
+		}
+		can_handle = 0;
+	}
+	return can_handle;
+}
+
+########################################################################
+#
 # Produce timing-related comment.
 #
 # ptemp: Array of per-process directives.
@@ -588,6 +623,15 @@ function gen_comment_timing(ptemp, n,  proc_num, result, s, t, y) {
 	# Special-case uni-process litmus tests
 	if (n == 1) {
 		gen_comment_timing_up(ptemp);
+		return;
+	}
+
+	# If the test is not a form that can be reliably classified,
+	# give up.
+	if (!gen_comment_timing_check(ptemp, n)) {
+		result = "Maybe"
+		comment = "Result: " result;
+		print " result: " result;
 		return;
 	}
 
