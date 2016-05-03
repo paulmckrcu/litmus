@@ -1,6 +1,6 @@
 LISA LISA3G
 (*
- * Result: Never
+ * Result: Always
  *
  * Three RCU grace periods with absolutely nothing else.  There is no
  * cycle to be either prohibited or allowed.  This litmus test is therefore
