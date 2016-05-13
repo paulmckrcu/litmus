@@ -4,7 +4,7 @@ LISA LB+rl-deref-addr-rul+o-assign (*5-light*)
  * relationships.  (Note: Reworked to apply to ARM as well as PowerPC.)
  *)
 {
-x = 0;
+x = u;
 y = z;
 z = 42;
 1:r1=y;

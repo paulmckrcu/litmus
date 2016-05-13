@@ -1,10 +1,10 @@
-LISA LB+rl-deref-addr-rul+o-release (*5-light*)
+LISA lb+rl-deref-addr-rul+o-rl (*5-light*)
 (*
  * Forbid: Address dependency in P0 and release in P1, write-to-read
  * relationships.  (Note: Reworked to apply to ARM as well as PowerPC.)
  *)
 {
-x = 0;
+x = u;
 y = z;
 z = 42;
 1:r1=y;
