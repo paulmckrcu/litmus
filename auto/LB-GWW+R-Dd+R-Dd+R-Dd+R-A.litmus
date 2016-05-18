@@ -11,4 +11,4 @@ LISA auto/LB-GWW+R-Dd+R-Dd+R-Dd+R-A
  w[release] x1 r3 | w[release] r1 r3 | w[release] r1 r3 | w[release] r1 1 | w[once] v0 1     | f[mb]         ;
                   |                  |                  |                 |                  | r[once] r2 u0 ;
 exists
-(5:r1=2 /\ 5:r2=0 /\ 1:r1=x2 /\ 2:r1=x3 /\ 3:r1=x4 /\ 4:r1=1)
+(5:r1=1 /\ 5:r2=0 /\ 1:r1=x2 /\ 2:r1=x3 /\ 3:r1=x4 /\ 4:r1=1)

@@ -10,4 +10,4 @@ LISA auto/LB-GWW+OB-OB
  f[mb]        | f[mb]         | f[mb]         ;
  w[once] x1 1 | w[once] v0 1  | r[once] r2 u0 ;
 exists
-(2:r1=2 /\ 2:r2=0 /\ 1:r1=1)
+(2:r1=1 /\ 2:r2=0 /\ 1:r1=1)

@@ -15,4 +15,4 @@ LISA auto/LB-GWW+R-Oc
                  | w[once] v0 1       |               ;
                  | CTRL1:             |               ;
 exists
-(2:r1=2 /\ 2:r2=0 /\ 1:r1=1)
+(2:r1=1 /\ 2:r2=0 /\ 1:r1=1)
