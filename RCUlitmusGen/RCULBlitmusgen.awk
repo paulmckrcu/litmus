@@ -393,7 +393,7 @@ function gen_aux_proc_global(g, n,  line_num) {
 		gen_add_exists(n - 1 ":r2=0");
 	} else {
 		stmts[n + 1 ":" ++line_num] = "r[once] r1 v0"
-		gen_add_exists(n ":r1=2");
+		gen_add_exists(n ":r1=1");
 	}
 	stmts[n + 1 ":" ++line_num] = "f[mb]"
 	if (g ~ /^GR[RW]$/) {
