@@ -5,7 +5,6 @@ LISA LB+rl-deref-addr-rul+o-assign (*5-light*)
  *)
 {
 x = u;
-y = z;
 z = 42;
 1:r1=y;
 }

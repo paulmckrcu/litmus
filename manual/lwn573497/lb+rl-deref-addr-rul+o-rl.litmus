@@ -5,7 +5,6 @@ LISA lb+rl-deref-addr-rul+o-rl (*5-light*)
  *)
 {
 x = u;
-y = z;
 z = 42;
 1:r1=y;
 }
