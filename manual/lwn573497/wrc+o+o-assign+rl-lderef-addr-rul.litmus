@@ -1,4 +1,4 @@
-LISA WRC+o+o-assign+rl-deref-addr-rul (*1-light*)
+LISA WRC+o+o-assign+rl-lderef-addr-rul (*1-light*)
 (*
  * Forbid: Address dependency in P2 and release in P0, write-to-read
  * relationship.  (Note: Reworked to apply to ARM as well as PowerPC.)

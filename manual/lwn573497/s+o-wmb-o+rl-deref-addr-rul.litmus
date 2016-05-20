@@ -1,4 +1,4 @@
-LISA s+o-assign+rl-deref-addr-rul (*7-light*)
+LISA s+o-wmb-o+rl-deref-addr-rul (*7-light*)
 (*
  * Forbid: Address dependency in P1 and wmb in P0, write-to-read
  * relationship.  (Note: Reworked to apply to ARM as well as PowerPC.)
