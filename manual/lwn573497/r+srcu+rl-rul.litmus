@@ -1,4 +1,4 @@
-LISA R+rl-rul+srcu (*14-RCU*)
+LISA R+srcu+rl-rul (*14-RCU*)
 (* Forbid: At least as many GPs and RCU RS CSes. *)
 {
 x = 0;
