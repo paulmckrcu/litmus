@@ -4,7 +4,7 @@ x = 0;
 y = 0;
 }
 P0               | P1               ;
-r[ctrl] r1 x     | r[ctrl] r2 y     ;
+r[once] r1 x     | r[once] r2 y     ;
 mov r3 (eq r1 0) | mov r4 (eq r2 0) ;
 b[] r3 END1      | b[] r4 END2      ;
 w[once] y 1      | w[once] x 1      ;
