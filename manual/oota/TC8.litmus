@@ -22,5 +22,6 @@ y = 0;
  mov r2 (xor r1 r2) | w[once] x r3 ;
  mov r2 (xor r1 r2) |              ;
  w[once] y r2       |              ;
-exists (0:r1=1 /\ 0:r2=0:r2 /\ 1:r3=1)
+locations [0:r2]
+exists (0:r1=1 /\ 1:r3=1)
 
