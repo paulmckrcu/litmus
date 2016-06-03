@@ -1,0 +1,23 @@
+# diy7 -bell ../models/linux.bell -safe FenceMbdWR,FenceMbdRW,FreOnceOnce,RfeOnceOnce,WseOnceOnce -relax FenceWmbdWW,FenceRmbdRR -mix true -size 6 -num false -lowercase true
+# Version 7.03, Revision: 1153
+mp+fencewmbonceonce+fencermbonceonce.litmus
+w+rwc+fencewmbonceonce+fencermbonceonce+fencembonceonce.litmus
+z6.3+fencewmbonceonce+fencewmbonceonce+fencermbonceonce.litmus
+isa2+fencewmbonceonce+fencembonceonce+fencermbonceonce.litmus
+wrc+fencembonceonce+fencermbonceonce+Once.litmus
+iriw+fencermbonceonces+OnceOnce.litmus
+rwc+fencermbonceonce+fencembonceonce+Once.litmus
+wrr+2w+fencermbonceonce+fencewmbonceonce+Once.litmus
+irrwiw+fencermbonceonce+fencembonceonce+OnceOnce.litmus
+z6.4+fencewmbonceonce+fencembonceonce+fencembonceonce.litmus
+r+fencewmbonceonce+fencembonceonce.litmus
+z6.5+fencewmbonceonce+fencewmbonceonce+fencembonceonce.litmus
+z6.0+fencewmbonceonce+fencembonceonce+fencembonceonce.litmus
+2+2w+fencewmbonceonces.litmus
+3.2w+fencewmbonceonces.litmus
+z6.1+fencewmbonceonce+fencewmbonceonce+fencembonceonce.litmus
+s+fencewmbonceonce+fencembonceonce.litmus
+z6.2+fencewmbonceonce+fencembonceonce+fencembonceonce.litmus
+wrw+2w+fencembonceonce+fencewmbonceonce+Once.litmus
+##Plus
+2+2w+wmbs+OBS.litmus

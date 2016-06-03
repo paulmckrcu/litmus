@@ -1,0 +1,22 @@
+#By Linus pronouncement...
+2+2w+fencewmbonceonces Forbid
+2+2w+wmbs+OBS Forbid
+mp+fencewmbonceonce+fencermbonceonce Forbid
+r+fencewmbonceonce+fencembonceonce   Allow
+s+fencewmbonceonce+fencembonceonce   Forbid
+#rmb/wmb and non-transitive
+rwc+fencermbonceonce+fencembonceonce+Once               Allow
+wrc+fencembonceonce+fencermbonceonce+Once               Allow
+wrr+2w+fencermbonceonce+fencewmbonceonce+Once           Allow
+wrw+2w+fencembonceonce+fencewmbonceonce+Once            Allow
+3.2w+fencewmbonceonces                                  Allow
+isa2+fencewmbonceonce+fencembonceonce+fencermbonceonce  Allow
+w+rwc+fencewmbonceonce+fencermbonceonce+fencembonceonce Allow
+z6.0+fencewmbonceonce+fencembonceonce+fencembonceonce   Allow
+z6.1+fencewmbonceonce+fencewmbonceonce+fencembonceonce  Allow
+z6.2+fencewmbonceonce+fencembonceonce+fencembonceonce   Allow
+z6.3+fencewmbonceonce+fencewmbonceonce+fencermbonceonce Allow
+z6.4+fencewmbonceonce+fencembonceonce+fencembonceonce   Allow
+z6.5+fencewmbonceonce+fencewmbonceonce+fencembonceonce  Allow
+iriw+fencermbonceonces+OnceOnce                         Allow
+irrwiw+fencermbonceonce+fencembonceonce+OnceOnce        Allow

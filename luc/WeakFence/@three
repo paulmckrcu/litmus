@@ -1,0 +1,16 @@
+# msort7
+rwc+fencermbonceonce+fencembonceonce+Once.litmus
+wrc+fencembonceonce+fencermbonceonce+Once.litmus
+wrr+2w+fencermbonceonce+fencewmbonceonce+Once.litmus
+wrw+2w+fencembonceonce+fencewmbonceonce+Once.litmus
+3.2w+fencewmbonceonces.litmus
+isa2+fencewmbonceonce+fencembonceonce+fencermbonceonce.litmus
+w+rwc+fencewmbonceonce+fencermbonceonce+fencembonceonce.litmus
+z6.0+fencewmbonceonce+fencembonceonce+fencembonceonce.litmus
+z6.1+fencewmbonceonce+fencewmbonceonce+fencembonceonce.litmus
+z6.2+fencewmbonceonce+fencembonceonce+fencembonceonce.litmus
+z6.3+fencewmbonceonce+fencewmbonceonce+fencermbonceonce.litmus
+z6.4+fencewmbonceonce+fencembonceonce+fencembonceonce.litmus
+z6.5+fencewmbonceonce+fencewmbonceonce+fencembonceonce.litmus
+iriw+fencermbonceonces+OnceOnce.litmus
+irrwiw+fencermbonceonce+fencembonceonce+OnceOnce.litmus

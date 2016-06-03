@@ -1,0 +1,5 @@
+RW-rra+RW-ra+RW-rra+CK-PPC ???
+RW-rra+RW-ra+RW-rwa+CK-PPC Forbid
+RW-rwa+RW-ra+RW-rra+CK-PPC Allow
+RW-rwa+RW-ra+RW-rwa+CK-PPC Forbid
+
