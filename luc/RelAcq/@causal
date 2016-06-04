@@ -1,0 +1,9 @@
+##
+WRC+pooncerelease+poacquireonce+Once.litmus
+##
+ISA2+pooncerelease+poacquireonce+poacquireonce.litmus
+ISA2+pooncerelease+pooncerelease+poacquireonce.litmus
+##
+3.LB+poacquireonces.litmus
+3.LB+pooncereleases.litmus
+3.LB+poacquireonce+poacquireonce+pooncerelease.litmus
