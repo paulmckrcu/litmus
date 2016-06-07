@@ -7,6 +7,9 @@ o	Writes following a control dependency that are unconditionally
 
 o	C11 release sequences.
 
+o	Release-acquire pair short-circuiting a series of RCU read-side
+	critical sections.
+
 > Locally transitive:
 > 
 > > o	smp_store_release() -> smp_load_acquire() (locally transitive)
