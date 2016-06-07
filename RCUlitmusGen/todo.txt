@@ -1,5 +1,12 @@
 More litmus tests:
 
+o	Combined control dependency and f[rmb].
+
+o	Writes following a control dependency that are unconditionally
+	reached.  (Will Deacon and 32-bit ARM conditional move instruction.)
+
+o	C11 release sequences.
+
 > Locally transitive:
 > 
 > > o	smp_store_release() -> smp_load_acquire() (locally transitive)
