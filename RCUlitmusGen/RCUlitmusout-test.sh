@@ -27,7 +27,7 @@
 gawk -f RCUlitmusout.awk -e '
 BEGIN {
 	aux[1 ":" 1] = "w[once] x1 1";
-	aux[1 ":" 2] = "call[sync]";
+	aux[1 ":" 2] = "f[sync]";
 	aux[1 ":" 3] = "w[once] x2 1";
 	aux[2 ":" 1] = "f[lock]";
 	aux[2 ":" 2] = "r[once] r1 x1";

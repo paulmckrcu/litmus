@@ -300,10 +300,10 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
 	if (y ~ /G/)
-		stmts[p ":" ++line_num] = "call[sync]";
+		stmts[p ":" ++line_num] = "f[sync]";
 	if (y ~ /H/) {
-		stmts[p ":" ++line_num] = "call[sync]";
-		stmts[p ":" ++line_num] = "call[sync]";
+		stmts[p ":" ++line_num] = "f[sync]";
+		stmts[p ":" ++line_num] = "f[sync]";
 	}
 	if (y ~ /R/ && y ~ /[23]/)
 		stmts[p ":" ++line_num] = "f[lock]";
