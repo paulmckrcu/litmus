@@ -14,7 +14,7 @@ x2 = 42;
 }
  P0              | P1             ;
  w[assign] x0 r5 | f[lock]        ;
- call[sync]      | r[deref] r1 x0 ;
+ f[sync]         | r[deref] r1 x0 ;
  w[once] x1 7    | r[once] r2 r1  ;
                  | f[unlock]      ;
 locations [1:r1*;]

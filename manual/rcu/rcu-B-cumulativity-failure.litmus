@@ -41,7 +41,7 @@ LISA rcu-B-cumulativity-failure.litmus
 }
  P0		| P1		| P2		    | P3		| P4		;
  f[lock]	| w[once] a 1	| r[once] r2 y	    | w[once] u 1	| r[once] r5 z	;
- r[once] r1 a	| call[sync]	| w[once] z r2	    | w[release] v 1	| f[rmb]	;
+ r[once] r1 a	| f[sync]   	| w[once] z r2	    | w[release] v 1	| f[rmb]	;
  w[once] x 1	| w[once] y 1	| r[acquire] r3 v   |			| r[once] r6 u	;
  f[unlock]	|		| r[once] r4 x	    |			|		;
 exists (0:r1=0 /\ 2:r2=1 /\ 2:r3=1 /\ 2:r4=0 /\ 4:r5=1 /\ 4:r6=0)

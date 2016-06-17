@@ -17,7 +17,7 @@ x2 = 1;
  w[once] x0 1  ;
  r[once] r3 x2 ;
  b[] r3 NODL   ;
- call[sync]    ;
+ f[sync]       ;
  NODL:         ;
  w[once] x1 1  ;
  f[unlock]     ;

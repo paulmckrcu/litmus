@@ -12,7 +12,7 @@ x1 = 0;
 }
  P0            | P1            ;
  f[lock]       | r[once] r1 x1 ;
- w[once] x0 1  | call[sync]    ;
+ w[once] x0 1  | f[sync]       ;
  f[lock]       | r[once] r2 x0 ;
  w[once] x1 1  |               ;
  f[unlock]     |               ;
