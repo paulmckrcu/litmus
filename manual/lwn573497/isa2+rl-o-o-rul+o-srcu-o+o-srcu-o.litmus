@@ -8,7 +8,7 @@ c = 0;
  P0           | P1            | P2            ;
  f[lock]      |               |               ;
  w[once] a 3  | r[once] r1 x  | r[once] r3 c  ;
-              | call[sync]    | call[sync]    ;
+              | f[sync]       | f[sync]       ;
  w[once] x 4  | w[once] c 1   | r[once] r2 a  ;
  f[unlock]    |               |               ;
 exists (1:r1 = 4 /\ 2:r3 = 1 /\ 2:r2 = 1)
