@@ -16,7 +16,7 @@ LISA auto/RW-GR1+RW-R
  f[lock]       | f[lock]       ;
  r[once] r1 x0 | r[once] r1 x1 ;
  f[unlock]     | w[once] x0 1  ;
- call[sync]    | f[unlock]     ;
+ f[sync]       | f[unlock]     ;
  w[once] x1 1  |               ;
 exists
 (0:r1=1 /\ 1:r1=1)

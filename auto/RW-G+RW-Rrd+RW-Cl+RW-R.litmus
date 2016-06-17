@@ -19,7 +19,7 @@ LISA auto/RW-G+RW-Rrd+RW-Cl+RW-R
 }
  P0            | P1               | P2                | P3            ;
  r[once] r1 x0 | f[lock]          | r[lderef] r1 x2   | f[lock]       ;
- call[sync]    | r[once] r1 x1    | mov r4 (eq r1 r4) | r[once] r1 x3 ;
+ f[sync]       | r[once] r1 x1    | mov r4 (eq r1 r4) | r[once] r1 x3 ;
  w[once] x1 1  | w[release] x2 r3 | b[] r4 CTRL2      | w[once] x0 1  ;
                | f[unlock]        | w[once] r1 1      | f[unlock]     ;
                |                  | CTRL2:            |               ;

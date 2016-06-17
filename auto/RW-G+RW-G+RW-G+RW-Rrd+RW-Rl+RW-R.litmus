@@ -23,7 +23,7 @@ LISA auto/RW-G+RW-G+RW-G+RW-Rrd+RW-Rl+RW-R
 }
  P0            | P1            | P2            | P3               | P4              | P5            ;
  r[once] r1 x0 | r[once] r1 x1 | r[once] r1 x2 | f[lock]          | f[lock]         | f[lock]       ;
- call[sync]    | call[sync]    | call[sync]    | r[once] r1 x3    | r[lderef] r1 x4 | r[once] r1 x5 ;
+ f[sync]       | f[sync]       | f[sync]       | r[once] r1 x3    | r[lderef] r1 x4 | r[once] r1 x5 ;
  w[once] x1 1  | w[once] x2 1  | w[once] x3 1  | w[release] x4 r3 | w[once] r1 1    | w[once] x0 1  ;
                |               |               | f[unlock]        | f[unlock]       | f[unlock]     ;
 exists

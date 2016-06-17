@@ -16,8 +16,8 @@ LISA auto/WW-H+WW-R+WW-R
 }
  P0           | P1           | P2           ;
  w[once] x0 2 | f[lock]      | f[lock]      ;
- call[sync]   | w[once] x1 2 | w[once] x2 2 ;
- call[sync]   | w[once] x2 1 | w[once] x0 1 ;
+ f[sync]      | w[once] x1 2 | w[once] x2 2 ;
+ f[sync]      | w[once] x2 1 | w[once] x0 1 ;
  w[once] x1 1 | f[unlock]    | f[unlock]    ;
 exists
 (x0=2 /\ x1=2 /\ x2=2)

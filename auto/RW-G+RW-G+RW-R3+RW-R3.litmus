@@ -18,7 +18,7 @@ LISA auto/RW-G+RW-G+RW-R3+RW-R3
 }
  P0            | P1            | P2            | P3            ;
  r[once] r1 x0 | r[once] r1 x1 | f[lock]       | f[lock]       ;
- call[sync]    | call[sync]    | r[once] r1 x2 | r[once] r1 x3 ;
+ f[sync]       | f[sync]       | r[once] r1 x2 | r[once] r1 x3 ;
  w[once] x1 1  | w[once] x2 1  | f[unlock]     | f[unlock]     ;
                |               | f[lock]       | f[lock]       ;
                |               | w[once] x3 1  | w[once] x0 1  ;

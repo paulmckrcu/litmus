@@ -20,7 +20,7 @@ LISA auto/RR-G+RR-R+RR-R+RR-G+RR-R
 }
  P0            | P1            | P2            | P3            | P4            | P5           ;
  r[once] r1 x0 | f[lock]       | f[lock]       | r[once] r1 x3 | f[lock]       | w[once] x0 1 ;
- call[sync]    | r[once] r1 x1 | r[once] r1 x2 | call[sync]    | r[once] r1 x4 | w[once] x1 1 ;
+ f[sync]       | r[once] r1 x1 | r[once] r1 x2 | f[sync]       | r[once] r1 x4 | w[once] x1 1 ;
  r[once] r2 x1 | r[once] r2 x2 | r[once] r2 x3 | r[once] r2 x4 | r[once] r2 x0 | w[once] x2 1 ;
                | f[unlock]     | f[unlock]     |               | f[unlock]     | w[once] x3 1 ;
                |               |               |               |               | w[once] x4 1 ;

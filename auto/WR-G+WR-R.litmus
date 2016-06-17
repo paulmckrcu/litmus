@@ -14,7 +14,7 @@ LISA auto/WR-G+WR-R
 }
  P0            | P1            ;
  w[once] x0 2  | f[lock]       ;
- call[sync]    | w[once] x1 2  ;
+ f[sync]       | w[once] x1 2  ;
  r[once] r2 x1 | r[once] r2 x0 ;
                | f[unlock]     ;
 exists
