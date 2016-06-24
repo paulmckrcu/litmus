@@ -532,7 +532,7 @@ function gen_timing(ptemp, n,  proc_num, t, t_min, y) {
 		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
 			o_t[proc_num] = prev_gp(t);
-			if (y ~ /^[R123]*$/ && y ~ /[12]/)
+			if (y ~ /^[R123]*$/ && y ~ /[123]/)
 				r_maybe = 1;
 		} else {
 			# Normal CPU-based ordering constrains.
@@ -665,7 +665,7 @@ function gen_comment_timing(ptemp, n,  proc_num, result, s, t, y) {
 			break;
 		} else if (y ~ /R/ && (y ~ /I/ || y ~ /^[R123]*$/)) {
 			# RCU read-side critical section constrains.
-			if (y ~ /^[R123]*$/ && y ~ /[12]/)
+			if (y ~ /^[R123]*$/ && y ~ /[123]/)
 				gen_add_comment("\nP" proc_num - 1 " -maybe- goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");
 			else
 				gen_add_comment("\nP" proc_num - 1 " goes back a bit less than one grace period " timing_to_gp_str(o_t[proc_num]) ".");

@@ -359,7 +359,7 @@ name: auto/RW-G+RW-G+RW-G+RW-R1.litmus  result: Maybe
 name: auto/RW-G+RW-G+RW-G+RW-R1I.litmus  result: Sometimes
 name: auto/RW-G+RW-G+RW-G+RW-R2.litmus  result: Maybe
 name: auto/RW-G+RW-G+RW-G+RW-R2I.litmus  result: Sometimes
-name: auto/RW-G+RW-G+RW-G+RW-R3.litmus  result: Never
+name: auto/RW-G+RW-G+RW-G+RW-R3.litmus  result: Maybe
 name: auto/RW-G+RW-G+RW-G+RW-R3I.litmus  result: Sometimes
 name: auto/RW-G+RW-G+RW-G+RW-RB.litmus  result: Never
 name: auto/RW-G+RW-G+RW-G+RW-RB+RW-G+RW-G+RW-G+RW-R.litmus  result: Never
@@ -445,10 +445,10 @@ name: auto/RW-G+RW-G+RW-R2.litmus  result: Maybe
 name: auto/RW-G+RW-G+RW-R2I.litmus  result: Sometimes
 name: auto/RW-G+RW-G+RW-R2I+RW-R2I.litmus  result: Sometimes
 name: auto/RW-G+RW-G+RW-R2+RW-R2.litmus  result: Maybe
-name: auto/RW-G+RW-G+RW-R3.litmus  result: Never
+name: auto/RW-G+RW-G+RW-R3.litmus  result: Maybe
 name: auto/RW-G+RW-G+RW-R3I.litmus  result: Sometimes
 name: auto/RW-G+RW-G+RW-R3I+RW-R3I.litmus  result: Sometimes
-name: auto/RW-G+RW-G+RW-R3+RW-R3.litmus  result: Never
+name: auto/RW-G+RW-G+RW-R3+RW-R3.litmus  result: Maybe
 name: auto/RW-G+RW-G+RW-RB.litmus  result: Never
 name: auto/RW-G+RW-G+RW-RB+RW-G+RW-G+RW-G+RW-R+RW-R.litmus  result: Never
 name: auto/RW-G+RW-G+RW-RB+RW-G+RW-G+RW-R.litmus  result: Never
@@ -645,12 +645,12 @@ name: auto/RW-G+RW-R2I+RW-R2I+RW-R2I.litmus  result: Sometimes
 name: auto/RW-G+RW-R2+RW-G+RW-R2.litmus  result: Maybe
 name: auto/RW-G+RW-R2+RW-R2.litmus  result: Sometimes
 name: auto/RW-G+RW-R2+RW-R2+RW-R2.litmus  result: Sometimes
-name: auto/RW-G+RW-R3.litmus  result: Never
+name: auto/RW-G+RW-R3.litmus  result: Maybe
 name: auto/RW-G+RW-R3I.litmus  result: Sometimes
 name: auto/RW-G+RW-R3I+RW-G+RW-R3I.litmus  result: Sometimes
 name: auto/RW-G+RW-R3I+RW-R3I.litmus  result: Sometimes
 name: auto/RW-G+RW-R3I+RW-R3I+RW-R3I.litmus  result: Sometimes
-name: auto/RW-G+RW-R3+RW-G+RW-R3.litmus  result: Never
+name: auto/RW-G+RW-R3+RW-G+RW-R3.litmus  result: Maybe
 name: auto/RW-G+RW-R3+RW-R3.litmus  result: Sometimes
 name: auto/RW-G+RW-R3+RW-R3+RW-R3.litmus  result: Sometimes
 name: auto/RW-G+RW-RB.litmus  result: Never
