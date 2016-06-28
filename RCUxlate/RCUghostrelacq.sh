@@ -93,16 +93,16 @@ function emit_postamble(proc_num, line_in, line,  cs_num) {
 function emit_sync(proc_num, line_in, line,  gp_num, i) {
 	gp_num = rcusync_gp[proc_num ":" line_in]
 	aux[proc_num ":" line++] = "(* GP #" gp_num " *)";
-	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = "f[gbmb]";
 	aux[proc_num ":" line++] = sprintf("w[ghostrel] gpstart%02d 1", gp_num);
-	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = "f[gbmb]";
 	for (i = 1; i <= ncs; ++i) {
 		# Do not check critical sections in the same process
 		if (rcucs_proc[i] == proc_num)
 			continue;
 		aux[proc_num ":" line++] = sprintf("r[ghostacq] r6%02d%02d csend%02d", i, gp_num, i);
 	}
-	aux[proc_num ":" line++] = "f[mb]";
+	aux[proc_num ":" line++] = "f[gbmb]";
 	aux[proc_num ":" line++] = "(* end GP #" gp_num " *)";
 	return line;
 }
