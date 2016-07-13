@@ -1,0 +1,26 @@
+C C-RW-s+RW-D.litmus
+
+{
+	x1=y0;
+}
+
+P0(int *x0, int **x1)
+{
+	int r1;
+	int r3 = x0;
+
+	r1 = READ_ONCE(*x0);
+	rcu_assign_pointer(*x1, r3);
+}
+
+P1(int *x0, int **x1, int *y0)
+{
+	int r1;
+	int r4 = y0;
+
+	r1 = rcu_dereference(*x1);
+	WRITE_ONCE(*r1, 1);
+}
+
+exists
+(0:r1=1 /\ 1:r1=x0)
