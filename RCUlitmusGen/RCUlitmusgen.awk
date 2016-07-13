@@ -249,7 +249,7 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		}
 		if (y ~ /[ds]/) {
 			o_operand2[p] = "r3";
-			initializers = initializers " " p - 1 ":r3=x" vnn "; x" vn "=y" vnn "; " vn ":r4=y" vnn;
+			initializers = initializers " " p - 1 ":r3=x" vnn "; x" vn "=y" vnn "; " vn ":r4=y" vnn ";";
 		} else {
 			o_operand2[p] = "1";
 		}
