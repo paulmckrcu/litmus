@@ -1,7 +1,7 @@
 # Generate a LISA litmus test.
 #
 # Usage:
-#	generate_lisa(desc);
+#	gen_litmus(desc, directory);
 #
 # The "desc" argument is a string describing the litmus test.  This string
 # is a space-separated (or "+"-separated) list of per-process descriptions,
@@ -61,6 +61,10 @@
 #
 # Summary: X: RR, RW, WR, WW
 #	   Y: 1, 2, 3, a, B, C, D, d, G, I, l, R, r, s.
+#
+# The "directory" argument is the pathname to the directory in which
+# the litmus tests will be placed.  A trailing "/" will normally be
+# necessary, but without the "/" you can specify a common file prefix.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
