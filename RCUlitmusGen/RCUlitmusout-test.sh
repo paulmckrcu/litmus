@@ -33,5 +33,5 @@ BEGIN {
 	aux[2 ":" 2] = "r[once] r1 x1";
 	aux[2 ":" 3] = "r[once] r2 x2";
 	aux[2 ":" 4] = "f[unlock]";
-	output_lisa("test", "This is a\nmulti-line comment", "x=0; y=0;\n1:r1=42; 1:r2=43;", aux, "1:r2=1 /\\ 1:r1=0");
+	output_litmus("test", "This is a\nmulti-line comment", "x=0; y=0;\n1:r1=42; 1:r2=43;", aux, "1:r2=1 /\\ 1:r1=0");
 }'

@@ -770,5 +770,5 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	gen_exists(n);
 	printf "%s ", "name: " name ".litmus";
 	gen_comment(ptemp, n);
-	output_lisa(name, comment, initializers, stmts, exists);
+	output_litmus(name, comment, initializers, stmts, exists);
 }
