@@ -19,7 +19,7 @@ LISA auto/RW-G+RW-G+RW-G+RW-G+RW-Rrd+RW-l
  * Process 0 start at t=100000, process 6 end at t=500007: Cycle forbidden.
  *)
 {
- 4:r3=x0; x5=y0; 5:r4=y0
+ 4:r3=x0; x5=y0; 5:r4=y0;
 }
  P0            | P1            | P2            | P3            | P4               | P5              ;
  r[once] r1 x0 | r[once] r1 x1 | r[once] r1 x2 | r[once] r1 x3 | f[lock]          | r[lderef] r1 x5 ;
