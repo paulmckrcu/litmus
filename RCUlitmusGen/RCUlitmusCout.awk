@@ -23,7 +23,7 @@
 #
 # Translate from LISA to C.
 #
-function translate_statement(stmt,  n, splt) {
+function translate_statement(stmt,  n, rel, splt) {
 	if (stmt ~ /^P[0-9]*/)
 		return ""
 	if (stmt ~ /^[A-Za-z][A-Za-z0-9]*:/)
@@ -46,10 +46,14 @@ function translate_statement(stmt,  n, splt) {
 		return "smp_wmb();"
 	if (stmt ~ /^mov /) {
 		n = split(stmt, splt, " ");
-		if (n != 5 || splt[3] != "(eq")
+		if (n != 5 || (splt[3] != "(eq" && splt[3] != "(neq"))
 			return "???" stmt;
 		gsub(")", "", splt[5]);
-		return "if (" splt[4] " != " splt[5] ") {";
+		if (splt[3] == "(eq")
+			rel = " != ";
+		else if (splt[3] == "(neq")
+			rel = " == ";
+		return "if (" splt[4] rel splt[5] ") {";
 	}
 	if (stmt ~ /^r\[acquire] /) {
 		n = split(stmt, splt, " ");
