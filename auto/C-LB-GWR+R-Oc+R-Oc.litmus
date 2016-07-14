@@ -1,0 +1,47 @@
+C auto/LB-GWR+R-Oc+R-Oc
+(*
+ * Result: Sometimes
+ * P0 GWR: Never->Sometimes: Power rel-acq does not provide write-to-read global transitivity
+ * P0-P1 rf R-Oc: Note lack of C11 guarantee, control dependency
+ * P1 Oc,R: Note lack of C11 guarantee
+ * P1-P2 rf R-Oc: Note lack of C11 guarantee, control dependency
+ * P2 Oc,GWR: Control dependencies do not order trailing reads
+ *)
+{
+ 1:r4=1; 2:r4=1;
+}
+
+P0(int *u0, int *x1)
+{
+	WRITE_ONCE(*u0, 3);
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = READ_ONCE(*x1);
+	???mov r4 (neq r1 r4)
+	smp_store_release(x2, 1);
+}
+}
+
+
+P2(int *x2, int *v0)
+{
+	r1 = READ_ONCE(*x2);
+	???mov r4 (neq r1 r4)
+	r2 = READ_ONCE(*v0);
+}
+}
+
+
+P3(int *u0, int *v0)
+{
+	WRITE_ONCE(*v0, 1);
+	smp_mb();
+	r2 = READ_ONCE(*u0);
+}
+
+exists
+(2:r2=0 /\ 3:r2=0 /\ 1:r1=1 /\ 2:r1=1)

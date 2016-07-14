@@ -1,0 +1,63 @@
+C auto/RR-G+RR-R+RR-G+RR-R
+(*
+ * Result: Never
+ * 
+ * Process 0 starts (t=100000).
+ * 
+ * P0 advances one grace period (t=200000).
+ * 
+ * P1 goes back a bit less than one grace period (t=101001).
+ * 
+ * P2 advances one grace period (t=201002).
+ * 
+ * P3 goes back a bit less than one grace period (t=102003).
+ * 
+ * Process 0 start at t=100000, process 4 end at t=102003: Cycle forbidden.
+ *)
+{
+}
+
+P0(int *x0, int *x1)
+{
+	r1 = READ_ONCE(*x0);
+	synchronize_rcu();
+	r2 = READ_ONCE(*x1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	rcu_read_lock();
+	r1 = READ_ONCE(*x1);
+	r2 = READ_ONCE(*x2);
+	rcu_read_unlock();
+}
+
+
+P2(int *x2, int *x3)
+{
+	r1 = READ_ONCE(*x2);
+	synchronize_rcu();
+	r2 = READ_ONCE(*x3);
+}
+
+
+P3(int *x0, int *x3)
+{
+	rcu_read_lock();
+	r1 = READ_ONCE(*x3);
+	r2 = READ_ONCE(*x0);
+	rcu_read_unlock();
+}
+
+
+P4()
+{
+	WRITE_ONCE(*x0, 1);
+	WRITE_ONCE(*x1, 1);
+	WRITE_ONCE(*x2, 1);
+	WRITE_ONCE(*x3, 1);
+}
+
+exists
+(3:r2=0 /\ 0:r1=1 /\ 0:r2=0 /\ 1:r1=1 /\ 1:r2=0 /\ 2:r1=1 /\ 2:r2=0 /\ 3:r1=1)

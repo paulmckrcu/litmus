@@ -1,0 +1,34 @@
+C auto/LB-LRW+R-A+R-Oc
+(*
+ * Result: Maybe
+ * P1-P2 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P2 Oc,LRW: Note lack of C11 guarantee, control dependency
+ *)
+{
+ 2:r4=1;
+}
+
+P0(int *u0, int *x1)
+{
+	r1 = READ_ONCE(*u0);
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = smp_load_acquire(x1);
+	smp_store_release(x2, 1);
+}
+
+
+P2(int *x2, int *u0)
+{
+	r1 = READ_ONCE(*x2);
+	???mov r4 (neq r1 r4)
+	WRITE_ONCE(*u0, 1);
+}
+}
+
+exists
+(0:r1=1 /\ 1:r1=1 /\ 2:r1=1)

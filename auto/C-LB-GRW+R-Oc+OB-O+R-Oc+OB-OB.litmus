@@ -1,0 +1,60 @@
+C auto/LB-GRW+R-Oc+OB-O+R-Oc+OB-OB
+(*
+ * Result: Maybe
+ * P1-P2 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
+ *)
+{
+ 1:r4=1; 3:r4=1;
+}
+
+P0(int *u0, int *x1)
+{
+	r1 = READ_ONCE(*u0);
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = READ_ONCE(*x1);
+	???mov r4 (neq r1 r4)
+	smp_mb();
+	WRITE_ONCE(*x2, 1);
+}
+}
+
+
+P2(int *x2, int *x3)
+{
+	r1 = READ_ONCE(*x2);
+	smp_store_release(x3, 1);
+}
+
+
+P3(int *x3, int *x4)
+{
+	r1 = READ_ONCE(*x3);
+	???mov r4 (neq r1 r4)
+	smp_mb();
+	WRITE_ONCE(*x4, 1);
+}
+}
+
+
+P4(int *v0, int *x4)
+{
+	r1 = READ_ONCE(*x4);
+	smp_mb();
+	WRITE_ONCE(*v0, 1);
+}
+
+
+P5(int *u0, int *v0)
+{
+	r1 = READ_ONCE(*v0);
+	smp_mb();
+	WRITE_ONCE(*u0, 1);
+}
+
+exists
+(5:r1=1 /\ 0:r1=1 /\ 1:r1=1 /\ 2:r1=1 /\ 3:r1=1 /\ 4:r1=1)

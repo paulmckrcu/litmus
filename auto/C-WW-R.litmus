@@ -1,0 +1,15 @@
+C auto/WW-R
+(* Result: Never *)
+{
+}
+
+P0(int *x0)
+{
+	rcu_read_lock();
+	WRITE_ONCE(*x0, 2);
+	WRITE_ONCE(*x0, 1);
+	rcu_read_unlock();
+}
+
+exists
+(x0=2)

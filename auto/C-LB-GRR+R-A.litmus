@@ -1,0 +1,31 @@
+C auto/LB-GRR+R-A
+(*
+ * Result: Maybe
+ * P0 GRR: Never->Maybe: Should rel-acq provide any global transitivity?
+ *)
+{
+}
+
+P0(int *u0, int *x1)
+{
+	r1 = READ_ONCE(*u0);
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *v0, int *x1)
+{
+	r1 = smp_load_acquire(x1);
+	r2 = READ_ONCE(*v0);
+}
+
+
+P2(int *u0, int *v0)
+{
+	WRITE_ONCE(*v0, 1);
+	smp_mb();
+	WRITE_ONCE(*u0, 1);
+}
+
+exists
+(1:r2=0 /\ 0:r1=1 /\ 1:r1=1)

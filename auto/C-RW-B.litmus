@@ -1,0 +1,14 @@
+C auto/RW-B
+(* Result: Never *)
+{
+}
+
+P0(int *x0)
+{
+	r1 = READ_ONCE(*x0);
+	smp_mb();
+	WRITE_ONCE(*x0, 1);
+}
+
+exists
+(0:r1=1)

@@ -1,0 +1,21 @@
+C auto/RR-R
+(* Result: Never *)
+{
+}
+
+P0(int *x0)
+{
+	rcu_read_lock();
+	r1 = READ_ONCE(*x0);
+	r2 = READ_ONCE(*x0);
+	rcu_read_unlock();
+}
+
+
+P1()
+{
+	WRITE_ONCE(*x0, 1);
+}
+
+exists
+(0:r2=0 /\ 0:r1=1)

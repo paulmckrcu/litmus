@@ -1,0 +1,14 @@
+C auto/WR-G
+(* Result: Never *)
+{
+}
+
+P0(int *x0)
+{
+	WRITE_ONCE(*x0, 2);
+	synchronize_rcu();
+	r2 = READ_ONCE(*x0);
+}
+
+exists
+(0:r2=0)

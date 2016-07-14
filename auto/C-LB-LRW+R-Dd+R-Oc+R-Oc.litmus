@@ -1,0 +1,45 @@
+C auto/LB-LRW+R-Dd+R-Oc+R-Oc
+(*
+ * Result: Maybe
+ * P1-P2 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P2 Oc,R: Note lack of C11 guarantee
+ * P2-P3 rf R-Oc: Note lack of C11 guarantee, control dependency
+ * P3 Oc,LRW: Note lack of C11 guarantee, control dependency
+ *)
+{
+ 0:r3=x2; x1=y1; 2:r4=1; 3:r4=1;
+}
+
+P0(int *u0, int *x1)
+{
+	r1 = READ_ONCE(*u0);
+	smp_store_release(x1, r3);
+}
+
+
+P1(int *x1)
+{
+	r1 = rcu_dereference(*x1);
+	smp_store_release(r1, 1);
+}
+
+
+P2(int *x2, int *x3)
+{
+	r1 = READ_ONCE(*x2);
+	???mov r4 (neq r1 r4)
+	smp_store_release(x3, 1);
+}
+}
+
+
+P3(int *x3, int *u0)
+{
+	r1 = READ_ONCE(*x3);
+	???mov r4 (neq r1 r4)
+	WRITE_ONCE(*u0, 1);
+}
+}
+
+exists
+(0:r1=1 /\ 1:r1=x2 /\ 2:r1=1 /\ 3:r1=1)

@@ -1,0 +1,20 @@
+C auto/RR-G
+(* Result: Never *)
+{
+}
+
+P0(int *x0)
+{
+	r1 = READ_ONCE(*x0);
+	synchronize_rcu();
+	r2 = READ_ONCE(*x0);
+}
+
+
+P1()
+{
+	WRITE_ONCE(*x0, 1);
+}
+
+exists
+(0:r2=0 /\ 0:r1=1)

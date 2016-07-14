@@ -1,0 +1,31 @@
+C auto/LB-LWW+R-A+O-Dd
+(*
+ * Result: Maybe
+ * P1-P2 rf O-Dd: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
+ *)
+{
+ 1:r3=u0; x2=y2;
+}
+
+P0(int *u0, int *x1)
+{
+	WRITE_ONCE(*u0, 3);
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = smp_load_acquire(x1);
+	WRITE_ONCE(*x2, r3);
+}
+
+
+P2(int *x2)
+{
+	r1 = rcu_dereference(*x2);
+	WRITE_ONCE(*r1, 1);
+}
+
+exists
+(u0=3 /\ 1:r1=1 /\ 2:r1=u0)

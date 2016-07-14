@@ -1,0 +1,35 @@
+C auto/WR-GR2+WR-R
+(*
+ * Result: Never
+ * 
+ * Process 0 starts (t=100000).
+ * 
+ * P0 advances one grace period (t=200000).
+ * 
+ * P1 goes back a bit less than one grace period (t=101001).
+ * 
+ * Process 0 start at t=100000, process 2 end at t=101001: Cycle forbidden.
+ *)
+{
+}
+
+P0(int *x0, int *x1)
+{
+	WRITE_ONCE(*x0, 2);
+	synchronize_rcu();
+	rcu_read_lock();
+	r2 = READ_ONCE(*x1);
+	rcu_read_unlock();
+}
+
+
+P1(int *x0, int *x1)
+{
+	rcu_read_lock();
+	WRITE_ONCE(*x1, 2);
+	r2 = READ_ONCE(*x0);
+	rcu_read_unlock();
+}
+
+exists
+(1:r2=0 /\ 0:r2=0)

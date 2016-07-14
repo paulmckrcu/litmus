@@ -1,0 +1,16 @@
+C auto/RW-RB
+(* Result: Never *)
+{
+}
+
+P0(int *x0)
+{
+	rcu_read_lock();
+	r1 = READ_ONCE(*x0);
+	smp_mb();
+	WRITE_ONCE(*x0, 1);
+	rcu_read_unlock();
+}
+
+exists
+(0:r1=1)

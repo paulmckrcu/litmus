@@ -1,0 +1,41 @@
+C auto/RW-rd+RW-l+RW-B
+(*
+ * Result: Never
+ * 
+ * Process 0 starts (t=100000).
+ * 
+ * P0 advances slightly (t=100001).
+ * 
+ * P1 advances slightly (t=100003).
+ * 
+ * P2 advances slightly (t=100005).
+ * 
+ * Process 0 start at t=100000, process 3 end at t=100005: Cycle forbidden.
+ *)
+{
+ 0:r3=x2; x1=y2; 1:r4=y2;
+}
+
+P0(int *x0, int *x1)
+{
+	r1 = READ_ONCE(*x0);
+	smp_store_release(x1, r3);
+}
+
+
+P1(int *x1)
+{
+	r1 = lockless_dereference(*x1);
+	WRITE_ONCE(*r1, 1);
+}
+
+
+P2(int *x2, int *x0)
+{
+	r1 = READ_ONCE(*x2);
+	smp_mb();
+	WRITE_ONCE(*x0, 1);
+}
+
+exists
+(0:r1=1 /\ 1:r1=x2 /\ 2:r1=1)
