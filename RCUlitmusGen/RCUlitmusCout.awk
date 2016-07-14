@@ -49,7 +49,7 @@ function translate_statement(stmt,  n, splt) {
 		if (n != 5 || splt[3] != "(eq")
 			return "???" stmt;
 		gsub(")", "", splt[5]);
-		return "if (" splt[4] " != " splt[5] ")";
+		return "if (" splt[4] " != " splt[5] ") {";
 	}
 	if (stmt ~ /^r\[acquire] /) {
 		n = split(stmt, splt, " ");
@@ -110,7 +110,11 @@ function translate_statement(stmt,  n, splt) {
 #	The outermost set of parentheses are supplied by output_litmus.
 #
 function output_C_litmus(litname, comments, varinit, gvars, stmts, exists,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, pad, proc_num, stmt, tabs) {
-	fn = "C-" litname ".litmus";
+	fn = litname;
+	gsub("[^/]*$", "", fn);
+	pad = litname;
+	gsub("^.*/", "", pad);
+	fn = fn "C-" pad ".litmus";
 	# Output file header.
 	print "C " litname > fn;
 
@@ -166,11 +170,11 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists,  argl
 			stmt = translate_statement(stmt);
 			if (stmt == "")
 				continue;
-			if (stmt ~ /^if /)
-				tabs = tabs "\t";
-			else if (stmt == "}")
+			if (stmt == "}")
 				tabs = substr(tabs, 2);
 			print tabs stmt > fn;
+			if (stmt ~ /^if /)
+				tabs = tabs "\t";
 		}
 		print "}\n" > fn;
 	}
