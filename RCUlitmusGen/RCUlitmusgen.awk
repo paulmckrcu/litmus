@@ -85,6 +85,7 @@
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
 @include "RCUlitmusout.awk"
+@include "RCUlitmusCout.awk"
 
 ########################################################################
 #
@@ -777,4 +778,5 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	printf "%s ", "name: " name ".litmus";
 	gen_comment(ptemp, n);
 	output_litmus(name, comment, initializers, vars, stmts, exists);
+	output_C_litmus(name, comment, initializers, vars, stmts, exists);
 }
