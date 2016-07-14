@@ -21,19 +21,6 @@
 
 ########################################################################
 #
-# Data structures:
-#
-# @@@ preamble[proc][gp]: How many preambles emitted for process/gp combo.
-# postamble[proc][gp]: How many postambles emitted for process/gp combo.
-# stmts[proc][line]: Litmus test with RCU statements translated.
-# lisa[proc][line]: Input litmus-test statements.
-# nproc: Number of processes.
-# ngp: Number of grace periods across all processes.
-# rcugp[gp]: Process containg RCU grace period gp.
-# rcurl[proc]: Number of RCU read-side critical sections in process.
-
-########################################################################
-#
 # Output comments if non-empty string supplied.  Varies format based
 # on number of lines in the comments parameter.
 #
