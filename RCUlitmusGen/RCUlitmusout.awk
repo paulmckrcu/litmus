@@ -66,11 +66,12 @@ function output_comments(comments, fn,  comment, i, n) {
 #	Can be empty string for no comment.
 # varinit: String containing initializers, optionally with embedded "\n".
 #	Can be empty string for no initializers.
+# gvars[proc_num ":" varname]: Non-empty if process uses variable.
 # stmts[proc_num ":" line_out]: Array of LISA statements.
 # exists: String containing exists clause, optionally with embedded "\n".
 #	The outermost set of parentheses are supplied by output_litmus.
 #
-function output_litmus(litname, comments, varinit, stmts, exists,  aux_max_line, comment, fn, i, line_out, max_length, max_stmts, nproc, pad, proc_num, stmt) {
+function output_litmus(litname, comments, varinit, gvars, stmts, exists,  aux_max_line, comment, fn, i, line_out, max_length, max_stmts, nproc, pad, proc_num, stmt) {
 	fn = litname ".litmus";
 	# Output file header.
 	print "LISA " litname > fn;

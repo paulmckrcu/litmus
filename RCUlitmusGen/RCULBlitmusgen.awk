@@ -101,6 +101,7 @@
 # o_var[proc_num]: Outgoing variable
 # rf[rf_num]: Read-from directive
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
+# vars[proc_num ":" name]: Global variables used by each process
 
 ########################################################################
 #
@@ -272,9 +273,11 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 			i_op[p] = "r";
 			i_operand1[p] = "r1";
 			i_operand2[p] = i_var[p];
+			vars[p ":" i_var[p]] = 1;
 		} else {
 			i_op[p] = "w";
 			i_operand1[p] = i_var[p];
+			vars[p ":" i_var[p]] = 1;
 			i_operand2[p] = "3";
 		}
 	} else {
@@ -289,6 +292,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		i_op[p] = "r";
 		i_operand1[p] = "r1";
 		i_operand2[p] = i_var[p];
+		vars[p ":" i_var[p]] = 1;
 		if (x ~ /c/ && x !~ /d/)
 			initializers = initializers " " p - 1 ":r4=" o_operand2[p - 1] ";";
 		else if (x ~ /c/)
@@ -305,16 +309,20 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 				exit 1;
 			}
 			o_operand1[p] = "r2";
-			if (x ~ /d/)
+			if (x ~ /d/) {
 				o_operand2[p] = "r1";
-			else
+			} else {
 				o_operand2[p] = o_var[p];
+				vars[p ":" o_var[p]] = 1;
+			}
 		} else {
 			o_op[p] = "w";
-			if (x ~ /d/)
+			if (x ~ /d/) {
 				o_operand1[p] = "r1";
-			else
+			} else {
 				o_operand1[p] = o_var[p];
+				vars[p ":" o_var[p]] = 1;
+			}
 			if (x ~ /v/) {
 				o_operand2[p] = "r1";
 				i_val[1] = i_val[p];
@@ -331,10 +339,12 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		else
 			o_mod[p] = "once";
 		o_op[p] = "w";
-		if (x ~ /d/)
+		if (x ~ /d/) {
 			o_operand1[p] = "r1";
-		else
+		} else {
 			o_operand1[p] = o_var[p];
+			vars[p ":" o_var[p]] = 1;
+		}
 		if (xn ~ /d/) {
 			o_operand2[p] = "r3";
 			initializers = initializers " " p - 1 ":r3=" o_var[p + 1] ";";
@@ -638,6 +648,7 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	delete o_operand1;
 	delete o_operand2;
 	delete stmts;
+	delete vars;
 
 	comment = "";
 	exists = "";
@@ -689,5 +700,5 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	gen_exists(n);
 	printf "%s ", "name: " name ".litmus";
 	gen_comment(gdir, n);
-	output_litmus(name, comment, initializers, stmts, exists);
+	output_litmus(name, comment, initializers, vars, stmts, exists);
 }

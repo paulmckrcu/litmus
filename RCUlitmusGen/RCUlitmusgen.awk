@@ -113,6 +113,7 @@
 # o_t[proc_num]: Outgoing operand timestamp.
 # r_maybe: An indeterminantly ordered operation was encountered
 # stmts[proc_num ":" line_num]: Marshalled LISA statements
+# vars[proc_num ":" name]: Global variables used by each process
 #
 # Incoming is first and outgoing is last, unless "I" is specified, in
 # which case outgoing is first and incoming is last.
@@ -232,9 +233,11 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		i_op[p] = "r";
 		i_operand1[p] = "r1";
 		i_operand2[p] = "x" v;
+		vars[p ":" "x" v] = 1;
 	} else {
 		i_op[p] = "w";
 		i_operand1[p] = "x" v;
+		vars[p ":" "x" v] = 1;
 		i_operand2[p] = "2";
 	}
 
@@ -244,12 +247,14 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		o_op[p] = "r";
 		o_operand1[p] = "r2";
 		o_operand2[p] = "x" vn;
+		vars[p ":" "x" vn] = 1;
 	} else {
 		o_op[p] = "w";
 		if (y ~ /[Dl]/) {
 			o_operand1[p] = "r1";
 		} else {
 			o_operand1[p] = "x" vn;
+			vars[p ":" "x" vn] = 1;
 		}
 		if (y ~ /[ds]/) {
 			o_operand2[p] = "r3";
@@ -745,6 +750,7 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	delete o_operand2;
 	delete o_t;
 	delete stmts;
+	delete vars;
 
 	initializers = "";
 
@@ -770,5 +776,5 @@ function gen_litmus(prefix, s,  i, line_num, n, name, ptemp) {
 	gen_exists(n);
 	printf "%s ", "name: " name ".litmus";
 	gen_comment(ptemp, n);
-	output_litmus(name, comment, initializers, stmts, exists);
+	output_litmus(name, comment, initializers, vars, stmts, exists);
 }
