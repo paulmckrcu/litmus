@@ -40,9 +40,9 @@ P3(int *x3, int *x4)
 P4(int *v0, int *x4)
 {
 	r1 = READ_ONCE(*x4);
-	???mov r4 (neq r1 r4)
-	r2 = READ_ONCE(*v0);
-}
+	if (r1 == r4) {
+		r2 = READ_ONCE(*v0);
+	}
 }
 
 

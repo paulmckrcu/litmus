@@ -34,18 +34,18 @@ P2(int *x2, int *x3)
 P3(int *x3, int *x4)
 {
 	r1 = READ_ONCE(*x3);
-	???mov r4 (neq r1 r4)
-	smp_store_release(x4, 1);
-}
+	if (r1 == r4) {
+		smp_store_release(x4, 1);
+	}
 }
 
 
 P4(int *x4, int *u0)
 {
 	r1 = READ_ONCE(*x4);
-	???mov r4 (neq r1 r4)
-	WRITE_ONCE(*u0, 1);
-}
+	if (r1 == r4) {
+		WRITE_ONCE(*u0, 1);
+	}
 }
 
 exists

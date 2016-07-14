@@ -23,27 +23,27 @@ P0(int *u0, int *x1)
 P1(int *x1, int *x2)
 {
 	r1 = READ_ONCE(*x1);
-	???mov r4 (neq r1 r4)
-	smp_store_release(x2, 1);
-}
+	if (r1 == r4) {
+		smp_store_release(x2, 1);
+	}
 }
 
 
 P2(int *x2, int *x3)
 {
 	r1 = READ_ONCE(*x2);
-	???mov r4 (neq r1 r4)
-	smp_store_release(x3, 1);
-}
+	if (r1 == r4) {
+		smp_store_release(x3, 1);
+	}
 }
 
 
 P3(int *x3, int *v0)
 {
 	r1 = READ_ONCE(*x3);
-	???mov r4 (neq r1 r4)
-	r2 = READ_ONCE(*v0);
-}
+	if (r1 == r4) {
+		r2 = READ_ONCE(*v0);
+	}
 }
 
 

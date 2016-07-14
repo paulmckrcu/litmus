@@ -27,9 +27,9 @@ P1(int *x1)
 P2(int *x2, int *x3)
 {
 	r1 = READ_ONCE(*x2);
-	???mov r4 (neq r1 r4)
-	smp_store_release(x3, r3);
-}
+	if (r1 == r4) {
+		smp_store_release(x3, r3);
+	}
 }
 
 
@@ -43,9 +43,9 @@ P3(int *x3)
 P4(int *x4, int *u0)
 {
 	r1 = READ_ONCE(*x4);
-	???mov r4 (neq r1 r4)
-	r2 = READ_ONCE(*u0);
-}
+	if (r1 == r4) {
+		r2 = READ_ONCE(*u0);
+	}
 }
 
 

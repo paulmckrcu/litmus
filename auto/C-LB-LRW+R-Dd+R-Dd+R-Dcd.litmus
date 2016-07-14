@@ -31,9 +31,9 @@ P2(int *x2)
 P3(int *x3)
 {
 	r1 = rcu_dereference(*x3);
-	???mov r4 (neq r1 r4)
-	WRITE_ONCE(*r1, 1);
-}
+	if (r1 == r4) {
+		WRITE_ONCE(*r1, 1);
+	}
 }
 
 exists

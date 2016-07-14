@@ -19,9 +19,9 @@ P0(int *u0, int *x1)
 P1(int *v0, int *x1)
 {
 	r1 = READ_ONCE(*x1);
-	???mov r4 (neq r1 r4)
-	r2 = READ_ONCE(*v0);
-}
+	if (r1 == r4) {
+		r2 = READ_ONCE(*v0);
+	}
 }
 
 
