@@ -24,7 +24,7 @@
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
 
-gawk -f RCUlitmusout.awk -e '
+gawk -f RCUlitmusout.awk -f RCUlitmusCout.awk -e '
 BEGIN {
 	aux[1 ":" 1] = "w[once] x1 1";
 	gvars[1 ":" x1] = 1;
@@ -38,4 +38,5 @@ BEGIN {
 	gvars[2 ":" x2] = 1;
 	aux[2 ":" 4] = "f[unlock]";
 	output_litmus("test", "This is a\nmulti-line comment", "x=0; y=0;\n1:r1=42; 1:r2=43;", gvars, aux, "1:r2=1 /\\ 1:r1=0");
+	output_C_litmus("test", "This is a\nmulti-line comment", "x=0; y=0;\n1:r1=42; 1:r2=43;", gvars, aux, "1:r2=1 /\\ 1:r1=0");
 }'
