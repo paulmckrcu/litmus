@@ -78,6 +78,7 @@
 # Authors: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
 @include "RCUlitmusout.awk"
+@include "RCUlitmusCout.awk"
 
 ########################################################################
 #
@@ -400,18 +401,22 @@ function gen_aux_proc_global(g, n,  line_num) {
 	line_num = 0;
 	if (g ~ /^G[RW]R$/) {
 		stmts[n + 1 ":" ++line_num] = "w[once] v0 1"
+		vars[n + 1 ":" "v0"] = 1;
 		gen_add_exists(n - 1 ":r2=0");
 	} else {
 		stmts[n + 1 ":" ++line_num] = "r[once] r1 v0"
+		vars[n + 1 ":" "v0"] = 1;
 		gen_add_exists(n ":r1=1");
 	}
 	stmts[n + 1 ":" ++line_num] = "f[mb]"
 	if (g ~ /^GR[RW]$/) {
 		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
+		vars[n + 1 ":" "u0"] = 1;
 		i_val[1] = "1";
 		gen_add_exists("0:r1=1");
 	} else {
 		stmts[n + 1 ":" ++line_num] = "r[once] r2 u0"
+		vars[n + 1 ":" "u0"] = 1;
 		gen_add_exists(n ":r2=0");
 	}
 }
@@ -701,4 +706,5 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 	printf "%s ", "name: " name ".litmus";
 	gen_comment(gdir, n);
 	output_litmus(name, comment, initializers, vars, stmts, exists);
+	output_C_litmus(name, comment, initializers, vars, stmts, exists);
 }
