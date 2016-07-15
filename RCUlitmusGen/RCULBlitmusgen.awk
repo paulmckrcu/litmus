@@ -21,10 +21,11 @@
 # W:	A: Use rcu_assign_pointer(), AKA w[assign].  Deprecated, use "R".
 #	B: Use smp_mb(), AKA f[mb].
 # 	O: Use WRITE_ONCE(), AKA w[once].
+#	Q: C11 release seQuence:  Follow bogus ordered write with [once].
 #	R: Use smp_write_release(), AKA w[release].
 #
 #	Only one of "A", "O", or "R" may be specified for a given rf link.
-#	It is legal to add "B" to any of them.
+#	It is legal to add "B" and/or "Q" to any of them.
 #
 # R:	A: Use smp_read_acquire(), AKA r[acquire].
 #	B: Use smp_assign_pointer, AKA f[mb].
@@ -198,11 +199,24 @@ function gen_global_syntax(x) {
 # Check the syntax of the specified reads-from (rf) directive string.
 # Complain and exit if there is a problem.
 #
-function gen_rf_syntax(rfn, x, y) {
-	if ((x !~ /^[AOR]B$/) &&
-	    (x !~ /^B[AOR]$/) &&
-	    (x !~ /^[AOR]$/)) {
+function gen_rf_syntax(rfn, x, y, xn, yn) {
+	if ((x ~ /A/) + (x ~ /O/) + (x ~ /R/) != 1) {
+		print "Reads-from edge " rfn " only one of \"AOR\" allowed in write-side specifier: \"" x "\"" > "/dev/stderr";
+	}
+	if (x !~ /^[ABOQR]*$/) {
 		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
+		exit 1;
+	}
+	if (y ~ /v/ && xn ~ /Q/) {
+		print "Reads-from edge " rfn " Cannot mix Q with next v: \"" y "\", \"" xn "\"" > "/dev/stderr";
+		exit 1;
+	}
+	if (x ~ /Q/ && y ~ /d/) {
+		print "Reads-from edge " rfn " Cannot mix Q with d: \"" x "\", \"" y "\"" > "/dev/stderr";
+		exit 1;
+	}
+	if (y ~ /v/ && yn ~ /d/) {
+		print "Reads-from edge " rfn " Cannot mix v with next d: \"" y "\", \"" yn "\"" > "/dev/stderr";
 		exit 1;
 	}
 	if (y ~ /[^ABcCdDLOv]/) {
@@ -361,6 +375,8 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 			i_val[p + 1] = i_val[p];
 		} else {
 			o_operand2[p] = "1";
+			if (y ~ /Q/)
+				o_operand3[p] = 2;
 			i_val[p + 1] = "1";
 		}
 	}
@@ -376,7 +392,12 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		stmts[p ":" ++line_num] = "f[rmb]";
 	if (x ~ /B/ || y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
-	stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand2[p];
+	if (y ~ /Q/) {
+		stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand3[p];
+		stmts[p ":" ++line_num] = o_op[p] "[once] " o_operand1[p] " " o_operand2[p];
+	} else {
+		stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand2[p];
+	}
 	if (x ~ /[cC]/)
 		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
 }
@@ -694,10 +715,11 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 		gsub(/-.*$/, "", o_dir[i - 1]);
 		i_dir[i] = ptemp[i];
 		gsub(/^.*-/, "", i_dir[i]);
-		gen_rf_syntax(ptemp[i], o_dir[i - 1], i_dir[i]);
 		if (o_dir[i - 1] ~ /B/ && i_dir[i - 1] !~ /B/)
 			i_dir[i - 1] = i_dir[i - 1] "B";
 	}
+	for (i = 2; i <= n; i++)
+		gen_rf_syntax(ptemp[i], o_dir[i - 1], i_dir[i], o_dir[i], i_dir[i + 1]);
 
 	# Generate each process's code.
 	gen_vars(gdir, n);
