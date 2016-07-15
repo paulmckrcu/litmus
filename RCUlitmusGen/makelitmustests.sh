@@ -178,6 +178,18 @@ awk '{
 			sub(/ R-Oc$/, " R-Ok", dir);
 			print "LRW " dir;
 		}
+		if ($0 ~ / R-A$/) {
+			# Produce a few with C11 release sequence at end
+			dir = $0;
+			sub(/ R-A$/, " RQ-A", dir);
+			print "LRW " dir;
+		}
+		if ($0 ~ / R-A R-A$/) {
+			# Produce a few with C11 release sequence near end
+			dir = $0;
+			sub(/ R-A R-A$/, " RQ-A R-A", dir);
+			print "LRW " dir;
+		}
 	}
     	print "GRR " $0;
     	print "GRW " $0;
