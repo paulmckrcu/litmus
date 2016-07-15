@@ -160,6 +160,12 @@ awk '{
 			sub(/ R-Dd$/, " R-Dcv", dir);
 			print "LRW " dir;
 		}
+		if ($0 ~ / R-Oc /) {
+			# Produce a few with combined control/rmb
+			dir = $0;
+			sub(/ R-Oc /, " R-OC ", dir);
+			print "LRW " dir;
+		}
 	}
     	print "GRR " $0;
     	print "GRW " $0;
