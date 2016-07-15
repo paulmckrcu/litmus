@@ -172,6 +172,12 @@ awk '{
 			sub(/ R-Oc$/, " R-OC", dir);
 			print "LRR " dir;
 		}
+		if ($0 ~ / R-Oc$/) {
+			# Produce a few with fake control dependency at end
+			dir = $0;
+			sub(/ R-Oc$/, " R-Ok", dir);
+			print "LRW " dir;
+		}
 	}
     	print "GRR " $0;
     	print "GRW " $0;
