@@ -19,7 +19,7 @@
 # W-R as follows:
 #
 # W:	A: Use rcu_assign_pointer(), AKA w[assign].  Deprecated, use "R".
-#	B: Use smp_assign_pointer, AKA f[mb].
+#	B: Use smp_mb(), AKA f[mb].
 # 	O: Use WRITE_ONCE(), AKA w[once].
 #	R: Use smp_write_release(), AKA w[release].
 #
