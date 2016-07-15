@@ -33,6 +33,7 @@
 #	C: Impose control dependency with f[rmb].
 #	d: Impose dependency (address dependency, historical!).
 #	D: Use data dependency, AKA r[deref].
+#	k: Use fake control dependency (write after "if").
 #	L: Use non-RCU data dependency, AKA r[lderef].  Deprecated, use "D".
 #	O: Use READ_ONCE(), AKA r[once].
 #	v: Impose value dependency (data dependency, historical!)
@@ -219,7 +220,7 @@ function gen_rf_syntax(rfn, x, y, xn, yn) {
 		print "Reads-from edge " rfn " Cannot mix v with next d: \"" y "\", \"" yn "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^ABcCdDLOv]/) {
+	if (y ~ /[^ABcCdDkLOv]/) {
 		print "Reads-from edge " rfn " bad read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
@@ -231,8 +232,8 @@ function gen_rf_syntax(rfn, x, y, xn, yn) {
 		print "Reads-from edge " rfn " only one of \"dv\" in read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if ((y ~ /c/) + (y ~ /C/) > 1) {
-		print "Reads-from edge " rfn " only one of \"cC\" in read-side specifier: \"" y "\"" > "/dev/stderr";
+	if ((y ~ /c/) + (y ~ /C/) + (y ~ /k/) > 1) {
+		print "Reads-from edge " rfn " only one of \"cCk\" in read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
 }
@@ -313,9 +314,9 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		i_operand1[p] = "r1";
 		i_operand2[p] = i_var[p];
 		vars[p ":" i_var[p]] = 1;
-		if (x ~ /[cC]/ && x !~ /d/)
+		if (x ~ /[cCk]/ && x !~ /d/)
 			initializers = initializers " " p - 1 ":r4=" o_operand2[p - 1] ";";
-		else if (x ~ /[cC]/)
+		else if (x ~ /[cCk]/)
 			initializers = initializers " " p - 1 ":r4=" o_var[p] ";";
 	}
 
@@ -384,7 +385,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 	# Output statements
 	line_num = 0;
 	stmts[p ":" ++line_num] = i_op[p] "[" i_mod[p] "] " i_operand1[p] " " i_operand2[p];
-	if (x ~ /[cC]/) {
+	if (x ~ /[cCk]/) {
 		stmts[p ":" ++line_num] = "mov r4 (neq r1 r4)";
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
@@ -392,6 +393,11 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		stmts[p ":" ++line_num] = "f[rmb]";
 	if (x ~ /B/ || y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
+	if (x ~ /k/) {
+		stmts[p ":" ++line_num] = "r[once] r4 z" p - 1;
+		vars[p ":" "z" p - 1] = 1;
+		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
+	}
 	if (y ~ /Q/) {
 		stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand3[p];
 		stmts[p ":" ++line_num] = o_op[p] "[once] " o_operand1[p] " " o_operand2[p];
