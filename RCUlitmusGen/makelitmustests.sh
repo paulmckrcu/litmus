@@ -166,6 +166,12 @@ awk '{
 			sub(/ R-Oc /, " R-OC ", dir);
 			print "LRW " dir;
 		}
+		if ($0 ~ / R-Oc$/) {
+			# Ditto, but with trailing read
+			dir = $0;
+			sub(/ R-Oc$/, " R-OC", dir);
+			print "LRR " dir;
+		}
 	}
     	print "GRR " $0;
     	print "GRW " $0;
