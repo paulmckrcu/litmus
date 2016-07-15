@@ -147,7 +147,7 @@ awk '{
 		if ($0 ~ / R-Dd R-Dd /) {
 			# Produce a few with value dependency, but no deref
 			dir = $0;
-			sub(/ R-Dd /, " R-Ov ", dir);
+			sub(/ R-Dd /, " R-Ov R-OC ", dir);
 			print "LRW " dir;
 		}
 		if ($0 ~ / R-Dd$/) {
