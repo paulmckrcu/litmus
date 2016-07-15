@@ -29,6 +29,7 @@
 # R:	A: Use smp_read_acquire(), AKA r[acquire].
 #	B: Use smp_assign_pointer, AKA f[mb].
 #	c: Impose control dependency.
+#	C: Impose control dependency with f[rmb].
 #	d: Impose dependency (address dependency, historical!).
 #	D: Use data dependency, AKA r[deref].
 #	L: Use non-RCU data dependency, AKA r[lderef].  Deprecated, use "D".
@@ -194,7 +195,7 @@ function gen_global_syntax(x) {
 
 ########################################################################
 #
-# Check the syntax of the specified reads-from (rf)  directive string.
+# Check the syntax of the specified reads-from (rf) directive string.
 # Complain and exit if there is a problem.
 #
 function gen_rf_syntax(rfn, x, y) {
@@ -204,7 +205,7 @@ function gen_rf_syntax(rfn, x, y) {
 		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^ABcdDLOv]/) {
+	if (y ~ /[^ABcCdDLOv]/) {
 		print "Reads-from edge " rfn " bad read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
@@ -214,6 +215,10 @@ function gen_rf_syntax(rfn, x, y) {
 	}
 	if ((y ~ /d/) + (y ~ /v/) > 1) {
 		print "Reads-from edge " rfn " only one of \"dv\" in read-side specifier: \"" y "\"" > "/dev/stderr";
+		exit 1;
+	}
+	if ((y ~ /c/) + (y ~ /C/) > 1) {
+		print "Reads-from edge " rfn " only one of \"cC\" in read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
 }
@@ -294,9 +299,9 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		i_operand1[p] = "r1";
 		i_operand2[p] = i_var[p];
 		vars[p ":" i_var[p]] = 1;
-		if (x ~ /c/ && x !~ /d/)
+		if (x ~ /[cC]/ && x !~ /d/)
 			initializers = initializers " " p - 1 ":r4=" o_operand2[p - 1] ";";
-		else if (x ~ /c/)
+		else if (x ~ /[cC]/)
 			initializers = initializers " " p - 1 ":r4=" o_var[p] ";";
 	}
 
@@ -363,14 +368,16 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 	# Output statements
 	line_num = 0;
 	stmts[p ":" ++line_num] = i_op[p] "[" i_mod[p] "] " i_operand1[p] " " i_operand2[p];
-	if (x ~ /c/) {
+	if (x ~ /[cC]/) {
 		stmts[p ":" ++line_num] = "mov r4 (neq r1 r4)";
 		stmts[p ":" ++line_num] = "b[] r4 CTRL" p - 1;
 	}
+	if (x ~ /[C]/)
+		stmts[p ":" ++line_num] = "f[rmb]";
 	if (x ~ /B/ || y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
 	stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand2[p];
-	if (x ~ /c/)
+	if (x ~ /[cC]/)
 		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
 }
 
@@ -533,7 +540,7 @@ function result_update(oldresult, desc, reasres,  reason, result) {
 #
 # Find the strongest in-bound ordering constraint.  Note that DEC Alpha
 # must have a full memory barrier for read-read data dependencies.
-# Therefore, without one of "L" or "D", a "d" is only as good as is
+# Therefore, without one of "L", "C", or "D", a "d" is only as good as is
 # a "c".
 #
 # cur_rf: String containing constraints
@@ -544,6 +551,8 @@ function best_rfin(cur_rf,  rfin) {
 	else if (cur_rf ~ /A/)
 		rfin = "A";
 	else if ((cur_rf ~ /L/ || cur_rf ~ /D/) && cur_rf ~ /[dv]/)
+		rfin = "D";
+	else if (cur_rf ~ /C/)
 		rfin = "D";
 	else if (cur_rf ~ /[cdv]/)
 		rfin = "C";
