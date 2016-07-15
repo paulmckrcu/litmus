@@ -1,4 +1,4 @@
-C auto/RW-RB
+C auto/C-RW-RB
 (* Result: Never *)
 {
 }

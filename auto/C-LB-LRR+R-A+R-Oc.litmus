@@ -1,4 +1,4 @@
-C auto/LB-LRR+R-A+R-Oc
+C auto/C-LB-LRR+R-A+R-Oc
 (*
  * Result: Sometimes
  * P1-P2 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency

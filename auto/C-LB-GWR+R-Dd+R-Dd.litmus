@@ -1,4 +1,4 @@
-C auto/LB-GWR+R-Dd+R-Dd
+C auto/C-LB-GWR+R-Dd+R-Dd
 (*
  * Result: Sometimes
  * P0 GWR: Never->Sometimes: Power rel-acq does not provide write-to-read global transitivity

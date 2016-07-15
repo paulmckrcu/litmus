@@ -1,4 +1,4 @@
-C auto/LB-GWW+R-Dd+R-Dd+R-Oc+R-A
+C auto/C-LB-GWW+R-Dd+R-Dd+R-Oc+R-A
 (*
  * Result: Maybe
  * P0 GWW: Never->Maybe: Should rel-acq provide any global transitivity?

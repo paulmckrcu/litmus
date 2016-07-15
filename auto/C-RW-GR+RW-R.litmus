@@ -1,4 +1,4 @@
-C auto/RW-GR+RW-R
+C auto/C-RW-GR+RW-R
 (*
  * Result: DEADLOCK
  * 

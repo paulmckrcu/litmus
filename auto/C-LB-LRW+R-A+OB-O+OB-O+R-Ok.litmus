@@ -1,4 +1,4 @@
-C auto/LB-LRW+R-A+OB-O+OB-O+R-Ok
+C auto/C-LB-LRW+R-A+OB-O+OB-O+R-Ok
 (*
  * Result: Sometimes
  * P2-P3 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
