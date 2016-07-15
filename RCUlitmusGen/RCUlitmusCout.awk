@@ -118,9 +118,10 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists,  argl
 	gsub("[^/]*$", "", fn);
 	pad = litname;
 	gsub("^.*/", "", pad);
-	fn = fn "C-" pad ".litmus";
+	pad = fn "C-" pad;
+	fn = pad ".litmus";
 	# Output file header.
-	print "C " litname > fn;
+	print "C " pad > fn;
 
 	# Process and output comments
 	output_comments(comments, fn);
