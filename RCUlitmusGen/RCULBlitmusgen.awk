@@ -315,7 +315,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 		i_operand2[p] = i_var[p];
 		vars[p ":" i_var[p]] = 1;
 		if (x ~ /[cCk]/ && x !~ /d/)
-			initializers = initializers " " p - 1 ":r4=" o_operand2[p - 1] ";";
+			initializers = initializers " " p - 1 ":r4=1;";
 		else if (x ~ /[cCk]/)
 			initializers = initializers " " p - 1 ":r4=" o_var[p] ";";
 	}
