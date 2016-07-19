@@ -6,7 +6,7 @@ C auto/C-LB-LRW+R-Ov+R-OC+R-Dd+OB-O+R-A
  * P3-P4 rf OB-O: Note lack of C11 guarantee, no synchronizes-with
  *)
 {
- 2:r4=r1; 2:r3=x4; x3=y3;
+ 2:r4=1; 2:r3=x4; x3=y3;
 }
 
 P0(int *u0, int *x1)

@@ -5,7 +5,7 @@ LISA auto/LB-LRW+R-Ov+R-OC+R-Dd+OB-O+OB-OB
  * P1 Ov,R: Note lack of C11 guarantee
  *)
 {
- 2:r4=r1; 2:r3=x4; x3=y3;
+ 2:r4=1; 2:r3=x4; x3=y3;
 }
  P0              | P1               | P2                 | P3             | P4            | P5            ;
  r[once] r1 u0   | r[once] r1 x1    | r[once] r1 x2      | r[deref] r1 x3 | r[once] r1 x4 | r[once] r1 x5 ;

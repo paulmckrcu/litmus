@@ -7,7 +7,7 @@ C auto/C-LB-LRW+R-Ov+R-OC+R-Dd+R-Dd+R-Oc
  * P5 Oc,LRW: Note lack of C11 guarantee, control dependency
  *)
 {
- 2:r4=r1; 2:r3=x4; x3=y3; 3:r3=x5; x4=y4; 5:r4=1;
+ 2:r4=1; 2:r3=x4; x3=y3; 3:r3=x5; x4=y4; 5:r4=1;
 }
 
 P0(int *u0, int *x1)
