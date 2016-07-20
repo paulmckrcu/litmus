@@ -469,6 +469,7 @@ function gen_aux_proc_local(g, n,  line_num) {
 	line_num = 0;
 	if (g == "LRR") {
 		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
+		vars[n + 1 ":" "u0"] = 1;
 		i_val[1] = "1";
 		gen_add_exists("0:r1=1");
 		gen_add_exists(n - 1 ":r2=0");
