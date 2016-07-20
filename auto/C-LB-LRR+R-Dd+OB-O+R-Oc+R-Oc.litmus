@@ -51,7 +51,7 @@ P4(int *x4, int *u0)
 }
 
 
-P5()
+P5(int *u0)
 {
 	WRITE_ONCE(*u0, 1);
 }

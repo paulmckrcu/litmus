@@ -31,7 +31,7 @@ P2(int *x2, int *u0)
 }
 
 
-P3()
+P3(int *u0)
 {
 	WRITE_ONCE(*u0, 1);
 }
