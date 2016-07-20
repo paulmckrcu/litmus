@@ -361,6 +361,7 @@ function gen_aux_proc(n,  line_num, old_proc_num, proc_num) {
 	for (proc_num = 1; proc_num <= n; proc_num++) {
 		if (o_op[old_proc_num] == "r" && i_op[proc_num] == "r") {
 			stmts[n + 1 ":" ++line_num] = "w[once] " i_operand2[proc_num] " 1"
+			vars[n + 1 ":" i_operand2[proc_num]] = 1;
 		}
 		old_proc_num = proc_num;
 	}
