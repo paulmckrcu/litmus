@@ -1,4 +1,8 @@
-LISA S+mb+data-wsi-wse
+LISA S+fencembonceonce+dataonceonce-wsionceonce
+"FenceMbdWWOnceOnce RfeOnceOnce DpDatadWOnceOnce WsiOnceOnce WseOnceOnce"
+Prefetch=0:x=F,0:y=W,1:y=F,1:x=W
+Com=Rf Ws
+Orig=FenceMbdWWOnceOnce RfeOnceOnce DpDatadWOnceOnce WsiOnceOnce WseOnceOnce
 {
 }
  P0          | P1                 ;

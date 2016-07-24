@@ -1,4 +1,8 @@
-LISA LB+data+data-wsi
+LISA LB+dataonceonce+dataonceonce-wsionceonce
+"DpDatadWOnceOnce RfeOnceOnce DpDatadWOnceOnce WsiOnceOnce RfeOnceOnce"
+Prefetch=0:x=F,0:y=W,1:y=F,1:x=W
+Com=Rf Rf
+Orig=DpDatadWOnceOnce RfeOnceOnce DpDatadWOnceOnce WsiOnceOnce RfeOnceOnce
 {
 }
  P0                 | P1                 ;
