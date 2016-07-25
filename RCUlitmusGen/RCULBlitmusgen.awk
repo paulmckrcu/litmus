@@ -22,6 +22,7 @@
 #	B: Use smp_mb(), AKA f[mb].
 # 	O: Use WRITE_ONCE(), AKA w[once].
 #	Q: C11 release seQuence:  Follow bogus ordered write with [once].
+#	q: As for "Q", but not subject to control dependency.
 #	R: Use smp_write_release(), AKA w[release].
 #
 #	Only one of "A", "O", or "R" may be specified for a given rf link.
@@ -204,16 +205,20 @@ function gen_rf_syntax(rfn, x, y, xn, yn) {
 	if ((x ~ /A/) + (x ~ /O/) + (x ~ /R/) != 1) {
 		print "Reads-from edge " rfn " only one of \"AOR\" allowed in write-side specifier: \"" x "\"" > "/dev/stderr";
 	}
-	if (x !~ /^[ABOQR]*$/) {
+	if (x !~ /^[ABOQqR]*$/) {
 		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /v/ && xn ~ /Q/) {
-		print "Reads-from edge " rfn " Cannot mix Q with next v: \"" y "\", \"" xn "\"" > "/dev/stderr";
+	if ((x ~ /Q/) + (x ~ /q/) > 1) {
+		print "Reads-from edge " rfn " at most one of \"Qq\" in write-side specifier: \"" x "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (x ~ /Q/ && y ~ /d/) {
-		print "Reads-from edge " rfn " Cannot mix Q with d: \"" x "\", \"" y "\"" > "/dev/stderr";
+	if (y ~ /v/ && xn ~ /[Qq]/) {
+		print "Reads-from edge " rfn " Cannot mix Qq with next v: \"" y "\", \"" xn "\"" > "/dev/stderr";
+		exit 1;
+	}
+	if (x ~ /[Qq]/ && y ~ /d/) {
+		print "Reads-from edge " rfn " Cannot mix Qq with d: \"" x "\", \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
 	if (y ~ /v/ && yn ~ /d/) {
@@ -376,7 +381,7 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 			i_val[p + 1] = i_val[p];
 		} else {
 			o_operand2[p] = "1";
-			if (y ~ /Q/)
+			if (y ~ /[Qq]/)
 				o_operand3[p] = 2;
 			i_val[p + 1] = "1";
 		}
@@ -401,11 +406,16 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 	if (y ~ /Q/) {
 		stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand3[p];
 		stmts[p ":" ++line_num] = o_op[p] "[once] " o_operand1[p] " " o_operand2[p];
+	} else if (y ~ /q/) {
+		stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand3[p];
 	} else {
 		stmts[p ":" ++line_num] = o_op[p] "[" o_mod[p] "] " o_operand1[p] " " o_operand2[p];
 	}
 	if (x ~ /[cC]/)
 		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
+	if (y ~ /q/) {
+		stmts[p ":" ++line_num] = o_op[p] "[once] " o_operand1[p] " " o_operand2[p];
+	}
 }
 
 ########################################################################
