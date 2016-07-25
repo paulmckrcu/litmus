@@ -204,6 +204,7 @@ function gen_global_syntax(x) {
 function gen_rf_syntax(rfn, x, y, xn, yn) {
 	if ((x ~ /A/) + (x ~ /O/) + (x ~ /R/) != 1) {
 		print "Reads-from edge " rfn " only one of \"AOR\" allowed in write-side specifier: \"" x "\"" > "/dev/stderr";
+		exit 1;
 	}
 	if (x !~ /^[ABOQqR]*$/) {
 		print "Reads-from edge " rfn " bad write-side specifier: \"" x "\"" > "/dev/stderr";
