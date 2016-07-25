@@ -27,8 +27,8 @@
 #	Only one of "A", "O", or "R" may be specified for a given rf link.
 #	It is legal to add "B" and/or "Q" to any of them.
 #
-# R:	A: Use smp_read_acquire(), AKA r[acquire].
-#	B: Use smp_assign_pointer, AKA f[mb].
+# R:	A: Use smp_load_acquire(), AKA r[acquire].
+#	B: Use smp_mb(), AKA f[mb].
 #	c: Impose control dependency.
 #	C: Impose control dependency with f[rmb].
 #	d: Impose dependency (address dependency, historical!).
