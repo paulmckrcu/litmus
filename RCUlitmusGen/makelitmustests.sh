@@ -190,6 +190,13 @@ awk '{
 			sub(/ R-A R-A$/, " RQ-A R-A", dir);
 			print "LRW " dir;
 		}
+		if ($0 ~ / R-A R-A$/) {
+			# Produce a few with non-control-dependency-protected
+			# C11 release sequence near end
+			dir = $0;
+			sub(/ R-A R-A$/, " R-Oc Oq-A", dir);
+			print "LRW " dir;
+		}
 	}
     	print "GRR " $0;
     	print "GRW " $0;
