@@ -30,7 +30,7 @@ function translate_statement(stmt,  n, rel, splt) {
 		return "}"
 	if (stmt ~ /^b\[] /)
 		return ""; # Generate "if" from preceding "mov".
-	if (stmt == "f[lock]")
+	if (stmt == "f[rcu_read_lock]")
 		return "rcu_read_lock();"
 	if (stmt == "f[mb]")
 		return "smp_mb();"
@@ -40,7 +40,7 @@ function translate_statement(stmt,  n, rel, splt) {
 		return "smp_rmb();"
 	if (stmt == "f[sync]")
 		return "synchronize_rcu();"
-	if (stmt == "f[unlock]")
+	if (stmt == "f[rcu_read_unlock]")
 		return "rcu_read_unlock();"
 	if (stmt == "f[wmb]")
 		return "smp_wmb();"

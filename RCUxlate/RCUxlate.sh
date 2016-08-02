@@ -140,7 +140,7 @@ function proc_needs_gp_check(proc_num, gp_num) {
 # against the specified grace period?
 #
 function stmt_needs_gp_check(stmt) {
-	if (stmt == "f[lock]" || stmt == "f[unlock]")
+	if (stmt == "f[rcu_read_lock]" || stmt == "f[rcu_read_unlock]")
 		return 0;
 	if (stmt ~ /^[frw]\[/)
 		return 1;
@@ -356,13 +356,13 @@ incode == 1 {
 				rcugp[ngp] = i;
 			}
 		}
-		if (cur_line[i] == "f[lock]") {
+		if (cur_line[i] == "f[rcu_read_lock]") {
 			if (rcunest[i] + 0 == 0)
 				rcurl[i]++;
 			else
 				cur_line[i] = "(* nested " cur_line[i] " *)";
 			rcunest[i]++;
-		} else if (cur_line[i] == "f[unlock]") {
+		} else if (cur_line[i] == "f[rcu_read_unlock]") {
 			if (rcunest[i] == 1)
 				rcurul[i]++;
 			else
@@ -396,7 +396,7 @@ END {
 			}
 		}
 		rcurlonly[proc_num] = 0;
-		if (lisa[proc_num ":" 2] == "f[lock]" && lisa[proc_num ":" max_line[proc_num]] == "f[unlock]") {
+		if (lisa[proc_num ":" 2] == "f[rcu_read_lock]" && lisa[proc_num ":" max_line[proc_num]] == "f[rcu_read_unlock]") {
 			rcurlonly[proc_num] = 1;
 		}
 		if (rcurl[proc_num] > 1 || (rcurl[proc_num] > 0 && !rcurlonly[proc_num]))
@@ -418,12 +418,12 @@ END {
 			aux[proc_num ":" line_out] = stmt;
 			if (line_out > aux_max_line)
 				aux_max_line = line_out;
-			if (stmt == "f[lock]") {
+			if (stmt == "f[rcu_read_lock]") {
 				drl++;
 				if (refgp[proc_num] != -1)
 					rlpreamble[proc_num ":" rl + drl] = preamble[proc_num ":" refgp[proc_num]];
 				aux[proc_num ":" line_out++] = "(* " stmt " *)";
-			} else if (stmt == "f[unlock]") {
+			} else if (stmt == "f[rcu_read_unlock]") {
 				rul += 1;
 				if (refgp[proc_num] != -1)
 					rlpostamble[proc_num ":" rul] = postamble[proc_num ":" refgp[proc_num]];

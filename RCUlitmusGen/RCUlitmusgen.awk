@@ -299,10 +299,10 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 	# Output statements
 	line_num = 0;
 	if (y ~ /R/ && (y ~ /[13]/ || y !~ /2/))
-		stmts[p ":" ++line_num] = "f[lock]";
+		stmts[p ":" ++line_num] = "f[rcu_read_lock]";
 	stmts[p ":" ++line_num] = f_op[p] "[" f_mod[p] "] " f_operand1[p] " " f_operand2[p];
 	if (y ~ /R/ && y ~ /[13]/)
-		stmts[p ":" ++line_num] = "f[unlock]";
+		stmts[p ":" ++line_num] = "f[rcu_read_unlock]";
 	if (y ~ /B/)
 		stmts[p ":" ++line_num] = "f[mb]";
 	if (y ~ /C/) {
@@ -316,12 +316,12 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		stmts[p ":" ++line_num] = "f[sync]";
 	}
 	if (y ~ /R/ && y ~ /[23]/)
-		stmts[p ":" ++line_num] = "f[lock]";
+		stmts[p ":" ++line_num] = "f[rcu_read_lock]";
 	stmts[p ":" ++line_num] = l_op[p] "[" l_mod[p] "] " l_operand1[p] " " l_operand2[p];
 	if (y ~ /C/)
 		stmts[p ":" ++line_num] = "CTRL" p - 1 ":";
 	if (y ~ /R/ && (y ~ /[23]/ || y !~ /1/))
-		stmts[p ":" ++line_num] = "f[unlock]";
+		stmts[p ":" ++line_num] = "f[rcu_read_unlock]";
 
 	# Update incoming and outgoing data for later reference.
 	if (y ~ /I/) {

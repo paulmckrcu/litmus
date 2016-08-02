@@ -31,12 +31,12 @@ BEGIN {
 	aux[1 ":" 2] = "f[sync]";
 	aux[1 ":" 3] = "w[once] x2 1";
 	gvars[1 ":" x2] = 1;
-	aux[2 ":" 1] = "f[lock]";
+	aux[2 ":" 1] = "f[rcu_read_lock]";
 	aux[2 ":" 2] = "r[once] r1 x1";
 	gvars[2 ":" x1] = 1;
 	aux[2 ":" 3] = "r[once] r2 x2";
 	gvars[2 ":" x2] = 1;
-	aux[2 ":" 4] = "f[unlock]";
+	aux[2 ":" 4] = "f[rcu_read_unlock]";
 	output_litmus("test", "This is a\nmulti-line comment", "x=0; y=0;\n1:r1=42; 1:r2=43;", gvars, aux, "1:r2=1 /\\ 1:r1=0");
 	output_C_litmus("test", "This is a\nmulti-line comment", "x=0; y=0;\n1:r1=42; 1:r2=43;", gvars, aux, "1:r2=1 /\\ 1:r1=0");
 }'

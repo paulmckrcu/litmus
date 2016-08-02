@@ -37,6 +37,6 @@ Contents of this archive:
 
 ./RCUxlate/
 
-	Scripts for converting litmus tests containing f[lock], f[unlock],
-	and f[sync] into equivalent models based on loads, stores,
-	and memory barriers.
+	Scripts for converting litmus tests containing f[rcu_read_lock],
+	f[rcu_read_unlock], and f[sync] into equivalent models based on
+	loads, stores, and memory barriers.

@@ -115,9 +115,9 @@ function emit_sync(proc_num, line_in, line,  gp_num, i) {
 #
 function do_gp_checks(proc_num, line_in, line_out,  stmt) {
 	stmt = lisa[proc_num ":" line_in];
-	if (stmt == "f[lock]")
+	if (stmt == "f[rcu_read_lock]")
 		line_out = emit_preamble(proc_num, line_in, line_out);
-	else if (stmt == "f[unlock]")
+	else if (stmt == "f[rcu_read_unlock]")
 		line_out = emit_postamble(proc_num, line_in, line_out);
 	else if (stmt == "f[sync]" || stmt == "call[sync]")
 		line_out = emit_sync(proc_num, line_in, line_out);
@@ -246,7 +246,7 @@ incode == 1 {
 				rcusync_gp[i ":" max_line[i]] = ngp;
 			}
 		}
-		if (cur_line[i] == "f[lock]") {
+		if (cur_line[i] == "f[rcu_read_lock]") {
 			if (rcunest[i] + 0 == 0) {
 				ncs++;
 				rcucs_proc[ncs] = i;
@@ -256,7 +256,7 @@ incode == 1 {
 				cur_line[i] = "(* nested " cur_line[i] " *)";
 			}
 			rcunest[i]++;
-		} else if (cur_line[i] == "f[unlock]") {
+		} else if (cur_line[i] == "f[rcu_read_unlock]") {
 			if (rcunest[i] == 1)
 				rcurul_cs[i ":" max_line[i]] = rcu_lastcs[i];
 			else

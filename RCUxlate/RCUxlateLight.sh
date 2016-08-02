@@ -208,13 +208,13 @@ incode == 1 {
 				rcugp[ngp] = proc_num;
 			}
 		}
-		if (cur_line[proc_num] == "f[lock]") {
+		if (cur_line[proc_num] == "f[rcu_read_lock]") {
 			if (rcunest[proc_num] + 0 == 0)
 				rcurl[proc_num]++;
 			else
 				cur_line[proc_num] = "(* nested " cur_line[proc_num] " *)";
 			rcunest[proc_num]++;
-		} else if (cur_line[proc_num] == "f[unlock]") {
+		} else if (cur_line[proc_num] == "f[rcu_read_unlock]") {
 			if (rcunest[proc_num] == 1)
 				rcurul[proc_num]++;
 			else
@@ -249,12 +249,12 @@ END {
 			stmt = lisa[proc_num ":" line_in];
 			if (line_in == 1) {
 				aux[proc_num ":" line_out++] = stmt;
-			} else if (stmt == "f[lock]") {
+			} else if (stmt == "f[rcu_read_lock]") {
 				aux[proc_num ":" line_out++] = stmt;
 
 				line_out = emit_preamble(proc_num, line_out);
 				aux[proc_num ":" line_out++] = "(* end " stmt " *)";
-			} else if (stmt == "f[unlock]") {
+			} else if (stmt == "f[rcu_read_unlock]") {
 				aux[proc_num ":" line_out++] = "(* start " stmt " *)";
 				line_out = emit_postamble(proc_num, line_out);
 				aux[proc_num ":" line_out++] = stmt;
