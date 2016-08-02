@@ -16,11 +16,11 @@ LISA auto/WW-GH+WW-R+WW-R+WW-R
  *)
 {
 }
- P0           | P1           | P2           | P3           ;
- w[once] x0 2 | f[lock]      | f[lock]      | f[lock]      ;
- f[sync]      | w[once] x1 2 | w[once] x2 2 | w[once] x3 2 ;
- f[sync]      | w[once] x2 1 | w[once] x3 1 | w[once] x0 1 ;
- f[sync]      | f[unlock]    | f[unlock]    | f[unlock]    ;
- w[once] x1 1 |              |              |              ;
+ P0           | P1                 | P2                 | P3                 ;
+ w[once] x0 2 | f[rcu_read_lock]   | f[rcu_read_lock]   | f[rcu_read_lock]   ;
+ f[sync]      | w[once] x1 2       | w[once] x2 2       | w[once] x3 2       ;
+ f[sync]      | w[once] x2 1       | w[once] x3 1       | w[once] x0 1       ;
+ f[sync]      | f[rcu_read_unlock] | f[rcu_read_unlock] | f[rcu_read_unlock] ;
+ w[once] x1 1 |                    |                    |                    ;
 exists
 (x0=2 /\ x1=2 /\ x2=2 /\ x3=2)

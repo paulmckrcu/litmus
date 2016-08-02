@@ -12,13 +12,13 @@ LISA auto/WW-GR3+WW-R
  *)
 {
 }
- P0           | P1           ;
- f[lock]      | f[lock]      ;
- w[once] x0 2 | w[once] x1 2 ;
- f[unlock]    | w[once] x0 1 ;
- f[sync]      | f[unlock]    ;
- f[lock]      |              ;
- w[once] x1 1 |              ;
- f[unlock]    |              ;
+ P0                 | P1                 ;
+ f[rcu_read_lock]   | f[rcu_read_lock]   ;
+ w[once] x0 2       | w[once] x1 2       ;
+ f[rcu_read_unlock] | w[once] x0 1       ;
+ f[sync]            | f[rcu_read_unlock] ;
+ f[rcu_read_lock]   |                    ;
+ w[once] x1 1       |                    ;
+ f[rcu_read_unlock] |                    ;
 exists
 (x0=2 /\ x1=2)

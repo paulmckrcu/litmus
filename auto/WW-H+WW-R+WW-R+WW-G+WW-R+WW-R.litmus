@@ -20,10 +20,10 @@ LISA auto/WW-H+WW-R+WW-R+WW-G+WW-R+WW-R
  *)
 {
 }
- P0           | P1           | P2           | P3           | P4           | P5           ;
- w[once] x0 2 | f[lock]      | f[lock]      | w[once] x3 2 | f[lock]      | f[lock]      ;
- f[sync]      | w[once] x1 2 | w[once] x2 2 | f[sync]      | w[once] x4 2 | w[once] x5 2 ;
- f[sync]      | w[once] x2 1 | w[once] x3 1 | w[once] x4 1 | w[once] x5 1 | w[once] x0 1 ;
- w[once] x1 1 | f[unlock]    | f[unlock]    |              | f[unlock]    | f[unlock]    ;
+ P0           | P1                 | P2                 | P3           | P4                 | P5                 ;
+ w[once] x0 2 | f[rcu_read_lock]   | f[rcu_read_lock]   | w[once] x3 2 | f[rcu_read_lock]   | f[rcu_read_lock]   ;
+ f[sync]      | w[once] x1 2       | w[once] x2 2       | f[sync]      | w[once] x4 2       | w[once] x5 2       ;
+ f[sync]      | w[once] x2 1       | w[once] x3 1       | w[once] x4 1 | w[once] x5 1       | w[once] x0 1       ;
+ w[once] x1 1 | f[rcu_read_unlock] | f[rcu_read_unlock] |              | f[rcu_read_unlock] | f[rcu_read_unlock] ;
 exists
 (x0=2 /\ x1=2 /\ x2=2 /\ x3=2 /\ x4=2 /\ x5=2)

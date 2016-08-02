@@ -14,10 +14,10 @@ LISA auto/WR-H+WR-R+WR-R
  *)
 {
 }
- P0            | P1            | P2            ;
- w[once] x0 2  | f[lock]       | f[lock]       ;
- f[sync]       | w[once] x1 2  | w[once] x2 2  ;
- f[sync]       | r[once] r2 x2 | r[once] r2 x0 ;
- r[once] r2 x1 | f[unlock]     | f[unlock]     ;
+ P0            | P1                 | P2                 ;
+ w[once] x0 2  | f[rcu_read_lock]   | f[rcu_read_lock]   ;
+ f[sync]       | w[once] x1 2       | w[once] x2 2       ;
+ f[sync]       | r[once] r2 x2      | r[once] r2 x0      ;
+ r[once] r2 x1 | f[rcu_read_unlock] | f[rcu_read_unlock] ;
 exists
 (2:r2=0 /\ 0:r2=0 /\ 1:r2=0)

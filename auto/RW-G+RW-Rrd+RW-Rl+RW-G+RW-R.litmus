@@ -19,10 +19,10 @@ LISA auto/RW-G+RW-Rrd+RW-Rl+RW-G+RW-R
 {
  1:r3=x3; x2=y3; 2:r4=y3;
 }
- P0            | P1               | P2              | P3            | P4            ;
- r[once] r1 x0 | f[lock]          | f[lock]         | r[once] r1 x3 | f[lock]       ;
- f[sync]       | r[once] r1 x1    | r[lderef] r1 x2 | f[sync]       | r[once] r1 x4 ;
- w[once] x1 1  | w[release] x2 r3 | w[once] r1 1    | w[once] x4 1  | w[once] x0 1  ;
-               | f[unlock]        | f[unlock]       |               | f[unlock]     ;
+ P0            | P1                 | P2                 | P3            | P4                 ;
+ r[once] r1 x0 | f[rcu_read_lock]   | f[rcu_read_lock]   | r[once] r1 x3 | f[rcu_read_lock]   ;
+ f[sync]       | r[once] r1 x1      | r[lderef] r1 x2    | f[sync]       | r[once] r1 x4      ;
+ w[once] x1 1  | w[release] x2 r3   | w[once] r1 1       | w[once] x4 1  | w[once] x0 1       ;
+               | f[rcu_read_unlock] | f[rcu_read_unlock] |               | f[rcu_read_unlock] ;
 exists
 (0:r1=1 /\ 1:r1=1 /\ 2:r1=x3 /\ 3:r1=1 /\ 4:r1=1)

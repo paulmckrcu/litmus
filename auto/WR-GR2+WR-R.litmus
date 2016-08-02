@@ -12,11 +12,11 @@ LISA auto/WR-GR2+WR-R
  *)
 {
 }
- P0            | P1            ;
- w[once] x0 2  | f[lock]       ;
- f[sync]       | w[once] x1 2  ;
- f[lock]       | r[once] r2 x0 ;
- r[once] r2 x1 | f[unlock]     ;
- f[unlock]     |               ;
+ P0                 | P1                 ;
+ w[once] x0 2       | f[rcu_read_lock]   ;
+ f[sync]            | w[once] x1 2       ;
+ f[rcu_read_lock]   | r[once] r2 x0      ;
+ r[once] r2 x1      | f[rcu_read_unlock] ;
+ f[rcu_read_unlock] |                    ;
 exists
 (1:r2=0 /\ 0:r2=0)

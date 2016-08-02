@@ -2,10 +2,10 @@ LISA auto/WR-R
 (* Result: Never *)
 {
 }
- P0            ;
- f[lock]       ;
- w[once] x0 2  ;
- r[once] r2 x0 ;
- f[unlock]     ;
+ P0                 ;
+ f[rcu_read_lock]   ;
+ w[once] x0 2       ;
+ r[once] r2 x0      ;
+ f[rcu_read_unlock] ;
 exists
 (0:r2=0)

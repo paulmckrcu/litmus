@@ -13,10 +13,10 @@ LISA auto/RW-Rrd+RW-Rl
 {
  0:r3=x0; x1=y0; 1:r4=y0;
 }
- P0               | P1              ;
- f[lock]          | f[lock]         ;
- r[once] r1 x0    | r[lderef] r1 x1 ;
- w[release] x1 r3 | w[once] r1 1    ;
- f[unlock]        | f[unlock]       ;
+ P0                 | P1                 ;
+ f[rcu_read_lock]   | f[rcu_read_lock]   ;
+ r[once] r1 x0      | r[lderef] r1 x1    ;
+ w[release] x1 r3   | w[once] r1 1       ;
+ f[rcu_read_unlock] | f[rcu_read_unlock] ;
 exists
 (0:r1=1 /\ 1:r1=x0)
