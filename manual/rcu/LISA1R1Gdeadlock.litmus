@@ -10,10 +10,10 @@ LISA LISA1R1Gdeadlock
 x0 = 0;
 x1 = 0;
 }
- P0            ;
- f[lock]       ;
- w[once] x0 1  ;
- f[sync]       ;
- w[once] x1 1  ;
- f[unlock]     ;
+ P0                 ;
+ f[rcu_read_lock]   ;
+ w[once] x0 1       ;
+ f[sync]            ;
+ w[once] x1 1       ;
+ f[rcu_read_unlock] ;
 exists (x0=1 /\ x1=1)

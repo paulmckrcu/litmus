@@ -10,9 +10,9 @@ z = 42;
 0:r1=y;
 }
  P0             | P1                 ;
-                | f[lock]            ;
+                | f[rcu_read_lock]   ;
  w[once] y 2    | r[deref] r1 x      ;
  w[assign] x r1 | w[once] r1 1       ;
-                | f[unlock]          ;
+                | f[rcu_read_unlock] ;
 exists (y=2 /\ 1:r1=y)
 
