@@ -27,9 +27,13 @@ function translate_statement(stmt,  n, rel, splt) {
 	if (stmt ~ /^P[0-9]*/)
 		return ""
 	if (stmt ~ /^[A-Za-z][A-Za-z0-9]*:/)
-		return "}"
-	if (stmt ~ /^b\[] /)
-		return ""; # Generate "if" from preceding "mov".
+		return "}";
+	if (stmt ~ /^b\[] /) {
+		n = split(stmt, splt, " ");
+		if (n != 3)
+			return "???" stmt;
+		return "if (" splt[2] ") {"
+	}
 	if (stmt == "f[rcu_read_lock]")
 		return "rcu_read_lock();"
 	if (stmt == "f[mb]")
@@ -46,14 +50,18 @@ function translate_statement(stmt,  n, rel, splt) {
 		return "smp_wmb();"
 	if (stmt ~ /^mov /) {
 		n = split(stmt, splt, " ");
-		if (n != 5 || (splt[3] != "(eq" && splt[3] != "(neq"))
+		if (n != 5)
 			return "???" stmt;
 		gsub(")", "", splt[5]);
 		if (splt[3] == "(eq")
 			rel = " != ";
 		else if (splt[3] == "(neq")
 			rel = " == ";
-		return "if (" splt[4] rel splt[5] ") {";
+		else if (splt[3] == "(xor")
+			rel = " ^ ";
+		else
+			return "???" stmt;
+		return splt[2] " = (" splt[4] rel splt[5] ");";
 	}
 	if (stmt ~ /^r\[acquire] /) {
 		n = split(stmt, splt, " ");
