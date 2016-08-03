@@ -53,6 +53,17 @@ function find_scratch_regs(stmts,  i, idx, j, proc_max, regs, stmt_regs, trash) 
 
 ########################################################################
 #
+# Output the specified read, using a scratch register if needed.
+#
+function output_read(proc_num, rtype, splt,  reg) {
+	if (splt[3] ~ /^[a-zA-Z0-9_]+$/)
+		return splt[2] " = " rtype splt[3] ");";
+	reg = scratch_regs[proc_num];
+	return reg " = (" splt[3] ");\n" splt[2] " = " rtype reg ");";
+}
+
+########################################################################
+#
 # Output the specified write, using a scratch register if needed.
 #
 function output_write(proc_num, wtype, splt,  reg) {
@@ -110,25 +121,25 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return splt[2] " = smp_load_acquire(" splt[3] ");"
+		return output_read(proc_num, "smp_load_acquire(", splt);
 	}
 	if (stmt ~ /^r\[deref] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return splt[2] " = rcu_dereference(*" splt[3] ");"
+		return output_read(proc_num, "rcu_dereference(*", splt);
 	}
 	if (stmt ~ /^r\[lderef] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return splt[2] " = lockless_dereference(*" splt[3] ");"
+		return output_read(proc_num, "lockless_dereference(*", splt);
 	}
 	if (stmt ~ /^r\[once] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return splt[2] " = READ_ONCE(*" splt[3] ");"
+		return output_read(proc_num, "READ_ONCE(*", splt);
 	}
 	if (stmt ~ /^w\[assign] /) {
 		n = split(stmt, splt, " ");
