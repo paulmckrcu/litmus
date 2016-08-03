@@ -109,11 +109,14 @@ function translate_statement(stmt,  n, rel, splt) {
 #	Can be empty string for no comment.
 # varinit: String containing initializers, optionally with embedded "\n".
 #	Can be empty string for no initializers.
+# gvars[proc_num ":" varname]: Array containing global-variable/function usage.
 # stmts[proc_num ":" line_out]: Array of LISA statements.
 # exists: String containing exists clause, optionally with embedded "\n".
 #	The outermost set of parentheses are supplied by output_litmus.
+# exists_paren: True if the exists clause is already fully parenthisized,
+#	false otherwise.  Note that an empty argument evaluates to false.
 #
-function output_C_litmus(litname, comments, varinit, gvars, stmts, exists,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, pad, proc_num, stmt, tabs) {
+function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exists_paren,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, pad, proc_num, stmt, tabs) {
 	fn = litname;
 	gsub("[^/]*$", "", fn);
 	pad = litname;
@@ -185,6 +188,9 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists,  argl
 	}
 
 	# exists clause.
-	printf "exists\n(%s)\n", exists > fn;
+	if (exists_paren)
+		printf "exists\n%s\n", exists > fn;
+	else
+		printf "exists\n(%s)\n", exists > fn;
 	close(fn);
 }

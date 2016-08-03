@@ -159,6 +159,6 @@ inexists == 1 {
 
 # Translate and output!
 END {
-	output_C_litmus(litname, "", varinit, vars, lisa, exists);
+	output_C_litmus(litname, "", varinit, vars, lisa, exists, 1);
 }
 '
