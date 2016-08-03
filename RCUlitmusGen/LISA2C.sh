@@ -50,6 +50,15 @@ gawk '
 function output_comments(comments, fn) {
 }
 
+########################################################################
+#
+# Do-nothing output_comments() function.
+function extract_global_vars(p, expr,  i, operands, operators) {
+	patsplit(expr, operators, /[- ()+*/]/, operands);
+	for (i in operands)
+		if (operands[i] == "" || operands[i] !~ /^r[0-9]+$/)
+			vars[p ":" operands[i]] = 1;
+}
 
 ########################################################################
 #
@@ -132,9 +141,9 @@ incode == 1 {
 		if (cur_line[i] ~ /r\[/ || cur_line[i] ~ /w\[/) {
 			split(cur_line[i], operands, " ");
 			if (cur_line[i] ~ /r\[/)
-				vars[i ":" operands[3]] = 1;
+				extract_global_vars(i, operands[3]);
 			else
-				vars[i ":" operands[2]] = 1;
+				extract_global_vars(i, operands[2]);
 		}
 
 		lisa[i ":" max_line[i]] = cur_line[i];
