@@ -21,9 +21,52 @@
 
 ########################################################################
 #
-# Translate from LISA to C.
+# Global variables:
 #
-function translate_statement(stmt,  n, rel, splt) {
+# scratch_regs[proc_num]: Per-process scratch register.
+
+
+########################################################################
+#
+# Find a scratch register for every process.
+#
+function find_scratch_regs(stmts,  i, idx, j, proc_max, regs, stmt_regs, trash) {
+	delete scratch_regs;
+	proc_max = 0;
+	for (i in stmts) {
+		split(i, idx, ":");
+		if (idx[1] > proc_max)
+			proc_max = idx[1];
+		patsplit(stmts[i], trash, /[ \[\]()]/, stmt_regs);
+		for (j in stmt_regs) {
+			if (stmt_regs[j] ~ /^r[0-9]+$/)
+				regs[idx[1] ":" stmt_regs[j]] = 1;
+		}
+	}
+	for (i = 1; i <= proc_max; i++) {
+		j = 1000;
+		while (regs[i ":r" j] != "")
+			j++;
+		scratch_regs[i] = "r"j;
+	}
+}
+
+########################################################################
+#
+# Output the specified write, using a scratch register if needed.
+#
+function output_write(proc_num, wtype, splt,  reg) {
+	if (splt[2] ~ /^[a-zA-Z0-9_]+$/)
+		return wtype splt[2] ", " splt[3] ");";
+	reg = scratch_regs[proc_num];
+	return reg " = (" splt[2] ");\n" wtype reg ", " splt[3] ");";
+}
+
+########################################################################
+#
+# Translate one statement from the specified process from LISA to C.
+#
+function translate_statement(proc_num, stmt,  n, rel, splt) {
 	if (stmt ~ /^P[0-9]*/)
 		return ""
 	if (stmt ~ /^[A-Za-z][A-Za-z0-9]*:/)
@@ -91,19 +134,20 @@ function translate_statement(stmt,  n, rel, splt) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return "rcu_assign_pointer(*" splt[2] ", "splt[3] ");"
+		return output_write(proc_num, "rcu_assign_pointer(*", splt);
 	}
 	if (stmt ~ /^w\[once] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return "WRITE_ONCE(*" splt[2] ", "splt[3] ");"
+		return output_write(proc_num, "WRITE_ONCE(*", splt);
 	}
 	if (stmt ~ /^w\[release] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
 		return "smp_store_release(" splt[2] ", "splt[3] ");"
+		return output_write(proc_num, "smp_store_release(", splt);
 	}
 	return "???" stmt;
 }
@@ -124,7 +168,7 @@ function translate_statement(stmt,  n, rel, splt) {
 # exists_paren: True if the exists clause is already fully parenthisized,
 #	false otherwise.  Note that an empty argument evaluates to false.
 #
-function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exists_paren,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, pad, proc_num, stmt, tabs) {
+function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exists_paren,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, nstmts, pad, proc_num, stmt, stmt_list, stmt_splt, tabs) {
 	fn = litname;
 	gsub("[^/]*$", "", fn);
 	pad = litname;
@@ -173,6 +217,9 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exist
 		arglists[proc_num] = arglists[proc_num] "int *" curvar;
 	}
 
+	# Find a scratch register for each process, just in case.
+	find_scratch_regs(stmts);
+
 	# Output each process
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		print "" > fn;
@@ -183,14 +230,17 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exist
 			stmt = stmts[proc_num ":" line_out];
 			if (stmt == "")
 				continue;
-			stmt = translate_statement(stmt);
-			if (stmt == "")
-				continue;
-			if (stmt == "}")
-				tabs = substr(tabs, 2);
-			print tabs stmt > fn;
-			if (stmt ~ /^if /)
-				tabs = tabs "\t";
+			stmt_list = translate_statement(proc_num, stmt);
+			nstmts = split(stmt_list, stmt_splt, "\n");
+			for (i = 1; i <= nstmts; i++) {
+				if (stmt_splt[i] == "")
+					continue;
+				if (stmt_splt[i] == "}")
+					tabs = substr(tabs, 2);
+				print tabs stmt_splt[i] > fn;
+				if (stmt_splt[i] ~ /^if /)
+					tabs = tabs "\t";
+			}
 		}
 		print "}\n" > fn;
 	}
