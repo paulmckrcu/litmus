@@ -107,7 +107,11 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 		if (n != 5)
 			return "???" stmt;
 		gsub(")", "", splt[5]);
-		if (splt[3] == "(eq")
+		if (splt[3] == "(add")
+			rel = " + ";
+		else if (splt[3] == "(and")
+			rel = " & ";
+		else if (splt[3] == "(eq")
 			rel = " != ";
 		else if (splt[3] == "(neq")
 			rel = " == ";
