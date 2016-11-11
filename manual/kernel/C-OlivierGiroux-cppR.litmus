@@ -1,0 +1,28 @@
+C C-OlivierGiroux-cppR.litmus
+(*
+ * Result: Sometimes
+ *)
+
+{
+}
+
+P0(int *x, int *y)
+{
+	r1 = READ_ONCE(*y);
+}
+
+P1(int *x, int *y)
+{
+	WRITE_ONCE(*x, 1);
+	smp_store_release(y, 1);
+}
+
+P2(int *x, int *y)
+{
+	WRITE_ONCE(*y, 2);
+	smp_mb();
+	r2 = READ_ONCE(*x);
+}
+
+exists
+(0:r1=1 /\ 2:r2=0 /\ y=2)
