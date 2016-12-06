@@ -26,7 +26,8 @@ P1(int *x0, int *x1)
 {
 	rcu_read_lock();
 	r1 = READ_ONCE(*x1);
-	if (r1 != r4) {
+	r4 = (r1 != r4);
+	if (r4) {
 		WRITE_ONCE(*x0, 1);
 	}
 	rcu_read_unlock();

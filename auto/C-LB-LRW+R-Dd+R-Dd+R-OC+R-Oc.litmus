@@ -32,7 +32,8 @@ P2(int *x2)
 P3(int *x3, int *x4)
 {
 	r1 = READ_ONCE(*x3);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		smp_rmb();
 		smp_store_release(x4, 1);
 	}
@@ -42,7 +43,8 @@ P3(int *x3, int *x4)
 P4(int *x4, int *u0)
 {
 	r1 = READ_ONCE(*x4);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		WRITE_ONCE(*u0, 1);
 	}
 }

@@ -24,7 +24,8 @@ P1(int *x1)
 P2(int *x2, int *u0)
 {
 	r1 = rcu_dereference(*x2);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		WRITE_ONCE(*u0, r1);
 	}
 }

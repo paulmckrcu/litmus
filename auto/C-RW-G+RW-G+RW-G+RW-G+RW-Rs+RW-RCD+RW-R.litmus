@@ -69,7 +69,8 @@ P5(int *x5)
 {
 	rcu_read_lock();
 	r1 = rcu_dereference(*x5);
-	if (r1 != r4) {
+	r4 = (r1 != r4);
+	if (r4) {
 		WRITE_ONCE(*r1, 1);
 	}
 	rcu_read_unlock();

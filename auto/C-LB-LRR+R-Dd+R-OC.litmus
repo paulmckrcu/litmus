@@ -24,7 +24,8 @@ P1(int *x1)
 P2(int *x2, int *u0)
 {
 	r1 = READ_ONCE(*x2);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		smp_rmb();
 		r2 = READ_ONCE(*u0);
 	}

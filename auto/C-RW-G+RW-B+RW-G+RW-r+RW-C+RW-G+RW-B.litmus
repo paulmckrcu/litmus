@@ -57,7 +57,8 @@ P3(int *x3, int *x4)
 P4(int *x4, int *x5)
 {
 	r1 = READ_ONCE(*x4);
-	if (r1 != r4) {
+	r4 = (r1 != r4);
+	if (r4) {
 		WRITE_ONCE(*x5, 1);
 	}
 }

@@ -77,7 +77,8 @@ P5(int *x5, int *x6)
 P6(int *x6)
 {
 	r1 = lockless_dereference(*x6);
-	if (r1 != r4) {
+	r4 = (r1 != r4);
+	if (r4) {
 		WRITE_ONCE(*r1, 1);
 	}
 }

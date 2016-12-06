@@ -19,7 +19,8 @@ P0(int *u0, int *x1)
 P1(int *x1, int *x2)
 {
 	r1 = READ_ONCE(*x1);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		WRITE_ONCE(*x2, 1);
 	}
 }

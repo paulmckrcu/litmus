@@ -26,7 +26,8 @@ P1(int *x1)
 P2(int *x2, int *x3)
 {
 	r1 = READ_ONCE(*x2);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		smp_mb();
 		WRITE_ONCE(*x3, 1);
 	}
@@ -43,7 +44,8 @@ P3(int *x3, int *x4)
 P4(int *v0, int *x4)
 {
 	r1 = READ_ONCE(*x4);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		WRITE_ONCE(*v0, 1);
 	}
 }

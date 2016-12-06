@@ -41,7 +41,8 @@ P3(int *x3)
 P4(int *x4, int *u0)
 {
 	r1 = READ_ONCE(*x4);
-	if (r1 == r4) {
+	r4 = (r1 == r4);
+	if (r4) {
 		r2 = READ_ONCE(*u0);
 	}
 }

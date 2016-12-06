@@ -1066,6 +1066,13 @@ name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-G+RW-Rr+RW-RC.litmus  result: Never
 name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-G+RW-R+RW-R.litmus  result: Never
 name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-G+RW-Rs+RW-RCD.litmus  result: Never
 name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-G+RW-Rs+RW-RD.litmus  result: Never
+name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-R.litmus  result: Never
+name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R.litmus  result: Never
+name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R.litmus  result: Never
+name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R.litmus  result: Never
+name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R.litmus  result: Never
+name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R.litmus  result: Never
+name: auto/RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R+RW-G+RW-R.litmus  result: Never
 name: auto/RW-G+RW-R+RW-G+RW-R+RW-R+RW-G+RW-G+RW-R.litmus  result: Never
 name: auto/RW-G+RW-R+RW-G+RW-R+RW-R+RW-G+RW-R.litmus  result: Sometimes
 name: auto/RW-G+RW-R+RW-G+RW-R+RW-R+RW-R+RW-G+RW-R.litmus  result: Sometimes

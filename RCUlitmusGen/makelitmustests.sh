@@ -45,6 +45,13 @@
 		sed -n -e 's/RW-R RW-R/RW-Rrd RW-l/p'
 	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rrd RW-Cl/p'
+	echo "RW-G RW-R RW-G RW-R RW-G RW-R"
+	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
+	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
+	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
+	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
+	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
+	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
 
 	# Load-buffering RCU tests with partial or multiple critical sections
 	sh gendir.sh "RW-G RW-R1" 4 | grep -e -R
