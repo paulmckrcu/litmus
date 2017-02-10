@@ -1,0 +1,37 @@
+C auto/C-LB-LRR+R-A+R-Dd
+(*
+ * Result: Never
+ * 
+ *)
+{
+ 1:r3=u0; x2=y2;
+}
+
+P0(int *u0, int *x1)
+{
+	r1 = READ_ONCE(*u0);
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = smp_load_acquire(x1);
+	smp_store_release(x2, r3);
+}
+
+
+P2(int *x2)
+{
+	r1 = rcu_dereference(*x2);
+	r2 = READ_ONCE(*r1);
+}
+
+
+P3(int *u0)
+{
+	WRITE_ONCE(*u0, 1);
+}
+
+exists
+(0:r1=1 /\ 2:r2=0 /\ 1:r1=1 /\ 2:r1=u0)
