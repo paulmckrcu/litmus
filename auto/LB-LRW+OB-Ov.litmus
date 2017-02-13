@@ -1,0 +1,14 @@
+LISA auto/LB-LRW+OB-Ov
+(*
+ * Result: Maybe
+ * P0-P1 rf OB-Ov: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P1 Ov,LRW: Note lack of C11 guarantee, control dependency
+ *)
+{
+}
+ P0            | P1            ;
+ r[once] r1 u0 | r[once] r1 x1 ;
+ f[mb]         | w[once] u0 r1 ;
+ w[once] x1 1  |               ;
+exists
+(0:r1=1 /\ 1:r1=1)

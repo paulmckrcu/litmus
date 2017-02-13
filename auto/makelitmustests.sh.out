@@ -2244,6 +2244,7 @@ name: auto/LB-LRW+OB-Dv.litmus  result: Never
 name: auto/LB-LRW+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRW+OB-O+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRW+OB-O+OB-O+OB-O+OB-OB.litmus  result: Never
+name: auto/LB-LRW+OB-Ov.litmus  result: Maybe
 name: auto/LB-LRW+O-O+OB-O+OB-OB.litmus  result: Sometimes
 name: auto/LB-LRW+O-O+OB-O+OB-O+OB-OB.litmus  result: Sometimes
 name: auto/LB-LRW+R-A+OB-Dd.litmus  result: Never

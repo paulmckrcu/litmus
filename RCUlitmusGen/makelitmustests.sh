@@ -217,5 +217,6 @@ do
 	echo $i R-A OB-Dd
 done
 echo LRW OB-Dv
+echo LRW OB-Ov
 } | sort -u |
     awk -f RCULBlitmusgen.awk -e '{ gen_lb_litmus("auto/", $0); }'
