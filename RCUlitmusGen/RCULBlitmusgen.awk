@@ -716,8 +716,8 @@ function gen_lb_litmus(prefix, s,  gdir, i, line_num, n, name, ptemp) {
 		n = split(s, ptemp, " ");
 	gdir = ptemp[1];
 	# Smaller configurations don't rely on transitivity
-	if ((gdir ~ /^L/) && n < 3) {
-		print "Locally transitive tests need at least two rf!";
+	if ((gdir ~ /^L/) && n < 2) {
+		print "Locally transitive tests need at least one rf!";
 		exit 1;
 	} else if ((gdir ~ /^G/) && n < 2) {
 		print "Globally transitive tests need at least one rf!";
