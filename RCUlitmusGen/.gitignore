@@ -2,3 +2,10 @@
 litmus
 litmus.*
 shortlitmus.sh
+linux.def
+lock.cat
+strong-kernel.bell
+strong-kernel.cat
+strong.cfg
+weak-kernel.cat
+weak.cfg
