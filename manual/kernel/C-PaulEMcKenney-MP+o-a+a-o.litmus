@@ -1,0 +1,23 @@
+C C-PaulEMcKenney-MP+o-a+a-o.litmus
+
+(* Expected result: Sometimes.  No ordering when rcu_assign_pointer()
+ * that stores a NULL pointer. *)
+
+{
+	p=x;
+}
+
+P0(int *p, int *y)
+{
+	WRITE_ONCE(*y, 1);
+	rcu_assign_pointer(*p, 0);
+}
+
+P1(int *p, int *y)
+{
+	r1 = smp_load_acquire(p);
+	r2 = READ_ONCE(*y);
+}
+
+exists
+(1:r1=0 /\ 1:r2=0)
