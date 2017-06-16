@@ -1,4 +1,4 @@
-C C-PaulEMcKenney-MP+o-a+a-o.litmus
+C C-PaulEMcKenney-MP+o-r+a-o.litmus
 
 (* Expected result: Never, as this is simple release-acquire MP. *)
 
