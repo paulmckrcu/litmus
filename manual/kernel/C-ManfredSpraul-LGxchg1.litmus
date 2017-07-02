@@ -14,7 +14,7 @@ P0(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 		smp_store_release(lcl, 0);
 		r11 = xchg_acquire(gbl, 1);
 		r12 = xchg_acquire(lcl, 1);
-		smp_store_release(gpl, 0);
+		smp_store_release(gbl, 0);
 	}
 	r2 = READ_ONCE(*gbl_held);
 	WRITE_ONCE(*lcl_held, 1);

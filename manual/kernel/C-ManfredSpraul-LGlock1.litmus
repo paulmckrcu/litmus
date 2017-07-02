@@ -14,7 +14,7 @@ P0(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 		spin_unlock(lcl);
 		spin_lock(gbl);
 		spin_lock(lcl);
-		spin_unlock(gpl);
+		spin_unlock(gbl);
 	}
 	r2 = READ_ONCE(*gbl_held);
 	WRITE_ONCE(*lcl_held, 1);
