@@ -1,6 +1,6 @@
 C C-ManfredSpraul-L1G1xchgnr.litmus
 
-(* Expected result: Never.  *)
+(* Expected result: Sometimes.  Need acquire-load of nfcla!  *)
 
 {
 }
@@ -32,6 +32,7 @@ P1(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 	r2 = READ_ONCE(*lcl_held);
 	WRITE_ONCE(*gbl_held, 1);
 	WRITE_ONCE(*gbl_held, 0);
+	smp_store_release(nfcla, 0);
 	smp_store_release(gbl, 0);
 }
 

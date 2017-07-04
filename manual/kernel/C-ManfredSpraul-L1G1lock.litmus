@@ -1,4 +1,4 @@
-C C-ManfredSpraul-LGlock1.litmus
+C C-ManfredSpraul-L1G1lock.litmus
 
 (* Expected result: Never.  *)
 
@@ -32,6 +32,7 @@ P1(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 	r2 = READ_ONCE(*lcl_held);
 	WRITE_ONCE(*gbl_held, 1);
 	WRITE_ONCE(*gbl_held, 0);
+	smp_store_release(nfcla, 0);
 	spin_unlock(gbl);
 }
 
