@@ -1,20 +1,18 @@
 C C-RW-s+RW-D.litmus
 
 {
-	x1=y0;
-	0:r3=x0;
-	1:r4=y0;
+  int z1; int *x1 = &z1;
 }
 
-P0(int *x0, int *x1)
+P0(int *x0, int **x1)
 {
-	r1 = READ_ONCE(*x0);
-	rcu_assign_pointer(*x1, r3);
+	int r1 = READ_ONCE(*x0);
+	rcu_assign_pointer(*x1, x0);
 }
 
-P1(int *x1)
+P1(int **x1)
 {
-	r1 = rcu_dereference(*x1);
+	int *r1 = rcu_dereference(*x1);
 	WRITE_ONCE(*r1, 1);
 }
 

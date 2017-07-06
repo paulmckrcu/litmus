@@ -25,7 +25,7 @@ P0(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 
 P1(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 {
-        int r2; 
+        int r2;
 	/* Acquire global lock. */
 	spin_lock(gbl);
 	WRITE_ONCE(*nfcla, 1);
