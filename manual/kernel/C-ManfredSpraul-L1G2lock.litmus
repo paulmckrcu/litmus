@@ -7,6 +7,7 @@ C C-ManfredSpraul-L1G2lock.litmus
 
 P0(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 {
+        int r1; int r2;
 	/* Acquire local lock. */
 	spin_lock(lcl);
 	r1 = smp_load_acquire(nfcla);
@@ -24,6 +25,7 @@ P0(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 
 P1(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 {
+        int r2;
 	/* Acquire global lock. */
 	spin_lock(gbl);
 	WRITE_ONCE(*nfcla, 1);
@@ -38,6 +40,8 @@ P1(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 
 P2(int *nfcla, spinlock_t *gbl, int *gbl_held, spinlock_t *lcl, int *lcl_held)
 {
+        int r2;
+
 	/* Acquire global lock. */
 	spin_lock(gbl);
 	WRITE_ONCE(*nfcla, 1);
