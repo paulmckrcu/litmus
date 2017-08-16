@@ -3,6 +3,7 @@ C SUW+or-ow+la-ow-or
 
 P0(int *x, int *y, int *my_lock)
 {
+  int r0; int r1;
   r0 = READ_ONCE(*x);
   WRITE_ONCE(*y, 1);
   smp_mb();
@@ -10,6 +11,7 @@ P0(int *x, int *y, int *my_lock)
 }
 
 P1(int *x, int *y, int *my_lock) {
+  int r0; int r1;
   r1 = xchg_acquire(my_lock, 1);
   WRITE_ONCE(*x, 1);
   r0 = READ_ONCE(*y);
