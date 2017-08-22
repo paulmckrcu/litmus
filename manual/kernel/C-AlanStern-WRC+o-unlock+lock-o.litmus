@@ -11,14 +11,14 @@ P0(int *x, int *y)
 
 P1(int *x, int *y)
 {
-	r1 = READ_ONCE(*x);
+	int r1 = READ_ONCE(*x);
 	smp_store_release(y, 0);
 }
 
 P2(int *x, int *y)
 {
-	r1 = xchg_acquire(y, 1);
-	r2 = READ_ONCE(*x);
+	int r1 = xchg_acquire(y, 1);
+	int r2 = READ_ONCE(*x);
 }
 
 exists
