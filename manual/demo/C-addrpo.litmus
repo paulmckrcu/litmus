@@ -1,0 +1,28 @@
+C C-addrpo
+
+{
+int u = 0;
+int v = 1;
+int *x = u;
+}
+
+P0(int **x, int *y)
+{
+	int *r0;
+	int r1;
+
+	r0 = lockless_dereference(*x);
+	r1 = READ_ONCE(*r0);
+	WRITE_ONCE(*y, 1);
+}
+
+P1(int **x, int *y, int *v)
+{
+	int r2;
+
+	r2 = READ_ONCE(*y);
+	if (r2 != 0)
+		WRITE_ONCE(*x, v);
+}
+
+exists (0:r1=1)
