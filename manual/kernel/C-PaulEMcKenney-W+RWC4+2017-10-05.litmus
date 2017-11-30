@@ -12,6 +12,7 @@ P0(int *a, int *x)
 
 P1(int *x, int *y, spinlock_t *l)
 {
+	int r3;
 	r3 = READ_ONCE(*x);
 	smp_mb(); /* Lock acquisition for rcu_node ->lock. */
 	spin_lock(l); /* Locking in complete(). */
@@ -21,6 +22,7 @@ P1(int *x, int *y, spinlock_t *l)
 
 P2(int *y, int *b, spinlock_t *l)
 {
+	int r4; int r1;
 	spin_lock(l); /* Locking in wait_for_completion. */
 	r4 = READ_ONCE(*y);
 	spin_unlock(l);
@@ -29,6 +31,7 @@ P2(int *y, int *b, spinlock_t *l)
 
 P3(int *b, int *a)
 {
+	int r2;
 	WRITE_ONCE(*b, 1);
 	smp_mb();
 	r2 = READ_ONCE(*a);
