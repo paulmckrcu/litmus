@@ -1,7 +1,7 @@
 #!/bin/sh
 
 awk '
-/^litmus-tests/ {
+/absperf/ {
 	curtest=$1;
 	testran = 0;
 }

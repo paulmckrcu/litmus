@@ -1,10 +1,15 @@
 #!/bin/sh
 
-for n in 1 2 3 4 5 6 7 8 9 10
+TIMECMD=/usr/bin/time
+TESTBASE=${1:-litmus-tests}
+TIMEOUT=${2:-15m}
+ITER=${3:-10}
+
+for n in $(seq $ITER)
 do
-	for i in litmus-tests/absperf/*.litmus
+	for i in $TESTBASE/absperf/*.litmus
 	do
 		echo $i
-		time timeout 15m herd7 -conf linux-kernel.cfg $i
+		$TIMECMD timeout $TIMEOUT herd7 -conf linux-kernel.cfg $i
 	done
 done
