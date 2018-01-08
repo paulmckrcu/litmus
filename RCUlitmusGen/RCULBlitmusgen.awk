@@ -647,6 +647,8 @@ function data_race(gdir, n, result,  rfn) {
 		if (i_dir[rfn + 1] !~ /[cCdDLv]/)
 			return 1; # Concurrency possible.
 	}
+	if (i_dir[n] !~ /[CdDLv]/ && gdir ~ /r$/)
+		return 1; # Control dependencies don't order later reads
 	return 0;
 }
 
