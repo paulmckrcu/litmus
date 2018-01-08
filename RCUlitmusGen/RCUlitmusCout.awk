@@ -178,7 +178,6 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return "smp_store_release(" splt[2] ", "splt[3] ");"
 		return output_write(proc_num, "smp_store_release(", splt);
 	}
 	if (stmt ~ /^w\[] /) {
