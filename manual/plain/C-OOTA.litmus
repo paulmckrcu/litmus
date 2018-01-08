@@ -9,7 +9,7 @@ int x = 0;
 int y = 0;
 }
 
-P0(int *x)
+P0(int *x, int *y)
 {
 	int r1;
 
@@ -17,7 +17,7 @@ P0(int *x)
 	*y = r1;
 }
 
-P1(int *x, int *a, int *b)
+P1(int *x, int *y)
 {
         int r1;
 

@@ -12,7 +12,7 @@ P0(int *x)
 	*x = 0;
 }
 
-P1(int *x, int *a, int *b)
+P1(int *x)
 {
         int *r1;
 
