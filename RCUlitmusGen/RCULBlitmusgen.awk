@@ -634,12 +634,12 @@ function best_rfout(cur_rf,  rfout) {
 # result: Cycle result.
 #
 function data_race(gdir, n, result,  rfn) {
-	if (gdir ~ /^G/)
-		return 1; # Unconditional data race with outside process
 	if (gdir ~ /rr/)
 		return 1; # Unconditional data race with dividing writes.
 	if (gdir ~ /[RW][RW]/)
 		return 0; # No plain writes.
+	if (gdir ~ /^G/)
+		return 1; # Unconditional data race with outside process
 	if (result == "Sometimes")
 		return 1; # Cycle permitted, so data race possible.
 	# Handle rf and in-process constraints
