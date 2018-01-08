@@ -55,22 +55,33 @@ function find_scratch_regs(stmts,  i, idx, j, proc_max, regs, stmt_regs, trash) 
 #
 # Output the specified read, using a scratch register if needed.
 #
-function output_read(proc_num, rtype, splt,  reg) {
+function output_read(proc_num, rtype, splt,  reg, stmt_end) {
+	if (rtype == "*")
+		stmt_end = ";";
+	else
+		stmt_end = ");";
 	if (splt[3] ~ /^[a-zA-Z0-9_]+$/)
-		return splt[2] " = " rtype splt[3] ");";
+		return splt[2] " = " rtype splt[3] stmt_end;
 	reg = scratch_regs[proc_num];
-	return reg " = (" splt[3] ");\n" splt[2] " = " rtype reg ");";
+	return reg " = (" splt[3] ");\n" splt[2] " = " rtype reg stmt_end;
 }
 
 ########################################################################
 #
 # Output the specified write, using a scratch register if needed.
 #
-function output_write(proc_num, wtype, splt,  reg) {
+function output_write(proc_num, wtype, splt,  reg, stmt_end, stmt_mid) {
+	if (wtype == "*") {
+		stmt_mid = " = ";
+		stmt_end = ";";
+	} else {
+		stmt_mid = ", ";
+		stmt_end = ");";
+	}
 	if (splt[2] ~ /^[a-zA-Z0-9_]+$/)
-		return wtype splt[2] ", " splt[3] ");";
+		return wtype splt[2] stmt_mid splt[3] stmt_end;
 	reg = scratch_regs[proc_num];
-	return reg " = (" splt[2] ");\n" wtype reg ", " splt[3] ");";
+	return reg " = (" splt[2] ");\n" wtype reg stmt_mid splt[3] stmt_end;
 }
 
 ########################################################################
@@ -145,6 +156,12 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 			return "???" stmt;
 		return output_read(proc_num, "READ_ONCE(*", splt);
 	}
+	if (stmt ~ /^r\[] /) {
+		n = split(stmt, splt, " ");
+		if (n != 3)
+			return "???" stmt;
+		return output_read(proc_num, "*", splt);
+	}
 	if (stmt ~ /^w\[assign] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
@@ -163,6 +180,12 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 			return "???" stmt;
 		return "smp_store_release(" splt[2] ", "splt[3] ");"
 		return output_write(proc_num, "smp_store_release(", splt);
+	}
+	if (stmt ~ /^w\[] /) {
+		n = split(stmt, splt, " ");
+		if (n != 3)
+			return "???" stmt;
+		return output_write(proc_num, "*", splt);
 	}
 	return "???" stmt;
 }
