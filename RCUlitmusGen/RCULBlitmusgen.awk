@@ -9,11 +9,12 @@
 # information is a three-character string as follows:
 #
 #	[GL]: Global or local transitivity
-#	[RW]: The first process reads or writes.
-#	[RW]: The last process reads or writes.
+#	[RW]: The first process reads or writes (lower-case for plain access).
+#	[RW]: The last process reads or writes (lower-case for plain access).
 #
 #	For example, "GRW" would be a test for global transitivity
-#	where the first process reads and the last process writes.
+#	where the first process does READ_ONCE() and the last process
+#	does WRITE_ONCE().
 #
 # The per-rf information describes a write-to-read operation of the form
 # W-R as follows:
@@ -190,7 +191,7 @@ function initialize_cycle_evaluation() {
 # Complain and exit if there is a problem.
 #
 function gen_global_syntax(x) {
-	if (x !~ /^[LG][RW][RW]$/) {
+	if (x !~ /^[LG][RWrw][RWrw]$/) {
 		print "Global information bad format: " x > "/dev/stderr";
 		exit 1;
 	}
@@ -295,8 +296,11 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 
 	# Form incoming statement base.
 	if (p == 1) {
-		i_mod[p] = "once";
-		if (g ~ /R[RW]$/) {
+		if (g ~ /[RW][RWrw]$/)
+			i_mod[p] = "once";
+		else
+			i_mod[p] = "";
+		if (g ~ /[Rr][RWrw]$/) {
 			i_op[p] = "r";
 			i_operand1[p] = "r1";
 			i_operand2[p] = i_var[p];
@@ -328,8 +332,11 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 
 	# Form outgoing statement base.
 	if (p == n ) {
-		o_mod[p] = "once";
-		if (g ~ /R$/) {
+		if (g ~ /[RW]$/)
+			o_mod[p] = "once";
+		else
+			o_mod[p] = "";
+		if (g ~ /[Rr]$/) {
 			o_op[p] = "r";
 			if (x ~ /v/) {
 				print "Last reads-from edge: Cannot do value/data dependency (\"v\") to trailing read" > "/dev/stderr";
@@ -620,12 +627,37 @@ function best_rfout(cur_rf,  rfout) {
 
 ########################################################################
 #
+# Check for data races.
+#
+# gdir: Global directive
+# n: Number of processes.
+# result: Cycle result.
+#
+function data_race(gdir, n, result,  rfn) {
+	if (gdir ~ /^G/)
+		return 1; # Unconditional data race with outside process
+	if (gdir ~ /rr/)
+		return 1; # Unconditional data race with dividing writes.
+	if (gdir ~ /[RW][RW]/)
+		return 0; # No plain writes.
+	if (result == "Sometimes")
+		return 1; # Cycle permitted, so data race possible.
+	# Handle rf and in-process constraints
+	for (rfn = 1; rfn < n; rfn++) {
+		if (i_dir[rfn + 1] !~ /[cCdDLv]/)
+			return 1; # Concurrency possible.
+	}
+	return 0;
+}
+
+########################################################################
+#
 # Produce ordering-prediction comment.
 #
 # gdir: Global directive
 # n: Number of processes.
 #
-function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout) {
+function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout, datarace) {
 
 	# Handle global directive ordering constraints, one full barrier
 	# is all it takes to promote local to global transitivity.
@@ -634,11 +666,11 @@ function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout) {
 		if (i_dir[rfn] ~ /B/ || o_dir[rfn] ~ /B/)
 			result = "Never";
 	}
-	if (result == "" && gdir == "GWR") {
+	if (result == "" && gdir ~ /G[Ww][Rr]/) {
 		result = "Never";
 		result = result_update(result, "P0 GWR", "Sometimes:Power rel-acq does not provide write-to-read global transitivity");
 	}
-	if (result == "" && gdir == "GRW") {
+	if (result == "" && gdir ~ /G[Rr][Ww]/) {
 		result = "Never";
 		result = result_update(result, "P0 GRW", "Never:B-cumulativity provides guarantee");
 	}
@@ -674,9 +706,15 @@ function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout) {
 	else
 		result = result_update(result, desc, cycle_procnW[rfin]);
 
+	# Check for data races
+	if (data_race(gdir, n, result))
+		datarace = " DATARACE";
+	else
+		datarace = "";
+
 	# Print the result and stick it on the front of the comment.
-	comment = "Result: " result "\n" comment;
-	print " result: " result;
+	comment = "Result: " result datarace "\n" comment;
+	print " result: " result datarace;
 }
 
 ########################################################################
