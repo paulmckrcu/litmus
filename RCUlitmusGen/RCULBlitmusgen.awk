@@ -644,10 +644,10 @@ function data_race(gdir, n, result,  rfn) {
 		return 1; # Cycle permitted, so data race possible.
 	# Handle rf and in-process constraints
 	for (rfn = 1; rfn < n; rfn++) {
-		if (i_dir[rfn + 1] !~ /[cCdDLv]/)
+		if (i_dir[rfn + 1] !~ /[cCdLv]/)
 			return 1; # Concurrency possible.
 	}
-	if (i_dir[n] !~ /[CdDLv]/ && gdir ~ /r$/)
+	if (i_dir[n] !~ /[CdLv]/ && gdir ~ /r$/)
 		return 1; # Control dependencies don't order later reads
 	return 0;
 }
