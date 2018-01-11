@@ -1,0 +1,30 @@
+C auto/C-LB-Lww+R-A+R-A
+(*
+ * Result: Never DATARACE
+ * 
+ *)
+{
+}
+
+P0(int *u0, int *x1)
+{
+	*u0 = 3;
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = smp_load_acquire(x1);
+	smp_store_release(x2, 1);
+}
+
+
+P2(int *x2, int *u0)
+{
+	r1 = smp_load_acquire(x2);
+	*u0 = 1;
+}
+
+exists
+(u0=3 /\ 1:r1=1 /\ 2:r1=1)

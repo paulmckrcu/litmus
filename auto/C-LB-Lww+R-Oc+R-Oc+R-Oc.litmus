@@ -1,0 +1,52 @@
+C auto/C-LB-Lww+R-Oc+R-Oc+R-Oc
+(*
+ * Result: Maybe
+ * P0-P1 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P1 Oc,R: Note lack of C11 guarantee
+ * P1-P2 rf R-Oc: Note lack of C11 guarantee, control dependency
+ * P2 Oc,R: Note lack of C11 guarantee
+ * P2-P3 rf R-Oc: Note lack of C11 guarantee, control dependency
+ * P3 Oc,Lww: Note lack of C11 guarantee, control dependency
+ *)
+{
+ 1:r4=1; 2:r4=1; 3:r4=1;
+}
+
+P0(int *u0, int *x1)
+{
+	*u0 = 3;
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = READ_ONCE(*x1);
+	r4 = (r1 == r4);
+	if (r4) {
+		smp_store_release(x2, 1);
+	}
+}
+
+
+P2(int *x2, int *x3)
+{
+	r1 = READ_ONCE(*x2);
+	r4 = (r1 == r4);
+	if (r4) {
+		smp_store_release(x3, 1);
+	}
+}
+
+
+P3(int *x3, int *u0)
+{
+	r1 = READ_ONCE(*x3);
+	r4 = (r1 == r4);
+	if (r4) {
+		*u0 = 1;
+	}
+}
+
+exists
+(u0=3 /\ 1:r1=1 /\ 2:r1=1 /\ 3:r1=1)

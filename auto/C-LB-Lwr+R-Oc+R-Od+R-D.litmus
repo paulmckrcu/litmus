@@ -1,0 +1,46 @@
+C auto/C-LB-Lwr+R-Oc+R-Od+R-D
+(*
+ * Result: Sometimes DATARACE
+ * P0-P1 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P1 Oc,R: Note lack of C11 guarantee
+ * P1-P2 rf R-Od: Note lack of C11 guarantee, control dependency
+ * P2 Od,R: Note lack of C11 guarantee
+ * P2-P3 rf R-D: Note lack of C11 guarantee, no synchronizes-with
+ * P3 D,Lwr: Maybe->Sometimes: No ordering
+ *)
+{
+ 1:r4=1; 1:r3=x3; x2=y2;
+}
+
+P0(int *u0, int *x1)
+{
+	*u0 = 3;
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = READ_ONCE(*x1);
+	r4 = (r1 == r4);
+	if (r4) {
+		smp_store_release(x2, r3);
+	}
+}
+
+
+P2(int *x2)
+{
+	r1 = READ_ONCE(*x2);
+	smp_store_release(r1, 1);
+}
+
+
+P3(int *x3, int *u0)
+{
+	r1 = rcu_dereference(*x3);
+	r2 = *u0;
+}
+
+exists
+(u0=3 /\ 1:r1=1 /\ 2:r1=x3 /\ 3:r1=1)

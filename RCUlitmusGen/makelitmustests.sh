@@ -218,5 +218,11 @@ do
 done
 echo LRW OB-Dv
 echo LRW OB-Ov
+sh gendir.sh "R-A R-Oc R-OC R-Od R-D" 3 |
+	awk '{
+		print "Lrw" $0;
+		print "Lwr" $0;
+		print "Lww" $0;
+	}'
 } | sort -u |
     awk -f RCULBlitmusgen.awk -e '{ gen_lb_litmus("auto/", $0); }'

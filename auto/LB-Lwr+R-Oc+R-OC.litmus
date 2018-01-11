@@ -1,0 +1,18 @@
+LISA auto/LB-Lwr+R-Oc+R-OC
+(*
+ * Result: Maybe
+ * P0-P1 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P1 Oc,R: Note lack of C11 guarantee
+ *)
+{
+ 1:r4=1; 2:r4=1;
+}
+ P0              | P1                 | P2                 ;
+ w[] u0 3        | r[once] r1 x1      | r[once] r1 x2      ;
+ w[release] x1 1 | mov r4 (neq r1 r4) | mov r4 (neq r1 r4) ;
+                 | b[] r4 CTRL1       | b[] r4 CTRL2       ;
+                 | w[release] x2 1    | f[rmb]             ;
+                 | CTRL1:             | r[] r2 u0          ;
+                 |                    | CTRL2:             ;
+exists
+(u0=3 /\ 1:r1=1 /\ 2:r1=1)

@@ -1,0 +1,24 @@
+C auto/C-LB-Lrw+R-D
+(*
+ * Result: Sometimes DATARACE
+ * P0-P1 rf R-D: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
+ * P1 D,Lrw: Maybe->Sometimes: No ordering
+ *)
+{
+}
+
+P0(int *u0, int *x1)
+{
+	r1 = *u0;
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *u0, int *x1)
+{
+	r1 = rcu_dereference(*x1);
+	*u0 = 1;
+}
+
+exists
+(u0=3 /\ 1:r1=1)

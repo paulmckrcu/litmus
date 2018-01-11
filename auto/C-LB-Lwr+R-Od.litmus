@@ -1,0 +1,25 @@
+C auto/C-LB-Lwr+R-Od
+(*
+ * Result: Maybe
+ * P0-P1 rf R-Od: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P1 Od,Lwr: Note lack of C11 guarantee, control dependency
+ *)
+{
+ 0:r3=u0; x1=y1;
+}
+
+P0(int *u0, int *x1)
+{
+	*u0 = 3;
+	smp_store_release(x1, r3);
+}
+
+
+P1(int *x1)
+{
+	r1 = READ_ONCE(*x1);
+	r2 = *r1;
+}
+
+exists
+(u0=3 /\ 1:r1=u0)

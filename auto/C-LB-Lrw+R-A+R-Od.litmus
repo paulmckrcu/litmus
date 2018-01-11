@@ -1,0 +1,32 @@
+C auto/C-LB-Lrw+R-A+R-Od
+(*
+ * Result: Maybe DATARACE
+ * P1-P2 rf R-Od: Never->Maybe: Note lack of C11 guarantee, control dependency
+ * P2 Od,Lrw: Note lack of C11 guarantee, control dependency
+ *)
+{
+ 1:r3=u0; x2=y2;
+}
+
+P0(int *u0, int *x1)
+{
+	r1 = *u0;
+	smp_store_release(x1, 1);
+}
+
+
+P1(int *x1, int *x2)
+{
+	r1 = smp_load_acquire(x1);
+	smp_store_release(x2, r3);
+}
+
+
+P2(int *x2)
+{
+	r1 = READ_ONCE(*x2);
+	*r1 = 1;
+}
+
+exists
+(u0=3 /\ 1:r1=1 /\ 2:r1=u0)
