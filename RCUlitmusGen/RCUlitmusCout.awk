@@ -105,6 +105,8 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 		return "smp_mb();"
 	if (stmt == "f[rbdep]")
 		return "smp_read_memory_depends();"
+	if (stmt == "f[rb_dep]")
+		return "smp_read_memory_depends();"
 	if (stmt == "f[rmb]")
 		return "smp_rmb();"
 	if (stmt == "f[sync]")
@@ -185,6 +187,12 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 		if (n != 3)
 			return "???" stmt;
 		return output_write(proc_num, "*", splt);
+	}
+	if (stmt ~ /^rmw\[once]/) {
+		n = split(stmt, splt, " ");
+		if (n != 4)
+			return "???" stmt;
+		return splt[2] " = xchg_relaxed(" splt[4] ", " splt[3] ");"
 	}
 	return "???" stmt;
 }
