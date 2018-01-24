@@ -102,6 +102,11 @@ incode == 1 {
 		if (n == 3 && splt[1] ~ /^r\[/)
 			if (splt[3] !~ /^r[0-9]+$/ && splt[3] ~ /^[a-zA-z_][a-zA-z_0-9]*$/)
 				curvar = splt[3];
+			else {
+				m = split(splt[3], spltexpr, "+");
+				if (spltexpr[1] !~ /^r[0-9]+$/ && spltexpr[1] ~ /^[a-zA-z_][a-zA-z_0-9]*$/)
+					curvar = spltexpr[1];
+			}
 		if (n == 3 && splt[1] ~ /^w\[/)
 			if (splt[2] !~ /^r[0-9]+$/ && splt[2] ~ /^[a-zA-z_][a-zA-z_0-9]*$/)
 				curvar = splt[2];
@@ -111,11 +116,8 @@ incode == 1 {
 		if (n == 5 && splt[1] == "mov")
 			if (splt[4] !~ /^r[0-9]+$/ && splt[4] ~ /^[a-zA-z_][a-zA-z_0-9]*$/)
 				curvar = splt[4];
-		if (curvar != "") {
-			if (arglists[i] != "")
-				arglists[i] = arglists[i] ", ";
-			arglists[i] = arglists[i] "int *" curvar;
-		}
+		if (curvar != "")
+			argsarray[i ":" curvar] = 1;
 	}
 	line++;
 	next;
@@ -130,6 +132,16 @@ inexists == 1 {
 END {
 	# Find a scratch register for each process, just in case.
 	find_scratch_regs(stmts);
+
+	# Create argument lists
+	for (i in argsarray) {
+		j = split(i, arg_split, ":");
+		proc_num = arg_split[1];
+		curvar = arg_split[2];
+		if (arglists[proc_num] != "")
+			arglists[proc_num] = arglists[proc_num] ", ";
+		arglists[proc_num] = arglists[proc_num] "int *" curvar;
+	}
 
 	# Do the translation from stmts[] and output.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
