@@ -108,6 +108,9 @@ incode == 1 {
 		if (n == 4 && splt[1] ~ /^rmw\[/)
 			if (splt[4] !~ /^r[0-9]+$/ && splt[4] ~ /^[a-zA-z_][a-zA-z_0-9]*$/)
 				curvar = splt[4];
+		if (n == 5 && splt[1] == "mov")
+			if (splt[4] !~ /^r[0-9]+$/ && splt[4] ~ /^[a-zA-z_][a-zA-z_0-9]*$/)
+				curvar = splt[4];
 		if (curvar != "") {
 			if (arglists[i] != "")
 				arglists[i] = arglists[i] ", ";
