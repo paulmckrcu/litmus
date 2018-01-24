@@ -32,6 +32,13 @@ T=/tmp/lisa2c-check.sh.$$
 mkdir $T
 trap 'rm -rf $T' 0
 
+if grep -q '^LISA' $2
+then
+	:
+else
+	echo Bad format, need LISA
+	exit 3
+fi
 cname=`echo $2 | sed -e 's,^.*/,,'`
 sh lisa2c.sh < $2 > $T/$cname
 herd7 $1 $2 > $T/lisa.out
