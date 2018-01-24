@@ -104,9 +104,9 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 	if (stmt == "f[mb]")
 		return "smp_mb();"
 	if (stmt == "f[rbdep]")
-		return "smp_read_memory_depends();"
+		return "smp_read_barrier_depends();"
 	if (stmt == "f[rb_dep]")
-		return "smp_read_memory_depends();"
+		return "smp_read_barrier_depends();"
 	if (stmt == "f[rmb]")
 		return "smp_rmb();"
 	if (stmt == "f[sync]")
