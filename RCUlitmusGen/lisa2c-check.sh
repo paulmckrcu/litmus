@@ -43,4 +43,12 @@ then
 	echo OK: LISA: $lisa_result C: $c_result
 	exit 0
 fi
+lisa_overall=`echo $lisa_result | awk '{ print $1 }'`
+c_overall=`echo $c_result | awk '{ print $1 }'`
+if test "$lisa_overall" = "$c_overall"
+then
+	echo mismatch: LISA: $lisa_result C: $c_result
+	exit 1
+fi
 echo MISMATCH: LISA: $lisa_result C: $c_result
+exit 2
