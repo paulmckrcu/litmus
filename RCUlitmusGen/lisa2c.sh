@@ -125,6 +125,9 @@ inexists == 1 {
 
 # Translate and output!
 END {
+	# Find a scratch register for each process, just in case.
+	find_scratch_regs(stmts);
+
 	# Do the translation from stmts[] and output.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		print "P" proc_num - 1 "(" arglists[proc_num] ")";
