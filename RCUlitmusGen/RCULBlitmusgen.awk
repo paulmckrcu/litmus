@@ -649,7 +649,7 @@ function data_race(gdir, n, result,  rfn) {
 	}
 	if (i_dir[n] !~ /[CdLv]/ && gdir ~ /r$/)
 		return 1; # Control dependencies don't order later reads
-	if (i_dir[n] !~ /[CdL]/ && gdir ~ /w$/)
+	if (i_dir[n] !~ /[CdLv]/ && gdir ~ /w$/)
 		return 1; # Need a compiler barrier to order a later write
 	return 0;
 }
