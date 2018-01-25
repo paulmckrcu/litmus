@@ -218,7 +218,7 @@ do
 done
 echo LRW OB-Dv
 echo LRW OB-Ov
-sh gendir.sh "R-A R-Oc R-OC R-Od R-D" 3 |
+sh gendir.sh "R-A R-Oc R-OC R-Od R-D R-Ov" 3 |
 	awk '{
 		print "Lrw" $0;
 		print "Lwr" $0;
