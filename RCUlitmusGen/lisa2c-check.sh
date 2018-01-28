@@ -10,6 +10,13 @@
 # different semantics for control dependencies.  The verification ignores
 # such details.
 #
+# The herd-args might be something like this:
+#	"-I <mmdir> -conf linux-kernel.cfg -variant backcompat"
+#
+# The "-I" gives the directory where the memory model lives, the "-conf"
+# specifies which memory model to use, and "-variant backcompat" allows
+# herd to process old LISA files.
+#
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation; either version 2 of the License, or
