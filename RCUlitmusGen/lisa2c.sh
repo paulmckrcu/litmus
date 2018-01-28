@@ -143,6 +143,30 @@ END {
 		arglists[proc_num] = arglists[proc_num] "int *" curvar;
 	}
 
+	# Eliminate branch-to-next statements and their labels.
+	# These would translate to "if" statements with empty "then"
+	# clauses, which herd7 objects strenuously to.
+	for (proc_num = 1; proc_num <= nproc; proc_num++) {
+		line_last = 1;
+		for (line_in = 2; line_in <= max_line[proc_num]; line_in++) {
+			if (stmts[proc_num ":" line_in] == "")
+				continue;
+			if (stmts[proc_num ":" line_in] ~ /^[a-zA-Z_][a-zA-Z0-9_]*:$/) {
+				cur_label = stmts[proc_num ":" line_in];
+				gsub(/:$/, "", cur_label);
+				cur_label = "^b.*][ 	]*r[0-9]+[ 	]" cur_label "$";
+				if (stmts[proc_num ":" line_last] ~ cur_label) {
+					stmts[proc_num ":" line_last] = "";
+					stmts[proc_num ":" line_in] = "";
+				}
+				while (stmts[proc_num ":" line_last] == "" && line_last > 1)
+					line_last--;
+			} else {
+				line_last = line_in;
+			}
+		}
+	}
+
 	# Do the translation from stmts[] and output.
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		print "P" proc_num - 1 "(" arglists[proc_num] ")";
