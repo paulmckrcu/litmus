@@ -1,0 +1,24 @@
+C C-WRC+assign+deref-assign+deref-o
+{
+x = 0;
+y = 0;
+}
+
+P0(int *y)
+{
+	rcu_assign_pointer(*y, 1);
+}
+
+P1(int *y, int *x)
+{
+	r3 = rcu_dereference(*y);
+	rcu_assign_pointer(*x, 1);
+}
+
+P2(int *x, int *y)
+{
+	r1 = rcu_dereference(*x);
+	r2 = READ_ONCE(*y);
+}
+
+exists (1:r3=1 /\ 2:r1=1 /\ 2:r2=0)

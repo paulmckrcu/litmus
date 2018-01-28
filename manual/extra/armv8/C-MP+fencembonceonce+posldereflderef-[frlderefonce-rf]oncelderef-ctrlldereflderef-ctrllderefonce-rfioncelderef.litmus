@@ -1,0 +1,34 @@
+C C-MP+fencembonceonce+posldereflderef-[frlderefonce-rf]oncelderef-ctrlldereflderef-ctrllderefonce-rfioncelderef
+"FenceMbdWWOnceOnce RfeOnceLderef PosRRLderefLderef FrLeaveLderefOnce RfBackOnceLderef DpCtrldRLderefLderef DpCtrldWLderefOnce RfiOnceLderef FreLderefOnce"
+Prefetch=0:x=F,0:y=W,1:y=F,1:x=T
+Com=Rf Fr Rf
+Orig=FenceMbdWWOnceOnce RfeOnceLderef PosRRLderefLderef FrLeaveLderefOnce RfBackOnceLderef DpCtrldRLderefLderef DpCtrldWLderefOnce RfiOnceLderef FreLderefOnce
+{
+}
+
+P0(int *x, int *y)
+{
+	WRITE_ONCE(*x, 2);
+	smp_mb();
+	WRITE_ONCE(*y, 1);
+}
+
+P1(int *y, int *z, int *x)
+{
+	r0 = lockless_dereference(*y);
+	r1 = lockless_dereference(*y);
+	r2 = lockless_dereference(*y);
+	r3 = (r2 != 0);
+	r4 = lockless_dereference(*z);
+	r5 = (r4 != 0);
+	WRITE_ONCE(*x, 1);
+	r6 = lockless_dereference(*x);
+}
+
+P2(int *y)
+{
+	WRITE_ONCE(*y, 2);
+}
+
+exists
+(x=2 /\ y=2 /\ 1:r0=1 /\ 1:r1=1 /\ 1:r2=2 /\ 1:r6=1)

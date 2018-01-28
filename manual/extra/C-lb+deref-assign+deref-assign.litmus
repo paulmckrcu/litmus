@@ -1,0 +1,19 @@
+C C-LB+deref-assign+deref-assign
+{
+x = 0;
+y = 0;
+}
+
+P0(int *x, int *y)
+{
+	r1 = rcu_dereference(*x);
+	rcu_assign_pointer(*y, 1);
+}
+
+P1(int *y, int *x)
+{
+	r3 = rcu_dereference(*y);
+	rcu_assign_pointer(*x, 1);
+}
+
+exists(0:r1=1 /\ 1:r3=1)

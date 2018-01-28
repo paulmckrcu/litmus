@@ -1,0 +1,28 @@
+C C-ISA2+o-rel+acq-assign+deref-addr-o
+{
+a = 1;
+x = 2;
+c = 0;
+}
+
+P0(int *x, int *a)
+{
+	WRITE_ONCE(*a, 3);
+	smp_store_release(x, 4);
+}
+
+P1(int *c, int *x)
+{
+	r1 = smp_load_acquire(x);
+	rcu_assign_pointer(*c, 1);
+}
+
+P2(int *a, int *c)
+{
+	r3 = rcu_dereference(*c);
+	r9 = (r3 ^ r3);
+	r4 = (a + r9);
+	r2 = READ_ONCE(*r4);
+}
+
+exists (1:r1 = 4 /\ 2:r3 = 1 /\ 2:r2 = 1)

@@ -1,0 +1,32 @@
+C C-3.LB+frilderefonce+datalderefonce+datalderefonce
+"FriLderefOnce RfeOnceLderef DpDatadWLderefOnce RfeOnceLderef DpDatadWLderefOnce RfeOnceLderef"
+Prefetch=1:x=F,1:y=W,2:y=F,2:x=W
+Com=Rf Rf Rf
+Orig=FriLderefOnce RfeOnceLderef DpDatadWLderefOnce RfeOnceLderef DpDatadWLderefOnce RfeOnceLderef
+{
+}
+
+P0(int *x)
+{
+	r0 = lockless_dereference(*x);
+	WRITE_ONCE(*x, 2);
+}
+
+P1(int *y, int *x)
+{
+	r0 = lockless_dereference(*x);
+	r1 = (r0 ^ r0);
+	r1 = (r1 + 1);
+	WRITE_ONCE(*y, r1);
+}
+
+P2(int *x, int *y)
+{
+	r0 = lockless_dereference(*y);
+	r1 = (r0 ^ r0);
+	r1 = (r1 + 1);
+	WRITE_ONCE(*x, r1);
+}
+
+exists
+(x=2 /\ 0:r0=1 /\ 1:r0=2 /\ 2:r0=1)

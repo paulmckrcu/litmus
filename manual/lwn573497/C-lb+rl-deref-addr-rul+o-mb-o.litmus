@@ -1,0 +1,27 @@
+C C-LB+rl-deref-addr-rul+o-mb-o
+(*
+ * Forbid: Address dependency in P0 and mb in P1, write-to-read
+ * relationships.  (Note: Reworked to apply to ARM as well as PowerPC.)
+ *)
+{
+x = u;
+z = 42;
+1:r1=y;
+}
+
+P0(int *x)
+{
+	rcu_read_lock();
+	r1 = rcu_dereference(*x);
+	WRITE_ONCE(*r1, 1);
+	rcu_read_unlock();
+}
+
+P1(int *y, int *x)
+{
+	r3 = READ_ONCE(*y);
+	smp_mb();
+	WRITE_ONCE(*x, r1);
+}
+
+exists(0:r1=y /\ 1:r3=1)

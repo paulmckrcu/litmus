@@ -1,0 +1,22 @@
+C C-s+o-assign+rl-deref-rul
+(* Allow, no ordering on P1. *)
+{
+x = 0;
+y = 0;
+}
+
+P0(int *x, int *y)
+{
+	WRITE_ONCE(*y, 2);
+	rcu_assign_pointer(*x, 1);
+}
+
+P1(int *y, int *x)
+{
+	rcu_read_lock();
+	r1 = rcu_dereference(*x);
+	WRITE_ONCE(*y, 1);
+	rcu_read_unlock();
+}
+
+exists (y=2 /\ 1:r1=1)
