@@ -4,21 +4,21 @@ C C-s+o-wmb-o+rl-deref-addr-rul
  * relationship.  (Note: Reworked to apply to ARM as well as PowerPC.)
  *)
 {
-x = z;
-y = 0;
 z = 42;
-0:r1=y;
+int *x = &z;
+y = 0;
 }
 
-P0(int *x, int *y)
+P0(int **x, int *y)
 {
 	WRITE_ONCE(*y, 2);
 	smp_wmb();
-	rcu_assign_pointer(*x, r1);
+	rcu_assign_pointer(*x, y);
 }
 
-P1(int *x)
+P1(int **x)
 {
+	int *r1;
 	rcu_read_lock();
 	r1 = rcu_dereference(*x);
 	WRITE_ONCE(*r1, 1);

@@ -4,23 +4,25 @@ C C-lb+rl-deref-addr-rul+o-rl
  * relationships.  (Note: Reworked to apply to ARM as well as PowerPC.)
  *)
 {
-x = u;
+u = 0;
+int *x = &u;
 z = 42;
-1:r1=y;
 }
 
-P0(int *x)
+P0(int **x)
 {
+	int *r1;
 	rcu_read_lock();
 	r1 = rcu_dereference(*x);
 	WRITE_ONCE(*r1, 1);
 	rcu_read_unlock();
 }
 
-P1(int *y, int *x)
+P1(int *y, int **x)
 {
+	int r3;
 	r3 = READ_ONCE(*y);
-	smp_store_release(x, r1);
+	smp_store_release(x, y);
 }
 
 exists(0:r1=y /\ 1:r3=1)

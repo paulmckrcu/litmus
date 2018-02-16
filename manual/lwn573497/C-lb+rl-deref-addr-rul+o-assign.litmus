@@ -4,23 +4,25 @@ C C-LB+rl-deref-addr-rul+o-assign
  * relationships.  (Note: Reworked to apply to ARM as well as PowerPC.)
  *)
 {
-x = u;
+u = 0;
+int *x= &u;
 z = 42;
-1:r1=y;
 }
 
-P0(int *x)
+P0(int **x)
 {
+	int *r1;
 	rcu_read_lock();
 	r1 = rcu_dereference(*x);
 	WRITE_ONCE(*r1, 1);
 	rcu_read_unlock();
 }
 
-P1(int *y, int *x)
+P1(int *y, int **x)
 {
+	int r3;
 	r3 = READ_ONCE(*y);
-	rcu_assign_pointer(*x, r1);
+	rcu_assign_pointer(*x, y);
 }
 
-exists(0:r1=y /\ 1:r3=1)
+exists(0:r1=y /\ 1:r3=1 /\ x=y)

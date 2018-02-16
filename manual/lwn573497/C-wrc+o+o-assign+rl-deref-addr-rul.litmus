@@ -4,10 +4,9 @@ C C-WRC+o+o-assign+rl-deref-addr-rul
  * relationship.  (Note: Reworked to apply to ARM as well as PowerPC.)
  *)
 {
-x = z;
-y = 0;
 z = 42;
-1:r1=y;
+int *x = &z;
+y = 0;
 }
 
 P0(int *y)
@@ -15,14 +14,16 @@ P0(int *y)
 	WRITE_ONCE(*y, 1);
 }
 
-P1(int *y, int *x)
+P1(int *y, int **x)
 {
+	int r3;
 	r3 = READ_ONCE(*y);
-	rcu_assign_pointer(*x, r1);
+	rcu_assign_pointer(*x, y);
 }
 
-P2(int *x)
+P2(int **x)
 {
+	int *r1; int r2;
 	rcu_read_lock();
 	r1 = rcu_dereference(*x);
 	r2 = READ_ONCE(*r1);
