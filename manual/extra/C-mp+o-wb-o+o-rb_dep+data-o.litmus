@@ -2,19 +2,19 @@ C C-MP+o-wb-o+o-rb_dep+data-o
 {
 a = 1;
 b = 42;
-x = b;
-0:r0 = a;
+int *x = &b;
 }
 
-P0(int *x, int *a)
+P0(int **x, int *a)
 {
 	WRITE_ONCE(*a, 3);
 	smp_wmb();
-	WRITE_ONCE(*x, r0);
+	WRITE_ONCE(*x, a);
 }
 
-P1(int *x)
+P1(int **x)
 {
+	int *r1; int r2;
 	r1 = READ_ONCE(*x);
 	smp_read_barrier_depends();
 	r2 = READ_ONCE(*r1);

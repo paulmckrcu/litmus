@@ -1,9 +1,8 @@
 C C-WRC+o+o-rel+lderef-addr-o
 {
-x = b;
 b = 42;
 y = 3;
-1:r0 = y;
+int *x = &b;
 }
 
 P0(int *y)
@@ -11,14 +10,16 @@ P0(int *y)
 	WRITE_ONCE(*y, 1);
 }
 
-P1(int *y, int *x)
+P1(int *y, int **x)
 {
+	int r3;
 	r3 = READ_ONCE(*y);
-	smp_store_release(x, r0);
+	smp_store_release(x, y);
 }
 
-P2(int *x)
+P2(int **x)
 {
+	int *r1; int r2;
 	r1 = lockless_dereference(*x);
 	r2 = READ_ONCE(*r1);
 }

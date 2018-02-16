@@ -2,20 +2,19 @@ C C-MP+o-rel+lderef-addr-o
 {
 a = 1;
 b = 42;
-x = b;
-0:r0 = a;
+int *x = &b;
 }
 
-P0(int *x, int *a)
+P0(int **x, int *a)
 {
 	WRITE_ONCE(*a, 3);
-	smp_store_release(x, r0);
+	smp_store_release(x, a);
 }
 
-P1(int *x)
+P1(int **x)
 {
-	r1 = lockless_dereference(*x);
-	r2 = READ_ONCE(*r1);
+	int *r1 = lockless_dereference(*x);
+	int r2 = READ_ONCE(*r1);
 }
 
 exists (1:r1 = a /\ 1:r2 = 1)
