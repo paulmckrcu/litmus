@@ -16,7 +16,7 @@ P0(int *x)
 
 P1(int *x, int *a, int *b)
 {
-        int *r1;
+	int r1;
 
 	r1 = *x;
 	WRITE_ONCE(*a, r1);

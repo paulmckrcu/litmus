@@ -14,7 +14,7 @@ P0(int *x)
 
 P1(int *x)
 {
-        int *r1;
+	int r1;
 
 	r1 = READ_ONCE(*x);
 }
