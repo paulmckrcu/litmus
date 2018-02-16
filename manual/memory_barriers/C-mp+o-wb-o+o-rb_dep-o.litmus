@@ -1,20 +1,21 @@
 C C-MP+o-wb-o+o-rb-dep-o
 (* Allowed: No actual dependency in P1. *)
 {
+int a=0;
 x = 2;
-p = a;
-0:r0=x;
+int *p = &a;
 }
 
-P0(int *x, int *p)
+P0(int *x, int **p)
 {
 	WRITE_ONCE(*x, 4);
 	smp_wmb();
-	WRITE_ONCE(*p, r0);
+	WRITE_ONCE(*p, x);
 }
 
-P1(int *p, int *x)
+P1(int **p, int *x)
 {
+	int *r1; int r2;
 	r1 = READ_ONCE(*p);
 	smp_read_barrier_depends();
 	r2 = READ_ONCE(*x);

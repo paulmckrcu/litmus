@@ -7,19 +7,20 @@ C C-MP+o-wb-o+o-data-o
  *)
 {
 x = 2;
-p = a;
-0:r1=x;
+int a = 0;
+int *p = &a;
 }
 
-P0(int *x, int *p)
+P0(int *x, int **p)
 {
 	WRITE_ONCE(*x, 4);
 	smp_wmb();
-	WRITE_ONCE(*p, r1);
+	WRITE_ONCE(*p, x);
 }
 
-P1(int *p)
+P1(int **p)
 {
+	int *r1; int r2;
 	r1 = READ_ONCE(*p);
 	r2 = READ_ONCE(*r1);
 }
