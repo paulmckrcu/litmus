@@ -1,7 +1,7 @@
 LISA auto/LB-GRW+R-A+OB-O+R-Oc+R-Oc
 (*
- * Result: Maybe
- * P1-P2 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
+ * Result: Never
+ * 
  *)
 {
  3:r4=1; 4:r4=1;

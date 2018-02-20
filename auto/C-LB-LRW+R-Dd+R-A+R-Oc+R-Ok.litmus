@@ -1,8 +1,7 @@
 C auto/C-LB-LRW+R-Dd+R-A+R-Oc+R-Ok
 (*
  * Result: Sometimes
- * P3-P4 rf R-Ok: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P4 Ok,LRW: Maybe->Sometimes: No ordering
+ * P4 Ok,LRW: Never->Sometimes: No ordering
  *)
 {
  0:r3=x2; x1=y1; 3:r4=1; 4:r4=1;

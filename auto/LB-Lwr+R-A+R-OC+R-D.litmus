@@ -1,8 +1,7 @@
 LISA auto/LB-Lwr+R-A+R-OC+R-D
 (*
  * Result: Sometimes DATARACE
- * P2-P3 rf R-D: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P3 D,Lwr: Maybe->Sometimes: No ordering
+ * P3 D,Lwr: Never->Sometimes: No ordering
  *)
 {
  2:r4=1;

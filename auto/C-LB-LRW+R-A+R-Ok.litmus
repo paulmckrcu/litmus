@@ -1,8 +1,7 @@
 C auto/C-LB-LRW+R-A+R-Ok
 (*
  * Result: Sometimes
- * P1-P2 rf R-Ok: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P2 Ok,LRW: Maybe->Sometimes: No ordering
+ * P2 Ok,LRW: Never->Sometimes: No ordering
  *)
 {
  2:r4=1;

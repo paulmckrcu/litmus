@@ -1,8 +1,7 @@
 C auto/C-LB-Lrw+R-A+R-Ov+R-D
 (*
  * Result: Sometimes DATARACE
- * P2-P3 rf R-D: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P3 D,Lrw: Maybe->Sometimes: No ordering
+ * P3 D,Lrw: Never->Sometimes: No ordering
  *)
 {
 }

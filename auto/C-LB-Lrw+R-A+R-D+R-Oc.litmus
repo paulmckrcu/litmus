@@ -1,8 +1,7 @@
 C auto/C-LB-Lrw+R-A+R-D+R-Oc
 (*
- * Result: Maybe DATARACE
- * P1-P2 rf R-D: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P2 D,R: Note lack of C11 guarantee
+ * Result: Never DATARACE
+ * 
  *)
 {
  3:r4=1;

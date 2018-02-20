@@ -1,8 +1,7 @@
 LISA auto/LB-LRR+R-A+OB-O+R-Oc
 (*
  * Result: Sometimes
- * P1-P2 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P3 Oc,LRR: Maybe->Sometimes: Control dependencies do not order trailing reads
+ * P3 Oc,LRR: Never->Sometimes: Control dependencies do not order trailing reads
  *)
 {
  3:r4=1;

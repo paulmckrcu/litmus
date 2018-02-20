@@ -1,7 +1,7 @@
 C auto/C-LB-LWW+R-A+R-Oc+OB-O+R-Oc
 (*
- * Result: Maybe
- * P2-P3 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
+ * Result: Never
+ * 
  *)
 {
  2:r4=1; 4:r4=1;

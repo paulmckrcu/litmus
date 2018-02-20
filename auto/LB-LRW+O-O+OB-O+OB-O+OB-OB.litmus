@@ -2,7 +2,6 @@ LISA auto/LB-LRW+O-O+OB-O+OB-O+OB-OB
 (*
  * Result: Sometimes
  * P0 LRW,O: Never->Sometimes: No ordering
- * P0-P1 rf O-O: Note lack of C11 guarantee, no synchronizes-with
  *)
 {
 }

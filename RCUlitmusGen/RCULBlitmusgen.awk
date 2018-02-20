@@ -144,19 +144,19 @@ function initialize_cycle_evaluation() {
 	cycle_rf["A:B"] = "Never";
 	cycle_rf["A:C"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_rf["A:D"] = "Never";
-	cycle_rf["A:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["A:O"] = "Never";  # C11 requires synchronizes-with.
 	cycle_rf["B:A"] = "Never";
 	cycle_rf["B:B"] = "Never";
 	cycle_rf["B:C"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_rf["B:D"] = "Never";
-	cycle_rf["B:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["B:O"] = "Never";  # C11 requires synchronizes-with.
 	cycle_rf["R:A"] = "Never";
 	cycle_rf["R:B"] = "Never";
 	cycle_rf["R:C"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_rf["R:D"] = "Never";
-	cycle_rf["R:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["R:O"] = "Never";  # C11 requires synchronizes-with.
 	cycle_rf["O:A"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
-	cycle_rf["O:B"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
+	cycle_rf["O:B"] = "Never";  # C11 requires synchronizes-with.
 	cycle_rf["O:C"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["O:D"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["O:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
@@ -178,10 +178,10 @@ function initialize_cycle_evaluation() {
 	cycle_proc["D:B"] = "Never";
 	cycle_proc["D:O"] = "Never";
 	cycle_proc["D:R"] = "Never";
-	cycle_proc["O:A"] = "Maybe:Note lack of C11 guarantee\n\tDeprecated, use \"R\" instead of Assign";
+	cycle_proc["O:A"] = "Never:Deprecated, use \"R\" instead of Assign";
 	cycle_proc["O:B"] = "Never";
 	cycle_proc["O:O"] = "Sometimes:No ordering";
-	cycle_proc["O:R"] = "Maybe:Note lack of C11 guarantee";
+	cycle_proc["O:R"] = "Never";  # C11 requires synchronizes-with.
 }
 
 ########################################################################
