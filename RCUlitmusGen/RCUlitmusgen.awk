@@ -45,9 +45,6 @@
 #		When combined with G, make that three grace periods!
 #	I: Invert the order of the accesses so that the outgoing
 #		variable is first and the incoming variable is second.
-#	l: Maintain a lockless data dependency betweeen the first access
-#		(which must be a load) and the second access (which must
-#		be a store).
 #	R: Enclose the X accesses in an RCU read-side critical section.
 #		May be modified by 1, 2, or 3 as noted above.
 #	r: Use an release store.  May be used only if the second accesses
@@ -129,15 +126,15 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " bad read-write specifier: " x > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^123aBCdDGHIlRrs]/) {
+	if (y ~ /[^123aBCdDGHIRrs]/) {
 		print "Process " p - 1 " bad modifier: " y > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[dlsD]/ && y ~ /I/) {
+	if (y ~ /[dsD]/ && y ~ /I/) {
 		print "Process " p - 1 " Cannot invert data dependencies! " y > "/dev/stderr";
 		exit 1;
 	}
-	if (x ~ /^W/ && y ~ /[alCD]/ && y !~ /I/) {
+	if (x ~ /^W/ && y ~ /[aCD]/ && y !~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
 		exit 1;
 	}
@@ -145,7 +142,7 @@ function gen_proc_syntax(p, x, y,  i) {
 		print "Process " p - 1 " no release/dependent load! " y > "/dev/stderr";
 		exit 1;
 	}
-	if (x ~ /W$/ && y ~ /[alCD]/ && y ~ /I/) {
+	if (x ~ /W$/ && y ~ /[aCD]/ && y ~ /I/) {
 		print "Process " p - 1 " no acquire/dependent store! " y > "/dev/stderr";
 		exit 1;
 	}
@@ -251,7 +248,7 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		vars[p ":" "x" vn] = 1;
 	} else {
 		o_op[p] = "w";
-		if (y ~ /[Dl]/) {
+		if (y ~ /D/) {
 			o_operand1[p] = "r1";
 		} else {
 			o_operand1[p] = "x" vn;
@@ -289,8 +286,6 @@ function gen_proc(p, n, s,  i, line_num, x, y, v, vn, vnn) {
 		f_mod[p] = "acquire";	/* smp_load_acquire() */
 	if (y ~ /D/)
 		f_mod[p] = "deref";	/* rcu_dereference() */
-	if (y ~ /l/)
-		f_mod[p] = "lderef";	/* lockless_dereference() */
 	if (y ~ /r/)
 		l_mod[p] = "release";	/* smp_store_release() */
 	if (y ~ /s/)
