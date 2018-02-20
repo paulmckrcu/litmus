@@ -36,7 +36,6 @@
 #	d: Impose dependency (address dependency, historical!).
 #	D: Use data dependency, AKA r[deref].
 #	k: Use fake control dependency (write after "if").
-#	L: Use non-RCU data dependency, AKA r[lderef].  Deprecated, use "D".
 #	O: Use READ_ONCE(), AKA r[once].
 #	v: Impose value dependency (data dependency, historical!)
 #
@@ -227,11 +226,11 @@ function gen_rf_syntax(rfn, x, y, xn, yn) {
 		print "Reads-from edge " rfn " Cannot mix v with next d: \"" y "\", \"" yn "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if (y ~ /[^ABcCdDkLOv]/) {
+	if (y ~ /[^ABcCdDkOv]/) {
 		print "Reads-from edge " rfn " bad read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
-	if ((y ~ /A/) + (y ~ /D/) + (y ~ /L/) + (y ~ /O/) != 1) {
+	if ((y ~ /A/) + (y ~ /D/) + (y ~ /O/) != 1) {
 		print "Reads-from edge " rfn " only one of \"ADLO\" in read-side specifier: \"" y "\"" > "/dev/stderr";
 		exit 1;
 	}
@@ -316,8 +315,6 @@ function gen_proc(p, n, g, x, y, xn,  i, line_num, tvar, vi, vo, vno) {
 			i_mod[p] = "acquire";
 		else if (x ~ /D/)
 			i_mod[p] = "deref";
-		else if (x ~ /L/)
-			i_mod[p] = "lderef";
 		else
 			i_mod[p] = "once";
 		i_op[p] = "r";
@@ -584,8 +581,7 @@ function result_update(oldresult, desc, reasres,  reason, result) {
 
 ########################################################################
 #
-# Find the strongest in-bound ordering constraint.  Note that DEC Alpha
-# must have a full memory barrier for read-read data dependencies.
+# Find the strongest in-bound ordering constraint.
 # Therefore, without one of "L", "C", or "D", a "d" is only as good as is
 # a "c".
 #
@@ -596,11 +592,11 @@ function best_rfin(cur_rf,  rfin) {
 		rfin = "B";
 	else if (cur_rf ~ /A/)
 		rfin = "A";
-	else if ((cur_rf ~ /L/ || cur_rf ~ /D/) && cur_rf ~ /[dv]/)
+	else if (cur_rf ~ /[dv]/)
 		rfin = "D";
 	else if (cur_rf ~ /C/)
 		rfin = "D";
-	else if (cur_rf ~ /[cdv]/)
+	else if (cur_rf ~ /c/)
 		rfin = "C";
 	else
 		rfin = "O";
@@ -644,12 +640,12 @@ function data_race(gdir, n, result,  rfn) {
 		return 1; # Cycle permitted, so data race possible.
 	# Handle rf and in-process constraints
 	for (rfn = 1; rfn < n; rfn++) {
-		if (i_dir[rfn + 1] !~ /[cCdLv]/)
+		if (i_dir[rfn + 1] !~ /[cCdv]/)
 			return 1; # Concurrency possible.
 	}
-	if (i_dir[n] !~ /[CdLv]/ && gdir ~ /r$/)
+	if (i_dir[n] !~ /[Cdv]/ && gdir ~ /r$/)
 		return 1; # Control dependencies don't order later reads
-	if (i_dir[n] !~ /[CdLv]/ && gdir ~ /w$/)
+	if (i_dir[n] !~ /[Cdv]/ && gdir ~ /w$/)
 		return 1; # Need a compiler barrier to order a later write
 	return 0;
 }
