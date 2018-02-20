@@ -1,10 +1,7 @@
 C auto/C-LB-Lrw+R-A+R-Od+R-Ov
 (*
- * Result: Maybe DATARACE
- * P1-P2 rf R-Od: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P2 Od,R: Note lack of C11 guarantee
- * P2-P3 rf R-Ov: Note lack of C11 guarantee, control dependency
- * P3 Ov,Lrw: Note lack of C11 guarantee, control dependency
+ * Result: Never DATARACE
+ * 
  *)
 {
  1:r3=x3; x2=y2;

@@ -38,13 +38,9 @@
 	sh gendir.sh "RW-G RW-R" 8 |
 		sed -n -e 's/RW-R RW-R/RW-Rs RW-RCD/p'
 	sh gendir.sh "RW-G RW-R" 8 |
-		sed -n -e 's/RW-R RW-R/RW-Rrd RW-Rl/p'
+		sed -n -e 's/RW-R RW-R/RW-Rrd RW-D/p'
 	sh gendir.sh "RW-G RW-R" 8 |
-		sed -n -e 's/RW-R RW-R/RW-Rrd RW-RCl/p'
-	sh gendir.sh "RW-G RW-R" 8 |
-		sed -n -e 's/RW-R RW-R/RW-Rrd RW-l/p'
-	sh gendir.sh "RW-G RW-R" 8 |
-		sed -n -e 's/RW-R RW-R/RW-Rrd RW-Cl/p'
+		sed -n -e 's/RW-R RW-R/RW-Rrd RW-CD/p'
 	echo "RW-G RW-R RW-G RW-R RW-G RW-R"
 	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
 	echo "RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R RW-G RW-R"
@@ -75,8 +71,6 @@
 		sed -n -e 's/RW-B RW-B/RW-r RW-a/p'
 	sh gendir.sh "RW-G RW-B" 8 |
 		sed -n -e 's/RW-B RW-B/RW-r RW-C/p'
-	sh gendir.sh "RW-G RW-B" 8 |
-		sed -n -e 's/RW-B RW-B/RW-rd RW-l/p'
 
 	# Non-load-buffering RCU tests.
 	sh gendir.sh "RW-G RW-RI" 8
