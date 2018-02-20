@@ -213,6 +213,8 @@ done
 echo LRW OB-Dv
 echo LRW OB-Ov
 sh gendir.sh "R-A R-Oc R-OC R-Od R-D R-Ov" 3 |
+	grep -v 'R-Ov [^-]*-[^ ]*d' |
+	grep -v 'R-Ov$' |
 	awk '{
 		print "Lrw" $0;
 		print "Lwr" $0;
