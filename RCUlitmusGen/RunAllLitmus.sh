@@ -7,7 +7,8 @@
 #
 # The value of ncpus defaults to all online CPUs on the system.
 #
-# Can specify LINUX_BELL_FILE and LINUX_CAT_FILE environment variables.
+# Can specify LINUX_HERD_OPTIONS environment variable to specify
+# command-line options to herd.
 #
 # You could also do this:
 #
@@ -19,7 +20,7 @@
 # run only those with five or fewer processes on the automatically
 # generated tests using the strong model on Paul's laptop:
 #
-# grep -v '\(+.*\)\{6\}' auto/makelitmustests.sh.out | LINUX_BELL_FILE=../../LWNLinuxMM/strong-kernel.bell LINUX_CAT_FILE=../../LWNLinuxMM/strong-kernel.cat bash RunAllLitmus.sh 6 > /tmp/RunAllLitmus.sh.out 2>&1
+# grep -v '\(+.*\)\{6\}' auto/makelitmustests.sh.out | LINUX_HERD_OPTIONS="-I /home/git/linux-2.6-tip/tools/memory-model/ -conf linux-kernel.cfg" bash RunAllLitmus.sh 6 > /tmp/RunAllLitmus.sh.out 2>&1
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

@@ -5,7 +5,9 @@
 # Usage:
 #	sh runAllCat.sh
 #
-# Can specify LINUX_BELL_FILE and LINUX_CAT_FILE environment variables.
+# Can specify LINUX_HERD_OPTIONS environment variable.  This will
+# normally have "-I" to specify the memory-model directory and
+# "-conf" to specify the .cfg file.
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by

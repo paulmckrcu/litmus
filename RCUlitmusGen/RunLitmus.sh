@@ -24,9 +24,7 @@
 # Author: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 
 litmus=$1
-outcome=$2
-bellfile=${LINUX_BELL_FILE-linux.bell}
-catfile=${LINUX_CAT_FILE-linux.cat}
+outcome=${2-specified}
 herdoptions=${LINUX_HERD_OPTIONS-}
 
 if test -f $litmus -a -r $litmus
@@ -37,9 +35,9 @@ else
 	exit 255
 fi
 
-echo Bell file: $bellfile " " Cat file: $catfile > $litmus.out
-/usr/bin/time herd7 -bell $bellfile -cat $catfile -o ~/tmp $herdoptions $litmus >> $litmus.out 2>&1
-grep "Bell file:.*Cat file:" $litmus.out
+echo Herd options: $herdoptions > $litmus.out
+/usr/bin/time herd7 -o ~/tmp $herdoptions $litmus >> $litmus.out 2>&1
+grep "Herd options:" $litmus.out
 grep '^Observation' $litmus.out
 if grep -q '^Observation' $litmus.out
 then
@@ -51,7 +49,8 @@ else
 fi
 if test "$outcome" = DEADLOCK
 then
-	if grep '^Observation' $litmus.out | grep -q "Never 0 0$"
+	echo grep 3 and 4
+	if grep '^Observation' $litmus.out | grep -q 'Never 0 0$'
 	then
 		ret=0
 	else
