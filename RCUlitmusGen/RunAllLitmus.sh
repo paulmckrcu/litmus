@@ -54,8 +54,8 @@ do
 	echo T=$T > $T/$i.sh
 	cat << '___EOF___' >> $T/$i.sh
 	runtest () {
-		echo ' ... ' sh RunLitmus.sh $1.litmus $2
-		if sh RunLitmus.sh $1.litmus $2
+		echo ' ... ' RunLitmus.sh $1.litmus $2
+		if RunLitmus.sh $1.litmus $2
 		then
 ___EOF___
 			echo 'echo "$asExpected $1:($2)" >> ' $T/asExpected.$i >> $T/$i.sh
