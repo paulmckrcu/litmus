@@ -10,4 +10,4 @@ LISA auto/LB-Lwr+R-D
  w[] u0 3        | r[deref] r1 x1 ;
  w[release] x1 1 | r[] r2 u0      ;
 exists
-(u0=3 /\ 1:r1=1)
+(1:r2=0 /\ 1:r1=1)

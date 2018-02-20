@@ -1,8 +1,7 @@
 C auto/C-LB-Lww+R-OC+R-Od
 (*
- * Result: Maybe
- * P1-P2 rf R-Od: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P2 Od,Lww: Note lack of C11 guarantee, control dependency
+ * Result: Never
+ * 
  *)
 {
  1:r4=1; 1:r3=u0; x2=y2;

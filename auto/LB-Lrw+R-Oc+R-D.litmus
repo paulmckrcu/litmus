@@ -16,4 +16,4 @@ LISA auto/LB-Lrw+R-Oc+R-D
                  | w[release] x2 1    |                ;
                  | CTRL1:             |                ;
 exists
-(u0=3 /\ 1:r1=1 /\ 2:r1=1)
+(0:r1=1 /\ 1:r1=1 /\ 2:r1=1)

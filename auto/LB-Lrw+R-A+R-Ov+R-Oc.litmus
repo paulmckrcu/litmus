@@ -14,4 +14,4 @@ LISA auto/LB-Lrw+R-A+R-Ov+R-Oc
                  |                  |                  | w[] u0 1           ;
                  |                  |                  | CTRL3:             ;
 exists
-(u0=3 /\ 1:r1=1 /\ 2:r1=1 /\ 3:r1=1)
+(0:r1=1 /\ 1:r1=1 /\ 2:r1=1 /\ 3:r1=1)

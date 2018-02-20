@@ -1,10 +1,7 @@
 C auto/C-LB-Lrw+R-OC+R-Od+R-Od
 (*
- * Result: Maybe
- * P1-P2 rf R-Od: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P2 Od,R: Note lack of C11 guarantee
- * P2-P3 rf R-Od: Note lack of C11 guarantee, control dependency
- * P3 Od,Lrw: Note lack of C11 guarantee, control dependency
+ * Result: Never
+ * 
  *)
 {
  1:r4=1; 1:r3=x3; x2=y2; 2:r3=u0; x3=y3;
@@ -42,4 +39,4 @@ P3(int *x3)
 }
 
 exists
-(u0=3 /\ 1:r1=1 /\ 2:r1=x3 /\ 3:r1=u0)
+(0:r1=1 /\ 1:r1=1 /\ 2:r1=x3 /\ 3:r1=u0)

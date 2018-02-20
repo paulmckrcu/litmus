@@ -1,9 +1,7 @@
 C auto/C-LB-Lrw+R-Od+R-D
 (*
  * Result: Sometimes DATARACE
- * P0-P1 rf R-Od: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P1 Od,R: Note lack of C11 guarantee
- * P1-P2 rf R-D: Note lack of C11 guarantee, no synchronizes-with
+ * P1-P2 rf R-D: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
  * P2 D,Lrw: Maybe->Sometimes: No ordering
  *)
 {
@@ -31,4 +29,4 @@ P2(int *x2, int *u0)
 }
 
 exists
-(u0=3 /\ 1:r1=x2 /\ 2:r1=1)
+(0:r1=1 /\ 1:r1=x2 /\ 2:r1=1)

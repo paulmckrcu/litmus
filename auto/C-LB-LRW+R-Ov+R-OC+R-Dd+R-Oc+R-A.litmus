@@ -1,9 +1,7 @@
 C auto/C-LB-LRW+R-Ov+R-OC+R-Dd+R-Oc+R-A
 (*
  * Result: Maybe
- * P0-P1 rf R-Ov: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P1 Ov,R: Note lack of C11 guarantee
- * P3-P4 rf R-Oc: Note lack of C11 guarantee, control dependency
+ * P3-P4 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
  * P4 Oc,R: Note lack of C11 guarantee
  *)
 {

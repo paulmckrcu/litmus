@@ -448,7 +448,7 @@ function gen_add_exists(e) {
 #
 function gen_aux_proc_global(g, n,  line_num) {
 	line_num = 0;
-	if (g ~ /^G[RW]R$/) {
+	if (g ~ /^G[RWrw][Rr]$/) {
 		stmts[n + 1 ":" ++line_num] = "w[once] v0 1"
 		vars[n + 1 ":" "v0"] = 1;
 		gen_add_exists(n - 1 ":r2=0");
@@ -458,7 +458,7 @@ function gen_aux_proc_global(g, n,  line_num) {
 		gen_add_exists(n ":r1=1");
 	}
 	stmts[n + 1 ":" ++line_num] = "f[mb]"
-	if (g ~ /^GR[RW]$/) {
+	if (g ~ /^G[Rr][RWrw]$/) {
 		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
 		vars[n + 1 ":" "u0"] = 1;
 		i_val[1] = "1";
@@ -482,15 +482,15 @@ function gen_aux_proc_global(g, n,  line_num) {
 #
 function gen_aux_proc_local(g, n,  line_num) {
 	line_num = 0;
-	if (g == "LRR") {
+	if (g ~ /L[Rr][Rr]/) {
 		stmts[n + 1 ":" ++line_num] = "w[once] u0 1"
 		vars[n + 1 ":" "u0"] = 1;
 		i_val[1] = "1";
 		gen_add_exists("0:r1=1");
 		gen_add_exists(n - 1 ":r2=0");
-	} else if (g == "LRW") {
+	} else if (g ~ /L[Rr][Ww]/) {
 		gen_add_exists("0:r1=" i_val[1]);
-	} else if (g == "LWR") {
+	} else if (g ~ /L[Ww][Rr]/) {
 		gen_add_exists(n - 1 ":r2=0");
 	} else {
 		gen_add_exists("u0=3");

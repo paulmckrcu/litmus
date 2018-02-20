@@ -3,8 +3,6 @@ LISA auto/LB-Lww+R-A+R-Oc+R-Od
  * Result: Maybe DATARACE
  * P1-P2 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
  * P2 Oc,R: Note lack of C11 guarantee
- * P2-P3 rf R-Od: Note lack of C11 guarantee, control dependency
- * P3 Od,Lww: Note lack of C11 guarantee, control dependency
  *)
 {
  2:r4=1; 2:r3=u0; x3=y3;
