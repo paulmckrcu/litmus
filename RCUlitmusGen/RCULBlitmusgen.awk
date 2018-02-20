@@ -135,24 +135,24 @@ function initialize_cycle_evaluation() {
 	# Last-process transitions for trailing write
 	cycle_procnW["A"] = "Never";
 	cycle_procnW["B"] = "Never";
-	cycle_procnW["C"] = "Maybe:Note lack of C11 guarantee, control dependency";
+	cycle_procnW["C"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_procnW["D"] = "Never";
 	cycle_procnW["O"] = "Sometimes:No ordering";
 
 	# Read-from transitions
 	cycle_rf["A:A"] = "Never";
 	cycle_rf["A:B"] = "Never";
-	cycle_rf["A:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
+	cycle_rf["A:C"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_rf["A:D"] = "Never";
 	cycle_rf["A:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["B:A"] = "Never";
 	cycle_rf["B:B"] = "Never";
-	cycle_rf["B:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
+	cycle_rf["B:C"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_rf["B:D"] = "Never";
 	cycle_rf["B:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["R:A"] = "Never";
 	cycle_rf["R:B"] = "Never";
-	cycle_rf["R:C"] = "Maybe:Note lack of C11 guarantee, control dependency";
+	cycle_rf["R:C"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_rf["R:D"] = "Never";
 	cycle_rf["R:O"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
 	cycle_rf["O:A"] = "Maybe:Note lack of C11 guarantee, no synchronizes-with";
@@ -170,10 +170,10 @@ function initialize_cycle_evaluation() {
 	cycle_proc["B:B"] = "Never";
 	cycle_proc["B:O"] = "Never";
 	cycle_proc["B:R"] = "Never";
-	cycle_proc["C:A"] = "Maybe:Note lack of C11 guarantee\n\tDeprecated, use \"R\" instead of Assign";
-	cycle_proc["C:B"] = "Maybe:Note lack of C11 guarantee";
-	cycle_proc["C:O"] = "Maybe:Note lack of C11 guarantee";
-	cycle_proc["C:R"] = "Maybe:Note lack of C11 guarantee";
+	cycle_proc["C:A"] = "Never:Deprecated, use \"R\" instead of Assign";
+	cycle_proc["C:B"] = "Never";  # C11 doesn't guarantee control deps.
+	cycle_proc["C:O"] = "Never";  # C11 doesn't guarantee control deps.
+	cycle_proc["C:R"] = "Never";  # C11 doesn't guarantee control deps.
 	cycle_proc["D:A"] = "Never:Deprecated, use \"R\" instead of Assign";
 	cycle_proc["D:B"] = "Never";
 	cycle_proc["D:O"] = "Never";
@@ -701,7 +701,7 @@ function gen_comment(gdir, n,  desc, result, rfin, rfn, rfout, datarace) {
 	# Handle last-process ordering constraints
 	rfin = best_rfin(i_dir[n]);
 	desc = "P" n - 1 " " i_dir[n] "," gdir;
-	if (gdir ~ /R$/)
+	if (gdir ~ /[Rr]$/)
 		result = result_update(result, desc, cycle_procnR[rfin]);
 	else
 		result = result_update(result, desc, cycle_procnW[rfin]);

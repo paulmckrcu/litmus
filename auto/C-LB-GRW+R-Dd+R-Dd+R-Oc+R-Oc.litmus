@@ -1,11 +1,7 @@
 C auto/C-LB-GRW+R-Dd+R-Dd+R-Oc+R-Oc
 (*
- * Result: Maybe
+ * Result: Never
  * P0 GRW: B-cumulativity provides guarantee
- * P2-P3 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P3 Oc,R: Note lack of C11 guarantee
- * P3-P4 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P4 Oc,GRW: Note lack of C11 guarantee, control dependency
  *)
 {
  0:r3=x2; x1=y1; 1:r3=x3; x2=y2; 3:r4=1; 4:r4=1;

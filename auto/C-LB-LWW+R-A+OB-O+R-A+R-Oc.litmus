@@ -2,8 +2,6 @@ C auto/C-LB-LWW+R-A+OB-O+R-A+R-Oc
 (*
  * Result: Maybe
  * P1-P2 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P3-P4 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P4 Oc,LWW: Note lack of C11 guarantee, control dependency
  *)
 {
  4:r4=1;

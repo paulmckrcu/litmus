@@ -1,9 +1,7 @@
 LISA auto/LB-LRW+R-Dd+R-Oc+R-A+R-Ok
 (*
  * Result: Sometimes
- * P1-P2 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P2 Oc,R: Note lack of C11 guarantee
- * P3-P4 rf R-Ok: Note lack of C11 guarantee, no synchronizes-with
+ * P3-P4 rf R-Ok: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
  * P4 Ok,LRW: Maybe->Sometimes: No ordering
  *)
 {

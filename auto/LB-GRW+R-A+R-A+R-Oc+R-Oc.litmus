@@ -1,11 +1,7 @@
 LISA auto/LB-GRW+R-A+R-A+R-Oc+R-Oc
 (*
- * Result: Maybe
+ * Result: Never
  * P0 GRW: B-cumulativity provides guarantee
- * P2-P3 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P3 Oc,R: Note lack of C11 guarantee
- * P3-P4 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P4 Oc,GRW: Note lack of C11 guarantee, control dependency
  *)
 {
  3:r4=1; 4:r4=1;

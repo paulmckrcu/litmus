@@ -2,7 +2,6 @@ C auto/C-LB-GWR+R-Dd+OB-O+R-Oc
 (*
  * Result: Sometimes
  * P1-P2 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P2-P3 rf R-Oc: Note lack of C11 guarantee, control dependency
  * P3 Oc,GWR: Maybe->Sometimes: Control dependencies do not order trailing reads
  *)
 {

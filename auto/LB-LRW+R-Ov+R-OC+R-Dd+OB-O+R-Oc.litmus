@@ -2,8 +2,6 @@ LISA auto/LB-LRW+R-Ov+R-OC+R-Dd+OB-O+R-Oc
 (*
  * Result: Maybe
  * P3-P4 rf OB-O: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
- * P4-P5 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P5 Oc,LRW: Note lack of C11 guarantee, control dependency
  *)
 {
  2:r4=1; 2:r3=x4; x3=y3; 5:r4=1;

@@ -1495,7 +1495,7 @@ name: auto/LB-GRR+R-A+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-A+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRR+R-A+R-Oc+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRR+R-A+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GRR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GRR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRR+R-Dd.litmus  result: Maybe
 name: auto/LB-GRR+R-Dd+OB-OB.litmus  result: Never
@@ -1552,13 +1552,13 @@ name: auto/LB-GRR+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-Dd+R-Oc+OB-O+R-A.litmus  result: Maybe
 name: auto/LB-GRR+R-Dd+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRR+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-GRR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
+name: auto/LB-GRR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-Dd+R-Oc+R-A+R-A.litmus  result: Maybe
 name: auto/LB-GRR+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRR+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Maybe
 name: auto/LB-GRR+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRR+R-Dd+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GRR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GRR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Maybe
 name: auto/LB-GRR+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRR+R-Oc.litmus  result: Sometimes
@@ -1567,10 +1567,10 @@ name: auto/LB-GRR+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-Oc+OB-O+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-Oc+OB-O+R-Oc+OB-OB.litmus  result: Maybe
 name: auto/LB-GRR+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GRR+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GRR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
+name: auto/LB-GRR+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-GRR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GRR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GRR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GRR+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-GRW+OB-OB.litmus  result: Never
 name: auto/LB-GRW+OB-O+OB-OB.litmus  result: Never
@@ -1595,19 +1595,19 @@ name: auto/LB-GRW+R-A+R-A+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-GRW+R-A+R-A+R-A.litmus  result: Never
 name: auto/LB-GRW+R-A+R-A+R-A+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-A+R-A+R-A+R-A.litmus  result: Never
-name: auto/LB-GRW+R-A+R-A+R-A+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-A+R-A+R-A+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-A+R-A+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-GRW+R-A+R-A+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-A+R-A+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-A+R-Dd.litmus  result: Never
-name: auto/LB-GRW+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-A+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-A+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-A+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-A+R-Oc+OB-O+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-A+R-Oc+R-A+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-A+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GRW+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-A+R-Oc+R-A+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-A+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-GRW+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Dd.litmus  result: Never
 name: auto/LB-GRW+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Dd+OB-O+OB-OB.litmus  result: Never
@@ -1633,12 +1633,12 @@ name: auto/LB-GRW+R-Dd+R-A+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-GRW+R-Dd+R-A+R-A.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-A+R-A+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-A+R-A+R-A.litmus  result: Never
-name: auto/LB-GRW+R-Dd+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Dd+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-A+R-Dd+R-A.litmus  result: Never
-name: auto/LB-GRW+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-A+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-GRW+R-Dd+R-A+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Dd+R-A+R-Oc+R-A.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+OB-O+OB-OB.litmus  result: Never
@@ -1647,42 +1647,42 @@ name: auto/LB-GRW+R-Dd+R-Dd+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-GRW+R-Dd+R-Dd+R-A.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+R-A+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+R-A+R-A.litmus  result: Never
-name: auto/LB-GRW+R-Dd+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Dd+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+R-Dd+R-A.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+R-Dd+R-Dd.litmus  result: Never
-name: auto/LB-GRW+R-Dd+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Dd+R-Dd+R-Dd+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Dd+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-GRW+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Dd+R-Oc+OB-O+R-A.litmus  result: Maybe
 name: auto/LB-GRW+R-Dd+R-Oc+OB-O+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-A+R-A.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-GRW+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-A+R-A.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Never
+name: auto/LB-GRW+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Oc.litmus  result: Never
 name: auto/LB-GRW+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Oc+OB-O+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GRW+R-Oc+OB-O+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GRW+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GRW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
-name: auto/LB-GRW+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GRW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GRW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-GRW+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-GRW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
+name: auto/LB-GRW+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-GRW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-GRW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-GWR+OB-OB.litmus  result: Never
 name: auto/LB-GWR+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWR+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -1717,7 +1717,7 @@ name: auto/LB-GWR+R-A+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-A+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWR+R-A+R-Oc+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWR+R-A+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GWR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GWR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd+OB-OB.litmus  result: Never
@@ -1774,13 +1774,13 @@ name: auto/LB-GWR+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-Dd+R-Oc+OB-O+R-A.litmus  result: Maybe
 name: auto/LB-GWR+R-Dd+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd+R-Oc+R-A.litmus  result: Sometimes
-name: auto/LB-GWR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
+name: auto/LB-GWR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-Dd+R-Oc+R-A+R-A.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GWR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GWR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Sometimes
 name: auto/LB-GWR+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWR+R-Oc.litmus  result: Sometimes
@@ -1789,10 +1789,10 @@ name: auto/LB-GWR+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-Oc+OB-O+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-Oc+OB-O+R-Oc+OB-OB.litmus  result: Maybe
 name: auto/LB-GWR+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GWR+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GWR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
+name: auto/LB-GWR+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-GWR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-GWR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GWR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GWR+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-GWW+OB-OB.litmus  result: Never
 name: auto/LB-GWW+OB-O+OB-OB.litmus  result: Never
@@ -1828,7 +1828,7 @@ name: auto/LB-GWW+R-A+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-A+R-Oc+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-GWW+R-A+R-Oc+R-A+R-Oc.litmus  result: Maybe
 name: auto/LB-GWW+R-A+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GWW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GWW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+OB-OB.litmus  result: Never
@@ -1885,13 +1885,13 @@ name: auto/LB-GWW+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-Dd+R-Oc+OB-O+R-A.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+R-Oc+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-GWW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
+name: auto/LB-GWW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-Dd+R-Oc+R-A+R-A.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GWW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GWW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Maybe
 name: auto/LB-GWW+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
 name: auto/LB-GWW+R-Oc.litmus  result: Maybe
@@ -1900,10 +1900,10 @@ name: auto/LB-GWW+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-Oc+OB-O+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-Oc+OB-O+R-Oc+OB-OB.litmus  result: Maybe
 name: auto/LB-GWW+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GWW+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-GWW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
+name: auto/LB-GWW+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-GWW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-GWW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-GWW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-GWW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
 name: auto/LB-LRR+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRR+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -1937,7 +1937,7 @@ name: auto/LB-LRR+R-A+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-LRR+R-A+R-A+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-A+R-A+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-A+R-A+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-A+R-A+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-A+R-A+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-A+R-Dd.litmus  result: Never
 name: auto/LB-LRR+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-LRR+R-A+R-OC.litmus  result: Never
@@ -1946,12 +1946,12 @@ name: auto/LB-LRR+R-A+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-A+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
 name: auto/LB-LRR+R-A+R-Oc+OB-O+R-OC.litmus  result: Maybe
 name: auto/LB-LRR+R-A+R-Oc+R-A+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-A+R-Oc+R-A+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-A+R-Oc+R-A+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-A+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-A+R-Oc+R-OC.litmus  result: Maybe
-name: auto/LB-LRR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-LRR+R-A+R-Oc+R-OC.litmus  result: Never
+name: auto/LB-LRR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-A+R-Oc+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-A+R-Oc+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Dd+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Dd+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -1988,9 +1988,9 @@ name: auto/LB-LRR+R-Dd+R-A+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-LRR+R-Dd+R-A+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-A+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LRR+R-Dd+R-A+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-A+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Dd+R-A+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-A+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Dd+OB-O+OB-OB.litmus  result: Never
@@ -2012,9 +2012,9 @@ name: auto/LB-LRR+R-Dd+R-Dd+R-Dd+R-Od.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-LRR+R-Dd+R-Dd+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Dd+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LRR+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Dd+R-Dd+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-Dd+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Dd+R-Od.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-LRR+R-Dd+R-OC.litmus  result: Never
@@ -2023,34 +2023,34 @@ name: auto/LB-LRR+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Oc+OB-O+R-A.litmus  result: Maybe
 name: auto/LB-LRR+R-Dd+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
 name: auto/LB-LRR+R-Dd+R-Oc+OB-O+R-OC.litmus  result: Maybe
-name: auto/LB-LRR+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LRR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
-name: auto/LB-LRR+R-Dd+R-Oc+R-A+R-A.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LRR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
+name: auto/LB-LRR+R-Dd+R-Oc+R-A+R-A.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Dd+R-Oc+R-A+R-OC.litmus  result: Maybe
-name: auto/LB-LRR+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-Oc+R-A+R-OC.litmus  result: Never
+name: auto/LB-LRR+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Dd+R-Oc+R-Dd+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-Oc+R-Dd+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Dd+R-Oc+R-OC.litmus  result: Maybe
-name: auto/LB-LRR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LRR+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-Oc+R-OC.litmus  result: Never
+name: auto/LB-LRR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LRR+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Dd+R-Oc+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-Dd+R-Oc+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-LRR+R-Dd+R-Od.litmus  result: Never
 name: auto/LB-LRR+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Oc+OB-O+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Oc+OB-O+R-Oc+OB-OB.litmus  result: Maybe
 name: auto/LB-LRR+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Oc+R-OC.litmus  result: Maybe
-name: auto/LB-LRR+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LRR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
+name: auto/LB-LRR+R-Oc+R-OC.litmus  result: Never
+name: auto/LB-LRR+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LRR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Oc+R-Oc+R-OC.litmus  result: Maybe
-name: auto/LB-LRR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-LRR+R-Oc+R-Oc+R-OC.litmus  result: Never
+name: auto/LB-LRR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRR+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LRR+R-Oc+R-Oc+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-LRR+R-Oc+R-Oc+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-LRW+OB-Dv.litmus  result: Never
 name: auto/LB-LRW+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRW+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -2088,18 +2088,18 @@ name: auto/LB-Lrw+R-A+R-A+R-A.litmus  result: Never DATARACE
 name: auto/LB-LRW+R-A+R-A+R-A.litmus  result: Never
 name: auto/LB-LRW+R-A+R-A+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-A+R-A+R-A+R-A.litmus  result: Never
-name: auto/LB-LRW+R-A+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-A+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-A+R-A+R-A+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-A+R-A+R-A+RQ-A.litmus  result: Never
 name: auto/LB-Lrw+R-A+R-A+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-A+R-A+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lrw+R-A+R-A+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-A+R-OC.litmus  result: Never DATARACE
-name: auto/LB-LRW+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-A+R-A+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-A+R-A+R-OC+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-A+R-A+R-Oc+Oq-A.litmus  result: Maybe
-name: auto/LB-LRW+R-A+R-A+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-A+R-A+R-OC+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-A+R-A+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-A+R-A+R-OC+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-A+R-A+R-Oc+R-Ok.litmus  result: Sometimes
 name: auto/LB-Lrw+R-A+R-A+R-Od.litmus  result: Never DATARACE
 name: auto/LB-LRW+R-A+R-A+R-Ok.litmus  result: Sometimes
@@ -2111,9 +2111,9 @@ name: auto/LB-Lrw+R-A+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-A+R-D+R-Oc.litmus  result: Maybe DATARACE
 name: auto/LB-Lrw+R-A+R-D+R-OC.litmus  result: Maybe DATARACE
 name: auto/LB-Lrw+R-A+R-D+R-Od.litmus  result: Maybe DATARACE
-name: auto/LB-Lrw+R-A+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lrw+R-A+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-OC.litmus  result: Never DATARACE
-name: auto/LB-LRW+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-A+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-A+R-OC+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-A+R-Oc+OB-O+OB-OB.litmus  result: Never
@@ -2122,33 +2122,33 @@ name: auto/LB-LRW+R-A+R-Oc+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-LRW+R-A+R-OC+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-LRW+R-A+R-Oc+OB-O+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-A+R-Oc+Oq-A.litmus  result: Maybe
-name: auto/LB-LRW+R-A+R-Oc+R-A+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-A+R-OC+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-A+R-Oc+R-A+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-A+R-OC+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-A+R-Oc+R-A+R-Ok.litmus  result: Sometimes
 name: auto/LB-Lrw+R-A+R-Oc+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-A+R-OC+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-A+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lrw+R-A+R-Oc+R-OC.litmus  result: Maybe DATARACE
-name: auto/LB-Lrw+R-A+R-OC+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lrw+R-A+R-Oc+R-Oc.litmus  result: Never DATARACE
+name: auto/LB-Lrw+R-A+R-Oc+R-OC.litmus  result: Never DATARACE
+name: auto/LB-Lrw+R-A+R-OC+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-OC+R-OC.litmus  result: Never DATARACE
-name: auto/LB-LRW+R-A+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-A+R-OC+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-LRW+R-A+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-A+R-OC+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-A+R-OC+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LRW+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-A+R-OC+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-A+R-OC+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-A+R-Oc+R-Oc+R-Ok.litmus  result: Sometimes
-name: auto/LB-Lrw+R-A+R-Oc+R-Od.litmus  result: Maybe DATARACE
+name: auto/LB-Lrw+R-A+R-Oc+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-OC+R-Od.litmus  result: Never DATARACE
 name: auto/LB-LRW+R-A+R-Oc+R-Ok.litmus  result: Sometimes
 name: auto/LB-Lrw+R-A+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-Od+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-A+R-Od+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lrw+R-A+R-Od+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-Od+R-OC.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-Od+R-Od.litmus  result: Never DATARACE
 name: auto/LB-LRW+R-A+R-Ok.litmus  result: Sometimes
 name: auto/LB-Lrw+R-A+R-Ov+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-A+R-Ov+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lrw+R-A+R-Ov+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-A+R-Ov+R-OC.litmus  result: Never DATARACE
 name: auto/LB-LRW+R-A+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-A+RQ-A+R-A.litmus  result: Never
@@ -2197,21 +2197,21 @@ name: auto/LB-LRW+R-Dd+R-A+OB-O+RQ-A.litmus  result: Maybe
 name: auto/LB-LRW+R-Dd+R-A+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-A+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-A+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-A+R-A+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-Dd+RQ-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-OC+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-Oc+Oq-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-A+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-A+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-OC+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-A+R-OC+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-A+R-OC+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-Oc+R-Ok.litmus  result: Sometimes
-name: auto/LB-LRW+R-Dd+R-A+R-Oc+RQ-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-A+R-Oc+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-A+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-A+RQ-A+R-A.litmus  result: Never
@@ -2228,7 +2228,7 @@ name: auto/LB-LRW+R-Dd+R-Dd+OB-O+RQ-A.litmus  result: Maybe
 name: auto/LB-LRW+R-Dd+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-A+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-A+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-Dd+R-A+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-D.litmus  result: Sometimes
@@ -2241,25 +2241,25 @@ name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-D.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-Dcd.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-Dcv.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-Dd.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+R-Ov.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Dd+RQ-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-OC+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+Oq-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-OC+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Dd+R-OC+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-Dd+R-OC+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+R-Ok.litmus  result: Sometimes
-name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+RQ-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Dd+R-Oc+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-Dd+R-Ov.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Dd+RQ-A+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-OC+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
@@ -2271,43 +2271,43 @@ name: auto/LB-LRW+R-Dd+R-OC+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-LRW+R-Dd+R-Oc+OB-O+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-Oc+OB-O+RQ-A.litmus  result: Maybe
 name: auto/LB-LRW+R-Dd+R-Oc+Oq-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-OC+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-OC+R-A+OB-OB.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Oc+R-A+R-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-A+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-OC+R-A+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-OC+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-OC+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Oc+R-A+R-Ok.litmus  result: Sometimes
-name: auto/LB-LRW+R-Dd+R-Oc+R-A+RQ-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-A+RQ-A.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-OC+R-Dd+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-OC+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-OC+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Oc+R-Dd+R-Ok.litmus  result: Sometimes
-name: auto/LB-LRW+R-Dd+R-Oc+R-Dd+RQ-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-OC+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-Dd+RQ-A.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-OC+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-OC+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+Oq-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-OC+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-OC+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-OC+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-OC+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+R-Ok.litmus  result: Sometimes
-name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+RQ-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+R-Oc+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Oc+R-Ok.litmus  result: Sometimes
-name: auto/LB-LRW+R-Dd+R-Oc+RQ-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Dd+R-Oc+RQ-A+R-A.litmus  result: Maybe
+name: auto/LB-LRW+R-Dd+R-Oc+RQ-A.litmus  result: Never
+name: auto/LB-LRW+R-Dd+R-Oc+RQ-A+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+R-Ok.litmus  result: Sometimes
 name: auto/LB-LRW+R-Dd+R-Ov.litmus  result: Never
 name: auto/LB-LRW+R-Dd+RQ-A.litmus  result: Never
 name: auto/LB-LRW+R-Dd+RQ-A+R-A.litmus  result: Never
 name: auto/LB-Lrw+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-D+R-D+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lrw+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lrw+R-OC.litmus  result: Never
 name: auto/LB-LRW+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-OC+OB-OB.litmus  result: Never
@@ -2326,44 +2326,44 @@ name: auto/LB-Lrw+R-OC+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-Oc+R-D+R-OC.litmus  result: Maybe DATARACE
 name: auto/LB-Lrw+R-Oc+R-D+R-Od.litmus  result: Maybe DATARACE
 name: auto/LB-Lrw+R-OC+R-D+R-Od.litmus  result: Maybe DATARACE
-name: auto/LB-Lrw+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lrw+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-Lrw+R-Oc+R-Oc.litmus  result: Never DATARACE
+name: auto/LB-Lrw+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-Lrw+R-OC+R-OC.litmus  result: Never
-name: auto/LB-LRW+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-OC+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-LRW+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-OC+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-OC+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LRW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
+name: auto/LB-LRW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-OC+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-Lrw+R-Oc+R-Oc+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-Oc+R-OC+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-OC+R-OC+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-Oc+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lrw+R-Oc+R-Oc+R-OC.litmus  result: Maybe
-name: auto/LB-Lrw+R-Oc+R-OC+R-OC.litmus  result: Maybe
+name: auto/LB-Lrw+R-Oc+R-Oc+R-Oc.litmus  result: Never DATARACE
+name: auto/LB-Lrw+R-Oc+R-Oc+R-OC.litmus  result: Never
+name: auto/LB-Lrw+R-Oc+R-OC+R-OC.litmus  result: Never
 name: auto/LB-Lrw+R-OC+R-OC+R-OC.litmus  result: Never
-name: auto/LB-LRW+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-OC+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LRW+R-OC+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LRW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-OC+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-OC+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LRW+R-OC+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LRW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-OC+R-Oc+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Oc+R-Oc+R-Oc+R-Ok.litmus  result: Sometimes
-name: auto/LB-Lrw+R-Oc+R-Oc+R-Od.litmus  result: Maybe
-name: auto/LB-Lrw+R-Oc+R-OC+R-Od.litmus  result: Maybe
+name: auto/LB-Lrw+R-Oc+R-Oc+R-Od.litmus  result: Never
+name: auto/LB-Lrw+R-Oc+R-OC+R-Od.litmus  result: Never
 name: auto/LB-Lrw+R-OC+R-OC+R-Od.litmus  result: Never
 name: auto/LB-LRW+R-Oc+R-Oc+R-Ok.litmus  result: Sometimes
-name: auto/LB-Lrw+R-Oc+R-Od.litmus  result: Maybe
+name: auto/LB-Lrw+R-Oc+R-Od.litmus  result: Never
 name: auto/LB-Lrw+R-OC+R-Od.litmus  result: Never
 name: auto/LB-Lrw+R-Oc+R-Od+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-OC+R-Od+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-Oc+R-Od+R-OC.litmus  result: Maybe
-name: auto/LB-Lrw+R-Oc+R-Od+R-Od.litmus  result: Maybe
+name: auto/LB-Lrw+R-Oc+R-Od+R-OC.litmus  result: Never
+name: auto/LB-Lrw+R-Oc+R-Od+R-Od.litmus  result: Never
 name: auto/LB-Lrw+R-OC+R-Od+R-Od.litmus  result: Never
 name: auto/LB-LRW+R-Oc+R-Ok.litmus  result: Sometimes
 name: auto/LB-Lrw+R-Oc+R-Ov+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-OC+R-Ov+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lrw+R-Oc+R-Ov+R-OC.litmus  result: Maybe
+name: auto/LB-Lrw+R-Oc+R-Ov+R-OC.litmus  result: Never
 name: auto/LB-Lrw+R-Od.litmus  result: Never
 name: auto/LB-Lrw+R-Od+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-LRW+R-Od+R-Dd+OB-OB.litmus  result: Never
@@ -2373,16 +2373,16 @@ name: auto/LB-LRW+R-Od+R-Dd+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-LRW+R-Od+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Od+R-Dd+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Od+R-Dd+R-A+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Od+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Od+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Od+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-LRW+R-Od+R-Dd+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Od+R-Dd+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Od+R-Dd+R-Dd+R-Dd.litmus  result: Never
-name: auto/LB-LRW+R-Od+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Od+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Od+R-Dd+R-Dd+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Od+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Od+R-Dd+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LRW+R-Od+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Od+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Od+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LRW+R-Od+R-Dd+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-Lrw+R-Od+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lrw+R-Od+R-Od.litmus  result: Never
 name: auto/LB-Lrw+R-Od+R-Od+R-D.litmus  result: Sometimes DATARACE
@@ -2395,16 +2395,16 @@ name: auto/LB-LRW+R-Ov+R-OC+R-Dd+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-A+R-A.litmus  result: Never
-name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Dd+R-Dd.litmus  result: Never
-name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
-name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Dd+R-Oc.litmus  result: Never
+name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LRW+R-Ov+R-OC+R-Dd+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-LRW+RQ-A+R-A.litmus  result: Never
 name: auto/LB-LWR+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LWR+OB-O+OB-O+OB-OB.litmus  result: Never
@@ -2432,7 +2432,7 @@ name: auto/LB-LWR+R-A+R-A+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LWR+R-A+R-A+R-A+R-A.litmus  result: Never
 name: auto/LB-LWR+R-A+R-A+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-Lwr+R-A+R-A+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-A+R-A+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-A+R-A+R-Oc.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-A+R-A+R-OC.litmus  result: Never DATARACE
 name: auto/LB-LWR+R-A+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-A+R-A+R-Oc+OB-OB.litmus  result: Never
@@ -2441,10 +2441,10 @@ name: auto/LB-Lwr+R-A+R-A+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lwr+R-A+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-LWR+R-A+R-Dd.litmus  result: Never
 name: auto/LB-Lwr+R-A+R-D+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-A+R-D+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-A+R-D+R-Oc.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-A+R-D+R-OC.litmus  result: Maybe DATARACE
 name: auto/LB-Lwr+R-A+R-D+R-Od.litmus  result: Maybe DATARACE
-name: auto/LB-Lwr+R-A+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-A+R-Oc.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-A+R-OC.litmus  result: Never DATARACE
 name: auto/LB-LWR+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-A+R-Oc+OB-OB.litmus  result: Never
@@ -2453,22 +2453,22 @@ name: auto/LB-LWR+R-A+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-A+R-Oc+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-Lwr+R-A+R-Oc+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-A+R-OC+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-A+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lwr+R-A+R-Oc+R-OC.litmus  result: Maybe DATARACE
-name: auto/LB-Lwr+R-A+R-OC+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-A+R-Oc+R-Oc.litmus  result: Sometimes DATARACE
+name: auto/LB-Lwr+R-A+R-Oc+R-OC.litmus  result: Never DATARACE
+name: auto/LB-Lwr+R-A+R-OC+R-Oc.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-A+R-OC+R-OC.litmus  result: Never DATARACE
 name: auto/LB-LWR+R-A+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LWR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-LWR+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LWR+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-Lwr+R-A+R-Oc+R-Od.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-A+R-Oc+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lwr+R-A+R-OC+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lwr+R-A+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lwr+R-A+R-Od+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-A+R-Od+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-A+R-Od+R-Oc.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-A+R-Od+R-OC.litmus  result: Never DATARACE
 name: auto/LB-Lwr+R-A+R-Od+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lwr+R-A+R-Ov+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-A+R-Ov+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-A+R-Ov+R-Oc.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-A+R-Ov+R-OC.litmus  result: Never DATARACE
 name: auto/LB-Lwr+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-LWR+R-Dd+OB-OB.litmus  result: Never
@@ -2499,7 +2499,7 @@ name: auto/LB-LWR+R-Dd+R-A+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-A+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-A+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-A+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LWR+R-Dd+R-A+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LWR+R-Dd+R-A+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Dd+OB-OB.litmus  result: Never
@@ -2517,26 +2517,26 @@ name: auto/LB-LWR+R-Dd+R-Dd+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Dd+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-Dd+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LWR+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LWR+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Oc+OB-O+R-A.litmus  result: Maybe
 name: auto/LB-LWR+R-Dd+R-Oc+OB-O+R-Oc.litmus  result: Sometimes
-name: auto/LB-LWR+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LWR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
-name: auto/LB-LWR+R-Dd+R-Oc+R-A+R-A.litmus  result: Maybe
+name: auto/LB-LWR+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LWR+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
+name: auto/LB-LWR+R-Dd+R-Oc+R-A+R-A.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Sometimes
-name: auto/LB-LWR+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Maybe
+name: auto/LB-LWR+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Sometimes
 name: auto/LB-LWR+R-Dd+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LWR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LWR+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Maybe
+name: auto/LB-LWR+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LWR+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Never
 name: auto/LB-LWR+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
 name: auto/LB-Lwr+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-D+R-D+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lwr+R-Oc.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-OC.litmus  result: Never
 name: auto/LB-LWR+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LWR+R-Oc+OB-O+OB-OB.litmus  result: Never
@@ -2549,35 +2549,35 @@ name: auto/LB-Lwr+R-OC+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-Oc+R-D+R-OC.litmus  result: Maybe DATARACE
 name: auto/LB-Lwr+R-Oc+R-D+R-Od.litmus  result: Maybe DATARACE
 name: auto/LB-Lwr+R-OC+R-D+R-Od.litmus  result: Maybe DATARACE
-name: auto/LB-Lwr+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lwr+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-Lwr+R-Oc+R-Oc.litmus  result: Sometimes DATARACE
+name: auto/LB-Lwr+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-Lwr+R-OC+R-OC.litmus  result: Never
 name: auto/LB-LWR+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LWR+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LWR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
+name: auto/LB-LWR+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LWR+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-Lwr+R-Oc+R-Oc+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-Oc+R-OC+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-OC+R-OC+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-Oc+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lwr+R-Oc+R-Oc+R-OC.litmus  result: Maybe
-name: auto/LB-Lwr+R-Oc+R-OC+R-OC.litmus  result: Maybe
+name: auto/LB-Lwr+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes DATARACE
+name: auto/LB-Lwr+R-Oc+R-Oc+R-OC.litmus  result: Never
+name: auto/LB-Lwr+R-Oc+R-OC+R-OC.litmus  result: Never
 name: auto/LB-Lwr+R-OC+R-OC+R-OC.litmus  result: Never
 name: auto/LB-LWR+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-LWR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
+name: auto/LB-LWR+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LWR+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Sometimes
-name: auto/LB-Lwr+R-Oc+R-Oc+R-Od.litmus  result: Maybe
-name: auto/LB-Lwr+R-Oc+R-OC+R-Od.litmus  result: Maybe
+name: auto/LB-Lwr+R-Oc+R-Oc+R-Od.litmus  result: Never
+name: auto/LB-Lwr+R-Oc+R-OC+R-Od.litmus  result: Never
 name: auto/LB-Lwr+R-OC+R-OC+R-Od.litmus  result: Never
-name: auto/LB-Lwr+R-Oc+R-Od.litmus  result: Maybe
+name: auto/LB-Lwr+R-Oc+R-Od.litmus  result: Never
 name: auto/LB-Lwr+R-OC+R-Od.litmus  result: Never
 name: auto/LB-Lwr+R-Oc+R-Od+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-OC+R-Od+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-Oc+R-Od+R-OC.litmus  result: Maybe
-name: auto/LB-Lwr+R-Oc+R-Od+R-Od.litmus  result: Maybe
+name: auto/LB-Lwr+R-Oc+R-Od+R-OC.litmus  result: Never
+name: auto/LB-Lwr+R-Oc+R-Od+R-Od.litmus  result: Never
 name: auto/LB-Lwr+R-OC+R-Od+R-Od.litmus  result: Never
 name: auto/LB-Lwr+R-Oc+R-Ov+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-OC+R-Ov+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lwr+R-Oc+R-Ov+R-OC.litmus  result: Maybe
+name: auto/LB-Lwr+R-Oc+R-Ov+R-OC.litmus  result: Never
 name: auto/LB-Lwr+R-Od.litmus  result: Never
 name: auto/LB-Lwr+R-Od+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lwr+R-Od+R-D+R-D.litmus  result: Sometimes DATARACE
@@ -2609,13 +2609,13 @@ name: auto/LB-Lww+R-A+R-A+R-A.litmus  result: Never DATARACE
 name: auto/LB-LWW+R-A+R-A+R-A.litmus  result: Never
 name: auto/LB-LWW+R-A+R-A+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-A+R-A+R-A+R-A.litmus  result: Never
-name: auto/LB-LWW+R-A+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-A+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-Lww+R-A+R-A+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-A+R-A+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lww+R-A+R-A+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-A+R-OC.litmus  result: Never DATARACE
-name: auto/LB-LWW+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-A+R-A+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LWW+R-A+R-A+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-A+R-A+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-Lww+R-A+R-A+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-LWW+R-A+R-Dd.litmus  result: Never
@@ -2623,31 +2623,31 @@ name: auto/LB-Lww+R-A+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-A+R-D+R-Oc.litmus  result: Maybe DATARACE
 name: auto/LB-Lww+R-A+R-D+R-OC.litmus  result: Maybe DATARACE
 name: auto/LB-Lww+R-A+R-D+R-Od.litmus  result: Maybe DATARACE
-name: auto/LB-Lww+R-A+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lww+R-A+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-OC.litmus  result: Never DATARACE
-name: auto/LB-LWW+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-A+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-A+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-A+R-Oc+OB-O+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-A+R-Oc+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-A+R-Oc+R-A+R-Oc.litmus  result: Never
 name: auto/LB-Lww+R-A+R-Oc+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-A+R-OC+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-A+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lww+R-A+R-Oc+R-OC.litmus  result: Maybe DATARACE
-name: auto/LB-Lww+R-A+R-OC+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lww+R-A+R-Oc+R-Oc.litmus  result: Never DATARACE
+name: auto/LB-Lww+R-A+R-Oc+R-OC.litmus  result: Never DATARACE
+name: auto/LB-Lww+R-A+R-OC+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-OC+R-OC.litmus  result: Never DATARACE
-name: auto/LB-LWW+R-A+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LWW+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-Lww+R-A+R-Oc+R-Od.litmus  result: Maybe DATARACE
+name: auto/LB-LWW+R-A+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-A+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LWW+R-A+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-Lww+R-A+R-Oc+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-OC+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-Od+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-A+R-Od+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lww+R-A+R-Od+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-Od+R-OC.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-Od+R-Od.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-Ov+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-A+R-Ov+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lww+R-A+R-Ov+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-A+R-Ov+R-OC.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-LWW+R-Dd+OB-OB.litmus  result: Never
@@ -2674,12 +2674,12 @@ name: auto/LB-LWW+R-Dd+R-A+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-LWW+R-Dd+R-A+R-A.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-A+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-A+R-A+R-A.litmus  result: Never
-name: auto/LB-LWW+R-Dd+R-A+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-Dd+R-A+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-A+R-Dd+R-A.litmus  result: Never
-name: auto/LB-LWW+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-A+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LWW+R-Dd+R-A+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-Dd+R-A+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-A+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+OB-O+OB-OB.litmus  result: Never
@@ -2688,34 +2688,34 @@ name: auto/LB-LWW+R-Dd+R-Dd+OB-O+R-Oc.litmus  result: Maybe
 name: auto/LB-LWW+R-Dd+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+R-A+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+R-A+R-A.litmus  result: Never
-name: auto/LB-LWW+R-Dd+R-Dd+R-A+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-Dd+R-Dd+R-A+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+R-Dd.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+R-Dd+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+R-Dd+R-A.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+R-Dd+R-Dd.litmus  result: Never
-name: auto/LB-LWW+R-Dd+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-Dd+R-Dd+R-Dd+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Dd+R-Oc+OB-OB.litmus  result: Never
-name: auto/LB-LWW+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-Dd+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Dd+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-Dd+R-Oc+OB-O+R-A.litmus  result: Maybe
 name: auto/LB-LWW+R-Dd+R-Oc+OB-O+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-A+R-A.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Maybe
-name: auto/LB-LWW+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
+name: auto/LB-LWW+R-Dd+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-A+OB-OB.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-A+R-A.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-A+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-Dd+R-A.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-Dd+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-Oc+R-A.litmus  result: Never
+name: auto/LB-LWW+R-Dd+R-Oc+R-Oc+R-Oc.litmus  result: Never
 name: auto/LB-Lww+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-D+R-D+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-Oc.litmus  result: Maybe DATARACE
+name: auto/LB-Lww+R-Oc.litmus  result: Never DATARACE
 name: auto/LB-Lww+R-OC.litmus  result: Never
 name: auto/LB-LWW+R-Oc+OB-OB.litmus  result: Never
 name: auto/LB-LWW+R-Oc+OB-O+OB-OB.litmus  result: Never
@@ -2728,35 +2728,35 @@ name: auto/LB-Lww+R-OC+R-D+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-Oc+R-D+R-OC.litmus  result: Maybe DATARACE
 name: auto/LB-Lww+R-Oc+R-D+R-Od.litmus  result: Maybe DATARACE
 name: auto/LB-Lww+R-OC+R-D+R-Od.litmus  result: Maybe DATARACE
-name: auto/LB-Lww+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lww+R-Oc+R-OC.litmus  result: Maybe
+name: auto/LB-Lww+R-Oc+R-Oc.litmus  result: Never DATARACE
+name: auto/LB-Lww+R-Oc+R-OC.litmus  result: Never
 name: auto/LB-Lww+R-OC+R-OC.litmus  result: Never
-name: auto/LB-LWW+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LWW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Maybe
+name: auto/LB-LWW+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LWW+R-Oc+R-Oc+OB-O+OB-OB.litmus  result: Never
 name: auto/LB-Lww+R-Oc+R-Oc+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-Oc+R-OC+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-OC+R-OC+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-Oc+R-Oc+R-Oc.litmus  result: Maybe DATARACE
-name: auto/LB-Lww+R-Oc+R-Oc+R-OC.litmus  result: Maybe
-name: auto/LB-Lww+R-Oc+R-OC+R-OC.litmus  result: Maybe
+name: auto/LB-Lww+R-Oc+R-Oc+R-Oc.litmus  result: Never DATARACE
+name: auto/LB-Lww+R-Oc+R-Oc+R-OC.litmus  result: Never
+name: auto/LB-Lww+R-Oc+R-OC+R-OC.litmus  result: Never
 name: auto/LB-Lww+R-OC+R-OC+R-OC.litmus  result: Never
-name: auto/LB-LWW+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-LWW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Maybe
-name: auto/LB-LWW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Maybe
-name: auto/LB-Lww+R-Oc+R-Oc+R-Od.litmus  result: Maybe
-name: auto/LB-Lww+R-Oc+R-OC+R-Od.litmus  result: Maybe
+name: auto/LB-LWW+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-LWW+R-Oc+R-Oc+R-Oc+OB-OB.litmus  result: Never
+name: auto/LB-LWW+R-Oc+R-Oc+R-Oc+R-Oc.litmus  result: Never
+name: auto/LB-Lww+R-Oc+R-Oc+R-Od.litmus  result: Never
+name: auto/LB-Lww+R-Oc+R-OC+R-Od.litmus  result: Never
 name: auto/LB-Lww+R-OC+R-OC+R-Od.litmus  result: Never
-name: auto/LB-Lww+R-Oc+R-Od.litmus  result: Maybe
+name: auto/LB-Lww+R-Oc+R-Od.litmus  result: Never
 name: auto/LB-Lww+R-OC+R-Od.litmus  result: Never
 name: auto/LB-Lww+R-Oc+R-Od+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-OC+R-Od+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-Oc+R-Od+R-OC.litmus  result: Maybe
-name: auto/LB-Lww+R-Oc+R-Od+R-Od.litmus  result: Maybe
+name: auto/LB-Lww+R-Oc+R-Od+R-OC.litmus  result: Never
+name: auto/LB-Lww+R-Oc+R-Od+R-Od.litmus  result: Never
 name: auto/LB-Lww+R-OC+R-Od+R-Od.litmus  result: Never
 name: auto/LB-Lww+R-Oc+R-Ov+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-OC+R-Ov+R-D.litmus  result: Sometimes DATARACE
-name: auto/LB-Lww+R-Oc+R-Ov+R-OC.litmus  result: Maybe
+name: auto/LB-Lww+R-Oc+R-Ov+R-OC.litmus  result: Never
 name: auto/LB-Lww+R-Od.litmus  result: Never
 name: auto/LB-Lww+R-Od+R-D.litmus  result: Sometimes DATARACE
 name: auto/LB-Lww+R-Od+R-D+R-D.litmus  result: Sometimes DATARACE

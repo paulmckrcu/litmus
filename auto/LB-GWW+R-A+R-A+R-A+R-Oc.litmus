@@ -2,8 +2,6 @@ LISA auto/LB-GWW+R-A+R-A+R-A+R-Oc
 (*
  * Result: Maybe
  * P0 GWW: Never->Maybe: Should rel-acq provide any global transitivity?
- * P3-P4 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P4 Oc,GWW: Note lack of C11 guarantee, control dependency
  *)
 {
  4:r4=1;

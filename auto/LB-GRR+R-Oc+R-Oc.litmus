@@ -2,9 +2,6 @@ LISA auto/LB-GRR+R-Oc+R-Oc
 (*
  * Result: Sometimes
  * P0 GRR: Never->Maybe: Should rel-acq provide any global transitivity?
- * P0-P1 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P1 Oc,R: Note lack of C11 guarantee
- * P1-P2 rf R-Oc: Note lack of C11 guarantee, control dependency
  * P2 Oc,GRR: Maybe->Sometimes: Control dependencies do not order trailing reads
  *)
 {

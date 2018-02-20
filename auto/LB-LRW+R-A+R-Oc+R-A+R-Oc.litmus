@@ -1,10 +1,7 @@
 LISA auto/LB-LRW+R-A+R-Oc+R-A+R-Oc
 (*
- * Result: Maybe
- * P1-P2 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P2 Oc,R: Note lack of C11 guarantee
- * P3-P4 rf R-Oc: Note lack of C11 guarantee, control dependency
- * P4 Oc,LRW: Note lack of C11 guarantee, control dependency
+ * Result: Never
+ * 
  *)
 {
  2:r4=1; 4:r4=1;

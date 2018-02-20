@@ -1,8 +1,7 @@
 C auto/C-LB-Lww+R-A+R-A+R-Oc
 (*
- * Result: Maybe DATARACE
- * P2-P3 rf R-Oc: Never->Maybe: Note lack of C11 guarantee, control dependency
- * P3 Oc,Lww: Note lack of C11 guarantee, control dependency
+ * Result: Never DATARACE
+ * 
  *)
 {
  3:r4=1;
