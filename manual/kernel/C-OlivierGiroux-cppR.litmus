@@ -8,6 +8,7 @@ C C-OlivierGiroux-cppR.litmus
 
 P0(int *x, int *y)
 {
+	int r1;
 	r1 = READ_ONCE(*y);
 }
 
@@ -19,6 +20,7 @@ P1(int *x, int *y)
 
 P2(int *x, int *y)
 {
+	int r2;
 	WRITE_ONCE(*y, 2);
 	smp_mb();
 	r2 = READ_ONCE(*x);

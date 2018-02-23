@@ -15,8 +15,9 @@ P0(int *x, int *y)
 
 P1(int *y, int *x)
 {
+	int r0; int r1; int r2;
 	r0 = READ_ONCE(*y);
-	r1 = (r0 ^ r0);
+	r1 = (r0 & 8);
 	r1 = (r1 + 1);
 	WRITE_ONCE(*x, r1);
 	WRITE_ONCE(*x, 2);

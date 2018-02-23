@@ -6,13 +6,13 @@ y = 0;
 
 P0(int *x, int *y)
 {
-	r1 = rcu_dereference(*x);
+	int r1 = (int)rcu_dereference(*(char **)x);
 	WRITE_ONCE(*y, 1);
 }
 
 P1(int *y, int *x)
 {
-	r3 = rcu_dereference(*y);
+	int r3 = (int)rcu_dereference(*(char **)y);
 	WRITE_ONCE(*x, 1);
 }
 

@@ -6,14 +6,15 @@ y = 0;
 
 P0(int *x, int *y)
 {
-	r1 = READ_ONCE(*x);
-	rcu_assign_pointer(*y, 1);
+	int r1 = READ_ONCE(*x);
+	rcu_assign_pointer(*(char **)y, (char *)1);
 }
 
 P1(int *y, int *x)
 {
-	r3 = rcu_dereference(*y);
-	r9 = (r3 ^ r3);
+	int r3; int r9; int *r4;
+	r3 = (int)rcu_dereference(*(char **)y);
+	r9 = (r3 & 8);
 	r4 = (x + r9);
 	WRITE_ONCE(*r4, 1);
 }

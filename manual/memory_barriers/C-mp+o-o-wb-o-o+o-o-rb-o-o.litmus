@@ -21,6 +21,7 @@ P0(int *d, int *x, int *a, int *c)
 
 P1(int *a, int *c, int *d, int *x)
 {
+	int r1; int r2; int r3; int r4;
 	r1 = READ_ONCE(*c);
 	r2 = READ_ONCE(*d);
 	smp_rmb();

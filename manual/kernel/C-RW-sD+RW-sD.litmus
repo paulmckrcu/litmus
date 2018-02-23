@@ -12,7 +12,7 @@ P0(int **x0, int **x1, int *y1)
 	int r4 = y1;
 
 	r1 = rcu_dereference(*x0);
-	rcu_assign_pointer(*r1, r3);
+	rcu_assign_pointer(*r1, y1);
 }
 
 P1(int **x0, int **x1, int *y0)

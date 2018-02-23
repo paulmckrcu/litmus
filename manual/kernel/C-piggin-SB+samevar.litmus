@@ -6,12 +6,14 @@ C C-piggin-SB+samevar.litmus
 
 P0(int *x)
 {
+	int r1;
 	WRITE_ONCE(*x, 1);
 	r1 = READ_ONCE(*x);
 }
 
 P1(int *x)
 {
+	int r1;
 	WRITE_ONCE(*x, 2);
 	r1 = READ_ONCE(*x);
 }

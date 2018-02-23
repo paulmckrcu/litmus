@@ -1,24 +1,24 @@
 C C-WRC+assign+deref-addr-o+o-rb-o
 {
-x = b;
-b = 42;
+int b = 42;
+int *x = b;
 y = 3;
-1:r0 = y;
 }
 
 P0(int *y)
 {
-	rcu_assign_pointer(*y, 1);
+	rcu_assign_pointer(*(char **)y, (char *)1);
 }
 
-P1(int *y, int *x)
+P1(int *y, int **x)
 {
-	r3 = rcu_dereference(*y);
-	WRITE_ONCE(*x, r0);
+	int r3 = (int)rcu_dereference(*(char **)y);
+	WRITE_ONCE(*x, y);
 }
 
-P2(int *x)
+P2(int **x)
 {
+	int *r1; int r2;
 	r1 = READ_ONCE(*x);
 	smp_rmb();
 	r2 = READ_ONCE(*r1);

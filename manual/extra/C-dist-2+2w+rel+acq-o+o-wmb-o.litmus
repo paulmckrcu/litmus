@@ -11,7 +11,7 @@ P0(int *x)
 
 P1(int *y, int *x)
 {
-	r1 = smp_load_acquire(x);
+	int r1 = smp_load_acquire(x);
 	WRITE_ONCE(*y, 2);
 }
 

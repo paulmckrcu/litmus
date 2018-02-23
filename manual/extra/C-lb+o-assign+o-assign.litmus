@@ -6,14 +6,14 @@ y = 0;
 
 P0(int *x, int *y)
 {
-	r1 = READ_ONCE(*x);
-	rcu_assign_pointer(*y, 1);
+	int r1 = READ_ONCE(*x);
+	rcu_assign_pointer(*(char **)y, (char *)1);
 }
 
 P1(int *y, int *x)
 {
-	r3 = READ_ONCE(*y);
-	rcu_assign_pointer(*x, 1);
+	int r3 = READ_ONCE(*y);
+	rcu_assign_pointer(*(char **)x, (char *)1);
 }
 
 exists(0:r1=1 /\ 1:r3=1)

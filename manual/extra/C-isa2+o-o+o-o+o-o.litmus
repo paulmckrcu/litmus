@@ -12,12 +12,13 @@ P0(int *x, int *a)
 
 P1(int *c, int *x)
 {
-	r1 = READ_ONCE(*x);
+	int r1 = READ_ONCE(*x);
 	WRITE_ONCE(*c, 1);
 }
 
 P2(int *a, int *c)
 {
+	int r2; int r3;
 	r3 = READ_ONCE(*c);
 	r2 = READ_ONCE(*a);
 }

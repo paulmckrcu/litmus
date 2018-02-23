@@ -12,6 +12,7 @@ P0(int *x)
 
 P1(int *y, int *x)
 {
+	int r1; int r2;
 	r1 = READ_ONCE(*x);
 	smp_mb();
 	r2 = READ_ONCE(*y);
@@ -19,6 +20,7 @@ P1(int *y, int *x)
 
 P2(int *x, int *y)
 {
+	int r3;
 	WRITE_ONCE(*y, 1);
 	smp_mb();
 	r3 = READ_ONCE(*x);

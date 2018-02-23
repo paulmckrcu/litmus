@@ -7,22 +7,25 @@ z = 0;
 
 P0(int *x, int *y)
 {
+	int r1;
 	r1 = READ_ONCE(*x);
-	rcu_assign_pointer(*y, 1);
+	rcu_assign_pointer(*(char **)y, (char *)1);
 }
 
 P1(int *y, int *z)
 {
-	r3 = rcu_dereference(*y);
-	r9 = (r3 ^ r3);
+	int r3; int r9; int *r4;
+	r3 = (int)rcu_dereference(*(char **)y);
+	r9 = (r3 & 8);
 	r4 = (z + r9);
-	rcu_assign_pointer(*r4, 1);
+	rcu_assign_pointer(*(char **)r4, (char *)1);
 }
 
 P2(int *x, int *z)
 {
-	r5 = rcu_dereference(*z);
-	r9 = (r5 ^ r5);
+	int r5; int r9; int *r6;
+	r5 = (int)rcu_dereference(*(char **)z);
+	r9 = (r5 & 8);
 	r6 = (x + r9);
 	WRITE_ONCE(*r6, 1);
 }

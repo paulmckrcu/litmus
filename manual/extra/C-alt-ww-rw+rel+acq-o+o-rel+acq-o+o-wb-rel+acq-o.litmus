@@ -11,7 +11,7 @@ P0(int *x)
 
 P1(int *y, int *x)
 {
-	r1 = smp_load_acquire(x);
+	int r1 = smp_load_acquire(x);
 	WRITE_ONCE(*y, 1);
 }
 
@@ -23,7 +23,7 @@ P2(int *y, int *z)
 
 P3(int *z, int *a)
 {
-	r2 = smp_load_acquire(z);
+	int r2 = smp_load_acquire(z);
 	WRITE_ONCE(*a, 1);
 }
 
@@ -36,7 +36,7 @@ P4(int *a, int *c)
 
 P5(int *x, int *c)
 {
-	r3 = smp_load_acquire(c);
+	int r3 = smp_load_acquire(c);
 	WRITE_ONCE(*x, 2);
 }
 

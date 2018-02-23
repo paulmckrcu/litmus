@@ -16,13 +16,14 @@ P0(int *x, int *a)
 
 P1(int *c, int *x)
 {
-	r1 = READ_ONCE(*x);
+	int r1 = READ_ONCE(*x);
 	synchronize_rcu();
 	WRITE_ONCE(*c, 1);
 }
 
 P2(int *a, int *c)
 {
+	int r3; int r2;
 	r3 = READ_ONCE(*c);
 	synchronize_rcu();
 	r2 = READ_ONCE(*a);

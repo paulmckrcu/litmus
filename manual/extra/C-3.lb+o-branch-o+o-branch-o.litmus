@@ -7,6 +7,7 @@ z = 0;
 
 P0(int *x, int *y)
 {
+	int r1; int r4;
 	r1 = READ_ONCE(*x);
 	r4 = (r1 != 0);
 	if (r4) {
@@ -16,6 +17,7 @@ P0(int *x, int *y)
 
 P1(int *y, int *z)
 {
+	int r2; int r5;
 	r2 = READ_ONCE(*y);
 	r5 = (r2 != 0);
 	if (r5) {
@@ -25,6 +27,7 @@ P1(int *y, int *z)
 
 P2(int *x, int *z)
 {
+	int r3; int r6;
 	r3 = READ_ONCE(*z);
 	r6 = (r3 != 0);
 	if (r6) {

@@ -5,6 +5,7 @@ x = 0; y = 0; z = 0;
 
 P0(int *x, int *y)
 {
+	int r1;
 	rcu_read_lock();
 	r1 = READ_ONCE(*y);
 	WRITE_ONCE(*x, 1);
@@ -13,6 +14,7 @@ P0(int *x, int *y)
 
 P1(int *z, int *x)
 {
+	int r2;
 	r2 = READ_ONCE(*x);
 	synchronize_rcu();
 	WRITE_ONCE(*z, 1);
@@ -20,6 +22,7 @@ P1(int *z, int *x)
 
 P2(int *y, int *z)
 {
+	int r3;
 	rcu_read_lock();
 	r3 = READ_ONCE(*z);
 	WRITE_ONCE(*y, 1);

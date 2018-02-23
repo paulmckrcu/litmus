@@ -8,13 +8,14 @@ y = 0;
 P0(int *x, int *y)
 {
 	WRITE_ONCE(*y, 2);
-	rcu_assign_pointer(*x, 1);
+	rcu_assign_pointer(*(char **)x, (char *)1);
 }
 
 P1(int *y, int *x)
 {
+	int r1;
 	rcu_read_lock();
-	r1 = rcu_dereference(*x);
+	r1 = (int)rcu_dereference(*(char **)x);
 	WRITE_ONCE(*y, 1);
 	rcu_read_unlock();
 }

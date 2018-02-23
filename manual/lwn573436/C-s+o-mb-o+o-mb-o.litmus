@@ -14,7 +14,7 @@ P0(int *x, int *y)
 
 P1(int *y, int *x)
 {
-	r1 = READ_ONCE(*x);
+	int r1 = READ_ONCE(*x);
 	smp_mb();
 	WRITE_ONCE(*y, 1);
 }

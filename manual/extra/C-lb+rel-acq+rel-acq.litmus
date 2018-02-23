@@ -6,13 +6,13 @@ y = 0;
 
 P0(int *x, int *y)
 {
-	r1 = smp_load_acquire(x);
+	int r1 = smp_load_acquire(x);
 	smp_store_release(y, 1);
 }
 
 P1(int *y, int *x)
 {
-	r3 = smp_load_acquire(y);
+	int r3 = smp_load_acquire(y);
 	smp_store_release(x, 1);
 }
 

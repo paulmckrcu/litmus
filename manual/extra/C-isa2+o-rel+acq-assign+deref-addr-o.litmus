@@ -13,14 +13,15 @@ P0(int *x, int *a)
 
 P1(int *c, int *x)
 {
-	r1 = smp_load_acquire(x);
-	rcu_assign_pointer(*c, 1);
+	int r1 = smp_load_acquire(x);
+	rcu_assign_pointer(*(char **)c, (char *)1);
 }
 
 P2(int *a, int *c)
 {
-	r3 = rcu_dereference(*c);
-	r9 = (r3 ^ r3);
+	int r3; int r9; int *r4; int r2;
+	r3 = (int)rcu_dereference(*(char **)c);
+	r9 = (r3 & 8);
 	r4 = (a + r9);
 	r2 = READ_ONCE(*r4);
 }

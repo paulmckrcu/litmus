@@ -6,6 +6,7 @@ x = 0;
 
 P0(int *x)
 {
+	int r1;
 	r1 = READ_ONCE(*x);
 	WRITE_ONCE(*x, 1);
 }

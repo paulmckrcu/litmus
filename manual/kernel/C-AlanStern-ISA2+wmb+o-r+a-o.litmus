@@ -1,7 +1,7 @@
 C C-AlanStern-ISA2+wmb+o-r+a-o.litmus
 
 {
-	1:r4=x;
+int *z = &y;
 }
 
 P0(int *x, int *y)
@@ -11,17 +11,18 @@ P0(int *x, int *y)
 	WRITE_ONCE(*y, 1);
 }
 
-P1(int *y, int *z)
+P1(int *y, int **z,int *x)
 {
-	r1 = READ_ONCE(*y);
-	smp_store_release(z, r4);
+	int r1 = READ_ONCE(*y);
+	smp_store_release(z, x);
 }
 
-P2(int *z)
+P2(int **z)
 {
+	int *r1; int r2;
 	r1 = smp_load_acquire(z);
 	r2 = READ_ONCE(*r1);
 }
 
 exists
-(1:r1=x1 /\ 2:r1=x /\ 2:r2=0)
+(1:r1=1 /\ 2:r1=x /\ 2:r2=0)
