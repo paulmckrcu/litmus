@@ -13,7 +13,7 @@ C auto/C-WR-GR3+WR-R
 {
 }
 
-P0(int *x0, int *x1)
+P0(intptr_t *x0, intptr_t *x1)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x0, 2);
@@ -25,7 +25,7 @@ P0(int *x0, int *x1)
 }
 
 
-P1(int *x0, int *x1)
+P1(intptr_t *x0, intptr_t *x1)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x1, 2);

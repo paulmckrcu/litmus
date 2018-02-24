@@ -6,14 +6,14 @@ C auto/C-LB-Lrw+R-D
 {
 }
 
-P0(int *u0, int *x1)
+P0(intptr_t *u0, intptr_t *x1)
 {
 	intptr_t r1 = *u0;
 	smp_store_release(x1, 1);
 }
 
 
-P1(int *u0, int *x1)
+P1(intptr_t *u0, intptr_t *x1)
 {
 	intptr_t r1 = rcu_dereference(*x1);
 	*u0 = 1;

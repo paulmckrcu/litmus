@@ -3,7 +3,7 @@ C auto/C-WW-B
 {
 }
 
-P0(int *x0)
+P0(intptr_t *x0)
 {
 	WRITE_ONCE(*x0, 2);
 	smp_mb();

@@ -21,7 +21,7 @@ C auto/C-WW-G+WW-G+WW-B+WW-R+WW-R+WW-R
 {
 }
 
-P0(int *x0, int *x1)
+P0(intptr_t *x0, intptr_t *x1)
 {
 	WRITE_ONCE(*x0, 2);
 	synchronize_rcu();
@@ -29,7 +29,7 @@ P0(int *x0, int *x1)
 }
 
 
-P1(int *x1, int *x2)
+P1(intptr_t *x1, intptr_t *x2)
 {
 	WRITE_ONCE(*x1, 2);
 	synchronize_rcu();
@@ -37,7 +37,7 @@ P1(int *x1, int *x2)
 }
 
 
-P2(int *x2, int *x3)
+P2(intptr_t *x2, intptr_t *x3)
 {
 	WRITE_ONCE(*x2, 2);
 	smp_mb();
@@ -45,7 +45,7 @@ P2(int *x2, int *x3)
 }
 
 
-P3(int *x3, int *x4)
+P3(intptr_t *x3, intptr_t *x4)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x3, 2);
@@ -54,7 +54,7 @@ P3(int *x3, int *x4)
 }
 
 
-P4(int *x4, int *x5)
+P4(intptr_t *x4, intptr_t *x5)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x4, 2);
@@ -63,7 +63,7 @@ P4(int *x4, int *x5)
 }
 
 
-P5(int *x0, int *x5)
+P5(intptr_t *x0, intptr_t *x5)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x5, 2);

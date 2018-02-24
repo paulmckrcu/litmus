@@ -3,7 +3,7 @@ C auto/C-WR-G
 {
 }
 
-P0(int *x0)
+P0(intptr_t *x0)
 {
 	WRITE_ONCE(*x0, 2);
 	synchronize_rcu();

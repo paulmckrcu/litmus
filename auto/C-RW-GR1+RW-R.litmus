@@ -13,7 +13,7 @@ C auto/C-RW-GR1+RW-R
 {
 }
 
-P0(int *x0, int *x1)
+P0(intptr_t *x0, intptr_t *x1)
 {
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x0);
@@ -23,7 +23,7 @@ P0(int *x0, int *x1)
 }
 
 
-P1(int *x0, int *x1)
+P1(intptr_t *x0, intptr_t *x1)
 {
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x1);

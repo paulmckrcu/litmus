@@ -7,28 +7,28 @@ C auto/C-LB-LRR+R-Dd+R-Dd+R-OC
  0:r3=x2; x1=y1; 1:r3=x3; x2=y2; 3:r4=1;
 }
 
-P0(int *u0, int *x1)
+P0(intptr_t *u0, intptr_t *x1)
 {
 	intptr_t r1 = READ_ONCE(*u0);
 	smp_store_release(x1, r3);
 }
 
 
-P1(int *x1)
+P1(intptr_t *x1)
 {
 	intptr_t r1 = rcu_dereference(*x1);
 	smp_store_release(r1, r3);
 }
 
 
-P2(int *x2)
+P2(intptr_t *x2)
 {
 	intptr_t r1 = rcu_dereference(*x2);
 	smp_store_release(r1, 1);
 }
 
 
-P3(int *x3, int *u0)
+P3(intptr_t *x3, intptr_t *u0)
 {
 	intptr_t r1 = READ_ONCE(*x3);
 	intptr_t r4 = (r1 == r4);
@@ -39,7 +39,7 @@ P3(int *x3, int *u0)
 }
 
 
-P4(int *u0)
+P4(intptr_t *u0)
 {
 	WRITE_ONCE(*u0, 1);
 }

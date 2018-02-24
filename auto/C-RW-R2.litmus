@@ -3,7 +3,7 @@ C auto/C-RW-R2
 {
 }
 
-P0(int *x0)
+P0(intptr_t *x0)
 {
 	intptr_t r1 = READ_ONCE(*x0);
 	rcu_read_lock();

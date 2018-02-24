@@ -14,7 +14,7 @@ C auto/C-RW-Rrd+RW-D
  0:r3=x0; x1=y0; 1:r4=y0;
 }
 
-P0(int *x0, int *x1)
+P0(intptr_t *x0, intptr_t *x1)
 {
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x0);
@@ -23,7 +23,7 @@ P0(int *x0, int *x1)
 }
 
 
-P1(int *x1)
+P1(intptr_t *x1)
 {
 	intptr_t r1 = rcu_dereference(*x1);
 	WRITE_ONCE(*r1, 1);

@@ -7,14 +7,14 @@ C auto/C-LB-Lrw+R-Od
  0:r3=u0; x1=y1;
 }
 
-P0(int *u0, int *x1)
+P0(intptr_t *u0, intptr_t *x1)
 {
 	intptr_t r1 = *u0;
 	smp_store_release(x1, r3);
 }
 
 
-P1(int *x1)
+P1(intptr_t *x1)
 {
 	intptr_t r1 = READ_ONCE(*x1);
 	*r1 = 1;

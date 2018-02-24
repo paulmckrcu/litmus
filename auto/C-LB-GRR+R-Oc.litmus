@@ -8,14 +8,14 @@ C auto/C-LB-GRR+R-Oc
  1:r4=1;
 }
 
-P0(int *u0, int *x1)
+P0(intptr_t *u0, intptr_t *x1)
 {
 	intptr_t r1 = READ_ONCE(*u0);
 	smp_store_release(x1, 1);
 }
 
 
-P1(int *v0, int *x1)
+P1(intptr_t *v0, intptr_t *x1)
 {
 	intptr_t r1 = READ_ONCE(*x1);
 	intptr_t r4 = (r1 == r4);
@@ -25,7 +25,7 @@ P1(int *v0, int *x1)
 }
 
 
-P2(int *u0, int *v0)
+P2(intptr_t *u0, intptr_t *v0)
 {
 	WRITE_ONCE(*v0, 1);
 	smp_mb();

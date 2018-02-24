@@ -6,7 +6,7 @@ C auto/C-LB-GRW+OB-OB
 {
 }
 
-P0(int *u0, int *x1)
+P0(intptr_t *u0, intptr_t *x1)
 {
 	intptr_t r1 = READ_ONCE(*u0);
 	smp_mb();
@@ -14,7 +14,7 @@ P0(int *u0, int *x1)
 }
 
 
-P1(int *v0, int *x1)
+P1(intptr_t *v0, intptr_t *x1)
 {
 	intptr_t r1 = READ_ONCE(*x1);
 	smp_mb();
@@ -22,7 +22,7 @@ P1(int *v0, int *x1)
 }
 
 
-P2(int *u0, int *v0)
+P2(intptr_t *u0, intptr_t *v0)
 {
 	intptr_t r1 = READ_ONCE(*v0);
 	smp_mb();

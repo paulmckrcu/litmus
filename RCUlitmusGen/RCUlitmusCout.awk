@@ -289,7 +289,7 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exist
 		gsub(/^.*:/, "", curvar);
 		if (arglists[proc_num] != "")
 			arglists[proc_num] = arglists[proc_num] ", ";
-		arglists[proc_num] = arglists[proc_num] "int *" curvar;
+		arglists[proc_num] = arglists[proc_num] "intptr_t *" curvar;
 	}
 
 	# Find a scratch register for each process, just in case.

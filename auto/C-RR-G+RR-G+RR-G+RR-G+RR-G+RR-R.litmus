@@ -21,7 +21,7 @@ C auto/C-RR-G+RR-G+RR-G+RR-G+RR-G+RR-R
 {
 }
 
-P0(int *x0, int *x1)
+P0(intptr_t *x0, intptr_t *x1)
 {
 	intptr_t r1 = READ_ONCE(*x0);
 	synchronize_rcu();
@@ -29,7 +29,7 @@ P0(int *x0, int *x1)
 }
 
 
-P1(int *x1, int *x2)
+P1(intptr_t *x1, intptr_t *x2)
 {
 	intptr_t r1 = READ_ONCE(*x1);
 	synchronize_rcu();
@@ -37,7 +37,7 @@ P1(int *x1, int *x2)
 }
 
 
-P2(int *x2, int *x3)
+P2(intptr_t *x2, intptr_t *x3)
 {
 	intptr_t r1 = READ_ONCE(*x2);
 	synchronize_rcu();
@@ -45,7 +45,7 @@ P2(int *x2, int *x3)
 }
 
 
-P3(int *x3, int *x4)
+P3(intptr_t *x3, intptr_t *x4)
 {
 	intptr_t r1 = READ_ONCE(*x3);
 	synchronize_rcu();
@@ -53,7 +53,7 @@ P3(int *x3, int *x4)
 }
 
 
-P4(int *x4, int *x5)
+P4(intptr_t *x4, intptr_t *x5)
 {
 	intptr_t r1 = READ_ONCE(*x4);
 	synchronize_rcu();
@@ -61,7 +61,7 @@ P4(int *x4, int *x5)
 }
 
 
-P5(int *x0, int *x5)
+P5(intptr_t *x0, intptr_t *x5)
 {
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x5);
@@ -70,7 +70,7 @@ P5(int *x0, int *x5)
 }
 
 
-P6(int *x3, int *x4, int *x5, int *x0, int *x1, int *x2)
+P6(intptr_t *x3, intptr_t *x4, intptr_t *x5, intptr_t *x0, intptr_t *x1, intptr_t *x2)
 {
 	WRITE_ONCE(*x0, 1);
 	WRITE_ONCE(*x1, 1);

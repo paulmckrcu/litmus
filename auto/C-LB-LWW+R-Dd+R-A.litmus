@@ -7,21 +7,21 @@ C auto/C-LB-LWW+R-Dd+R-A
  0:r3=x2; x1=y1;
 }
 
-P0(int *u0, int *x1)
+P0(intptr_t *u0, intptr_t *x1)
 {
 	WRITE_ONCE(*u0, 3);
 	smp_store_release(x1, r3);
 }
 
 
-P1(int *x1)
+P1(intptr_t *x1)
 {
 	intptr_t r1 = rcu_dereference(*x1);
 	smp_store_release(r1, 1);
 }
 
 
-P2(int *x2, int *u0)
+P2(intptr_t *x2, intptr_t *u0)
 {
 	intptr_t r1 = smp_load_acquire(x2);
 	WRITE_ONCE(*u0, 1);
