@@ -23,7 +23,7 @@
 #
 # Global variables:
 #
-# regs[proc_num ":" reg]: Per-process register table.
+# reg_table[proc_num ":" reg]: Per-process register table.
 # scratch_regs[proc_num]: Per-process scratch register.
 
 
@@ -41,12 +41,12 @@ function find_scratch_regs(stmts,  i, idx, j, proc_max, stmt_regs, trash) {
 		patsplit(stmts[i], trash, /[ \[\]()]/, stmt_regs);
 		for (j in stmt_regs) {
 			if (stmt_regs[j] ~ /^r[0-9]+$/)
-				regs[idx[1] ":" stmt_regs[j]] = 1;
+				reg_table[idx[1] ":" stmt_regs[j]] = 1;
 		}
 	}
 	for (i = 1; i <= proc_max; i++) {
 		j = 1000;
-		while (regs[i ":r" j] != "")
+		while (reg_table[i ":r" j] != "")
 			j++;
 		scratch_regs[i] = "r"j;
 	}
@@ -60,8 +60,8 @@ function find_scratch_regs(stmts,  i, idx, j, proc_max, stmt_regs, trash) {
 function reg_first_use(proc_num, r) {
 	if (r !~ /^r[0-9]+$/)
 		return r;
-	if (regs[proc_num ":" r] != 2) {
-		regs[proc_num ":" r] = 2;
+	if (reg_table[proc_num ":" r] != 2) {
+		reg_table[proc_num ":" r] = 2;
 		r = "intptr_t " r;
 	}
 	return r;
@@ -244,6 +244,7 @@ function translate_statement(proc_num, stmt,  n, reg, rel, splt) {
 #	false otherwise.  Note that an empty argument evaluates to false.
 #
 function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exists_paren,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, nstmts, pad, proc_num, stmt, stmt_list, stmt_splt, tabs) {
+	delete reg_table;
 	fn = litname;
 	gsub("[^/]*$", "", fn);
 	pad = litname;
