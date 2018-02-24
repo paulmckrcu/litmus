@@ -5,7 +5,7 @@ C auto/C-RW-G
 
 P0(int *x0)
 {
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	synchronize_rcu();
 	WRITE_ONCE(*x0, 1);
 }

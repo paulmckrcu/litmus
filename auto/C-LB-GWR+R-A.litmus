@@ -15,8 +15,8 @@ P0(int *u0, int *x1)
 
 P1(int *v0, int *x1)
 {
-	r1 = smp_load_acquire(x1);
-	r2 = READ_ONCE(*v0);
+	intptr_t r1 = smp_load_acquire(x1);
+	intptr_t r2 = READ_ONCE(*v0);
 }
 
 
@@ -24,7 +24,7 @@ P2(int *u0, int *v0)
 {
 	WRITE_ONCE(*v0, 1);
 	smp_mb();
-	r2 = READ_ONCE(*u0);
+	intptr_t r2 = READ_ONCE(*u0);
 }
 
 exists

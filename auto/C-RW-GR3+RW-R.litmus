@@ -16,7 +16,7 @@ C auto/C-RW-GR3+RW-R
 P0(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	rcu_read_unlock();
 	synchronize_rcu();
 	rcu_read_lock();
@@ -28,7 +28,7 @@ P0(int *x0, int *x1)
 P1(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x1);
+	intptr_t r1 = READ_ONCE(*x1);
 	WRITE_ONCE(*x0, 1);
 	rcu_read_unlock();
 }

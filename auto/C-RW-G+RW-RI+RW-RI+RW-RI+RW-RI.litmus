@@ -21,7 +21,7 @@ C auto/C-RW-G+RW-RI+RW-RI+RW-RI+RW-RI
 
 P0(int *x0, int *x1)
 {
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	synchronize_rcu();
 	WRITE_ONCE(*x1, 1);
 }
@@ -31,7 +31,7 @@ P1(int *x1, int *x2)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x2, 1);
-	r1 = READ_ONCE(*x1);
+	intptr_t r1 = READ_ONCE(*x1);
 	rcu_read_unlock();
 }
 
@@ -40,7 +40,7 @@ P2(int *x2, int *x3)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x3, 1);
-	r1 = READ_ONCE(*x2);
+	intptr_t r1 = READ_ONCE(*x2);
 	rcu_read_unlock();
 }
 
@@ -49,7 +49,7 @@ P3(int *x3, int *x4)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x4, 1);
-	r1 = READ_ONCE(*x3);
+	intptr_t r1 = READ_ONCE(*x3);
 	rcu_read_unlock();
 }
 
@@ -58,7 +58,7 @@ P4(int *x0, int *x4)
 {
 	rcu_read_lock();
 	WRITE_ONCE(*x0, 1);
-	r1 = READ_ONCE(*x4);
+	intptr_t r1 = READ_ONCE(*x4);
 	rcu_read_unlock();
 }
 

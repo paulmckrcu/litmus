@@ -19,33 +19,33 @@ C auto/C-RR-G+RR-G+RR-G+RR-R
 
 P0(int *x0, int *x1)
 {
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	synchronize_rcu();
-	r2 = READ_ONCE(*x1);
+	intptr_t r2 = READ_ONCE(*x1);
 }
 
 
 P1(int *x1, int *x2)
 {
-	r1 = READ_ONCE(*x1);
+	intptr_t r1 = READ_ONCE(*x1);
 	synchronize_rcu();
-	r2 = READ_ONCE(*x2);
+	intptr_t r2 = READ_ONCE(*x2);
 }
 
 
 P2(int *x2, int *x3)
 {
-	r1 = READ_ONCE(*x2);
+	intptr_t r1 = READ_ONCE(*x2);
 	synchronize_rcu();
-	r2 = READ_ONCE(*x3);
+	intptr_t r2 = READ_ONCE(*x3);
 }
 
 
 P3(int *x0, int *x3)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x3);
-	r2 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x3);
+	intptr_t r2 = READ_ONCE(*x0);
 	rcu_read_unlock();
 }
 

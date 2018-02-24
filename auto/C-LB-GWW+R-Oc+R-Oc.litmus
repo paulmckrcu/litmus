@@ -16,8 +16,8 @@ P0(int *u0, int *x1)
 
 P1(int *x1, int *x2)
 {
-	r1 = READ_ONCE(*x1);
-	r4 = (r1 == r4);
+	intptr_t r1 = READ_ONCE(*x1);
+	intptr_t r4 = (r1 == r4);
 	if (r4) {
 		smp_store_release(x2, 1);
 	}
@@ -26,8 +26,8 @@ P1(int *x1, int *x2)
 
 P2(int *x2, int *v0)
 {
-	r1 = READ_ONCE(*x2);
-	r4 = (r1 == r4);
+	intptr_t r1 = READ_ONCE(*x2);
+	intptr_t r4 = (r1 == r4);
 	if (r4) {
 		WRITE_ONCE(*v0, 1);
 	}
@@ -36,9 +36,9 @@ P2(int *x2, int *v0)
 
 P3(int *u0, int *v0)
 {
-	r1 = READ_ONCE(*v0);
+	intptr_t r1 = READ_ONCE(*v0);
 	smp_mb();
-	r2 = READ_ONCE(*u0);
+	intptr_t r2 = READ_ONCE(*u0);
 }
 
 exists

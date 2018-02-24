@@ -10,9 +10,9 @@ C auto/C-RR-GR+RR-R
 P0(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	synchronize_rcu();
-	r2 = READ_ONCE(*x1);
+	intptr_t r2 = READ_ONCE(*x1);
 	rcu_read_unlock();
 }
 
@@ -20,8 +20,8 @@ P0(int *x0, int *x1)
 P1(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x1);
-	r2 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x1);
+	intptr_t r2 = READ_ONCE(*x0);
 	rcu_read_unlock();
 }
 

@@ -19,7 +19,7 @@ C auto/C-RW-Rrd+RW-D+RW-R
 P0(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	smp_store_release(x1, r3);
 	rcu_read_unlock();
 }
@@ -27,7 +27,7 @@ P0(int *x0, int *x1)
 
 P1(int *x1)
 {
-	r1 = rcu_dereference(*x1);
+	intptr_t r1 = rcu_dereference(*x1);
 	WRITE_ONCE(*r1, 1);
 }
 
@@ -35,7 +35,7 @@ P1(int *x1)
 P2(int *x2, int *x0)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x2);
+	intptr_t r1 = READ_ONCE(*x2);
 	WRITE_ONCE(*x0, 1);
 	rcu_read_unlock();
 }

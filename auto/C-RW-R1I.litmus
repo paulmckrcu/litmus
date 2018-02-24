@@ -8,7 +8,7 @@ P0(int *x0)
 	rcu_read_lock();
 	WRITE_ONCE(*x0, 1);
 	rcu_read_unlock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 }
 
 exists

@@ -9,29 +9,29 @@ C auto/C-LB-GRW+R-Dd+R-Dd+R-Oc
 
 P0(int *u0, int *x1)
 {
-	r1 = READ_ONCE(*u0);
+	intptr_t r1 = READ_ONCE(*u0);
 	smp_store_release(x1, r3);
 }
 
 
 P1(int *x1)
 {
-	r1 = rcu_dereference(*x1);
+	intptr_t r1 = rcu_dereference(*x1);
 	smp_store_release(r1, r3);
 }
 
 
 P2(int *x2)
 {
-	r1 = rcu_dereference(*x2);
+	intptr_t r1 = rcu_dereference(*x2);
 	smp_store_release(r1, 1);
 }
 
 
 P3(int *x3, int *v0)
 {
-	r1 = READ_ONCE(*x3);
-	r4 = (r1 == r4);
+	intptr_t r1 = READ_ONCE(*x3);
+	intptr_t r4 = (r1 == r4);
 	if (r4) {
 		WRITE_ONCE(*v0, 1);
 	}
@@ -40,7 +40,7 @@ P3(int *x3, int *v0)
 
 P4(int *v0, int *u0)
 {
-	r1 = READ_ONCE(*v0);
+	intptr_t r1 = READ_ONCE(*v0);
 	smp_mb();
 	WRITE_ONCE(*u0, 1);
 }

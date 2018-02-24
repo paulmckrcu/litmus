@@ -21,7 +21,7 @@ C auto/C-RW-Rs+RW-RD+RW-R+RW-R
 P0(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	rcu_assign_pointer(*x1, r3);
 	rcu_read_unlock();
 }
@@ -30,7 +30,7 @@ P0(int *x0, int *x1)
 P1(int *x1)
 {
 	rcu_read_lock();
-	r1 = rcu_dereference(*x1);
+	intptr_t r1 = rcu_dereference(*x1);
 	WRITE_ONCE(*r1, 1);
 	rcu_read_unlock();
 }
@@ -39,7 +39,7 @@ P1(int *x1)
 P2(int *x2, int *x3)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x2);
+	intptr_t r1 = READ_ONCE(*x2);
 	WRITE_ONCE(*x3, 1);
 	rcu_read_unlock();
 }
@@ -48,7 +48,7 @@ P2(int *x2, int *x3)
 P3(int *x0, int *x3)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x3);
+	intptr_t r1 = READ_ONCE(*x3);
 	WRITE_ONCE(*x0, 1);
 	rcu_read_unlock();
 }

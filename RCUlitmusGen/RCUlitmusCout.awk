@@ -23,6 +23,7 @@
 #
 # Global variables:
 #
+# regs[proc_num ":" reg]: Per-process register table.
 # scratch_regs[proc_num]: Per-process scratch register.
 
 
@@ -30,7 +31,7 @@
 #
 # Find a scratch register for every process.
 #
-function find_scratch_regs(stmts,  i, idx, j, proc_max, regs, stmt_regs, trash) {
+function find_scratch_regs(stmts,  i, idx, j, proc_max, stmt_regs, trash) {
 	delete scratch_regs;
 	proc_max = 0;
 	for (i in stmts) {
@@ -53,6 +54,31 @@ function find_scratch_regs(stmts,  i, idx, j, proc_max, regs, stmt_regs, trash) 
 
 ########################################################################
 #
+# If this is the first use of the specified register by the specified
+# process, prefix it with a declaration.
+#
+function reg_first_use(proc_num, r) {
+	if (r !~ /^r[0-9]+$/)
+		return r;
+	if (regs[proc_num ":" r] != 2) {
+		regs[proc_num ":" r] = 2;
+		r = "intptr_t " r;
+	}
+	return r;
+}
+
+########################################################################
+#
+# Return the specified process's scratch register, prefixing with
+# a declaration on first use.
+#
+function get_scratch_reg(proc_num,  r) {
+	r = scratch_regs[proc_num];
+	return reg_first_use(proc_num, r);
+}
+
+########################################################################
+#
 # Output the specified read, using a scratch register if needed.
 #
 function output_read(proc_num, rtype, splt,  reg, stmt_end) {
@@ -60,9 +86,11 @@ function output_read(proc_num, rtype, splt,  reg, stmt_end) {
 		stmt_end = ";";
 	else
 		stmt_end = ");";
-	if (splt[3] ~ /^[a-zA-Z0-9_]+$/)
-		return splt[2] " = " rtype splt[3] stmt_end;
-	reg = scratch_regs[proc_num];
+	if (splt[3] ~ /^[a-zA-Z0-9_]+$/) {
+		reg = reg_first_use(proc_num, splt[2]);
+		return reg " = " rtype splt[3] stmt_end;
+	}
+	reg = get_scratch_reg(proc_num);
 	return reg " = (" splt[3] ");\n" splt[2] " = " rtype reg stmt_end;
 }
 
@@ -80,7 +108,7 @@ function output_write(proc_num, wtype, splt,  reg, stmt_end, stmt_mid) {
 	}
 	if (splt[2] ~ /^[a-zA-Z0-9_]+$/)
 		return wtype splt[2] stmt_mid splt[3] stmt_end;
-	reg = scratch_regs[proc_num];
+	reg = get_scratch_reg(proc_num);
 	return reg " = (" splt[2] ");\n" wtype reg stmt_mid splt[3] stmt_end;
 }
 
@@ -88,7 +116,7 @@ function output_write(proc_num, wtype, splt,  reg, stmt_end, stmt_mid) {
 #
 # Translate one statement from the specified process from LISA to C.
 #
-function translate_statement(proc_num, stmt,  n, rel, splt) {
+function translate_statement(proc_num, stmt,  n, reg, rel, splt) {
 	if (stmt ~ /^P[0-9]*/)
 		return ""
 	if (stmt ~ /^[A-Za-z][A-Za-z0-9]*:/)
@@ -132,7 +160,8 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 			rel = " ^ ";
 		else
 			return "???" stmt;
-		return splt[2] " = (" splt[4] rel splt[5] ");";
+		reg = reg_first_use(proc_num, splt[2])
+		return reg " = (" splt[4] rel splt[5] ");";
 	}
 	if (stmt ~ /^r\[acquire] /) {
 		n = split(stmt, splt, " ");
@@ -192,7 +221,8 @@ function translate_statement(proc_num, stmt,  n, rel, splt) {
 		n = split(stmt, splt, " ");
 		if (n != 4)
 			return "???" stmt;
-		return splt[2] " = xchg_relaxed(" splt[4] ", " splt[3] ");"
+		reg = reg_first_use(proc_num, splt[2])
+		return reg " = xchg_relaxed(" splt[4] ", " splt[3] ");"
 	}
 	return "???" stmt;
 }

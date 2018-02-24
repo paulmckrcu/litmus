@@ -9,15 +9,15 @@ C auto/C-LB-LRW+R-Oc+R-Ok
 
 P0(int *u0, int *x1)
 {
-	r1 = READ_ONCE(*u0);
+	intptr_t r1 = READ_ONCE(*u0);
 	smp_store_release(x1, 1);
 }
 
 
 P1(int *x1, int *x2)
 {
-	r1 = READ_ONCE(*x1);
-	r4 = (r1 == r4);
+	intptr_t r1 = READ_ONCE(*x1);
+	intptr_t r4 = (r1 == r4);
 	if (r4) {
 		smp_store_release(x2, 1);
 	}
@@ -26,8 +26,8 @@ P1(int *x1, int *x2)
 
 P2(int *x2, int *z2, int *u0)
 {
-	r1 = READ_ONCE(*x2);
-	r4 = (r1 == r4);
+	intptr_t r1 = READ_ONCE(*x2);
+	intptr_t r4 = (r1 == r4);
 	if (r4) {
 		r4 = READ_ONCE(*z2);
 	}

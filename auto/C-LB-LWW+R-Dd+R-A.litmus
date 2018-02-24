@@ -16,14 +16,14 @@ P0(int *u0, int *x1)
 
 P1(int *x1)
 {
-	r1 = rcu_dereference(*x1);
+	intptr_t r1 = rcu_dereference(*x1);
 	smp_store_release(r1, 1);
 }
 
 
 P2(int *x2, int *u0)
 {
-	r1 = smp_load_acquire(x2);
+	intptr_t r1 = smp_load_acquire(x2);
 	WRITE_ONCE(*u0, 1);
 }
 

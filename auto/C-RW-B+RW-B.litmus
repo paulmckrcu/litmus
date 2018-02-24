@@ -15,7 +15,7 @@ C auto/C-RW-B+RW-B
 
 P0(int *x0, int *x1)
 {
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	smp_mb();
 	WRITE_ONCE(*x1, 1);
 }
@@ -23,7 +23,7 @@ P0(int *x0, int *x1)
 
 P1(int *x0, int *x1)
 {
-	r1 = READ_ONCE(*x1);
+	intptr_t r1 = READ_ONCE(*x1);
 	smp_mb();
 	WRITE_ONCE(*x0, 1);
 }

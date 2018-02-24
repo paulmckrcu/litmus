@@ -48,7 +48,7 @@ C auto/C-RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+RW-R+RW-R+RW-R+RW-R+RW-G+RW-G+RW-G+RW-G+R
 P0(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	WRITE_ONCE(*x1, 1);
 	rcu_read_unlock();
 }
@@ -57,7 +57,7 @@ P0(int *x0, int *x1)
 P1(int *x1, int *x2)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x1);
+	intptr_t r1 = READ_ONCE(*x1);
 	WRITE_ONCE(*x2, 1);
 	rcu_read_unlock();
 }
@@ -65,7 +65,7 @@ P1(int *x1, int *x2)
 
 P2(int *x2, int *x3)
 {
-	r1 = READ_ONCE(*x2);
+	intptr_t r1 = READ_ONCE(*x2);
 	synchronize_rcu();
 	WRITE_ONCE(*x3, 1);
 }
@@ -73,7 +73,7 @@ P2(int *x2, int *x3)
 
 P3(int *x3, int *x4)
 {
-	r1 = READ_ONCE(*x3);
+	intptr_t r1 = READ_ONCE(*x3);
 	synchronize_rcu();
 	WRITE_ONCE(*x4, 1);
 }
@@ -81,7 +81,7 @@ P3(int *x3, int *x4)
 
 P4(int *x4, int *x5)
 {
-	r1 = READ_ONCE(*x4);
+	intptr_t r1 = READ_ONCE(*x4);
 	synchronize_rcu();
 	WRITE_ONCE(*x5, 1);
 }
@@ -89,7 +89,7 @@ P4(int *x4, int *x5)
 
 P5(int *x5, int *x6)
 {
-	r1 = READ_ONCE(*x5);
+	intptr_t r1 = READ_ONCE(*x5);
 	synchronize_rcu();
 	WRITE_ONCE(*x6, 1);
 }
@@ -98,7 +98,7 @@ P5(int *x5, int *x6)
 P6(int *x6, int *x7)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x6);
+	intptr_t r1 = READ_ONCE(*x6);
 	WRITE_ONCE(*x7, 1);
 	rcu_read_unlock();
 }
@@ -107,7 +107,7 @@ P6(int *x6, int *x7)
 P7(int *x7, int *x8)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x7);
+	intptr_t r1 = READ_ONCE(*x7);
 	WRITE_ONCE(*x8, 1);
 	rcu_read_unlock();
 }
@@ -116,7 +116,7 @@ P7(int *x7, int *x8)
 P8(int *x8, int *x9)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x8);
+	intptr_t r1 = READ_ONCE(*x8);
 	WRITE_ONCE(*x9, 1);
 	rcu_read_unlock();
 }
@@ -125,7 +125,7 @@ P8(int *x8, int *x9)
 P9(int *x9, int *x10)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x9);
+	intptr_t r1 = READ_ONCE(*x9);
 	WRITE_ONCE(*x10, 1);
 	rcu_read_unlock();
 }
@@ -133,7 +133,7 @@ P9(int *x9, int *x10)
 
 P10(int *x10, int *x11)
 {
-	r1 = READ_ONCE(*x10);
+	intptr_t r1 = READ_ONCE(*x10);
 	synchronize_rcu();
 	WRITE_ONCE(*x11, 1);
 }
@@ -141,7 +141,7 @@ P10(int *x10, int *x11)
 
 P11(int *x11, int *x12)
 {
-	r1 = READ_ONCE(*x11);
+	intptr_t r1 = READ_ONCE(*x11);
 	synchronize_rcu();
 	WRITE_ONCE(*x12, 1);
 }
@@ -149,7 +149,7 @@ P11(int *x11, int *x12)
 
 P12(int *x12, int *x13)
 {
-	r1 = READ_ONCE(*x12);
+	intptr_t r1 = READ_ONCE(*x12);
 	synchronize_rcu();
 	WRITE_ONCE(*x13, 1);
 }
@@ -157,7 +157,7 @@ P12(int *x12, int *x13)
 
 P13(int *x13, int *x14)
 {
-	r1 = READ_ONCE(*x13);
+	intptr_t r1 = READ_ONCE(*x13);
 	synchronize_rcu();
 	WRITE_ONCE(*x14, 1);
 }
@@ -166,7 +166,7 @@ P13(int *x13, int *x14)
 P14(int *x14, int *x15)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x14);
+	intptr_t r1 = READ_ONCE(*x14);
 	WRITE_ONCE(*x15, 1);
 	rcu_read_unlock();
 }
@@ -175,7 +175,7 @@ P14(int *x14, int *x15)
 P15(int *x15, int *x16)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x15);
+	intptr_t r1 = READ_ONCE(*x15);
 	WRITE_ONCE(*x16, 1);
 	rcu_read_unlock();
 }
@@ -184,7 +184,7 @@ P15(int *x15, int *x16)
 P16(int *x16, int *x17)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x16);
+	intptr_t r1 = READ_ONCE(*x16);
 	WRITE_ONCE(*x17, 1);
 	rcu_read_unlock();
 }
@@ -193,7 +193,7 @@ P16(int *x16, int *x17)
 P17(int *x17, int *x0)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x17);
+	intptr_t r1 = READ_ONCE(*x17);
 	WRITE_ONCE(*x0, 1);
 	rcu_read_unlock();
 }

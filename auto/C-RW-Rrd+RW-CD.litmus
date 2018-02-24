@@ -17,7 +17,7 @@ C auto/C-RW-Rrd+RW-CD
 P0(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	smp_store_release(x1, r3);
 	rcu_read_unlock();
 }
@@ -25,8 +25,8 @@ P0(int *x0, int *x1)
 
 P1(int *x1)
 {
-	r1 = rcu_dereference(*x1);
-	r4 = (r1 != r4);
+	intptr_t r1 = rcu_dereference(*x1);
+	intptr_t r4 = (r1 != r4);
 	if (r4) {
 		WRITE_ONCE(*r1, 1);
 	}

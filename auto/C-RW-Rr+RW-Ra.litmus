@@ -16,7 +16,7 @@ C auto/C-RW-Rr+RW-Ra
 P0(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = READ_ONCE(*x0);
+	intptr_t r1 = READ_ONCE(*x0);
 	smp_store_release(x1, 1);
 	rcu_read_unlock();
 }
@@ -25,7 +25,7 @@ P0(int *x0, int *x1)
 P1(int *x0, int *x1)
 {
 	rcu_read_lock();
-	r1 = smp_load_acquire(x1);
+	intptr_t r1 = smp_load_acquire(x1);
 	WRITE_ONCE(*x0, 1);
 	rcu_read_unlock();
 }
