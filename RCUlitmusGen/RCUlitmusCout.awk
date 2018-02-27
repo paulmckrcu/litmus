@@ -202,17 +202,11 @@ function translate_statement(proc_num, stmt,  n, reg, rel, splt) {
 			return "???" stmt;
 		return output_read(proc_num, "smp_load_acquire(", splt);
 	}
-	if (stmt ~ /^r\[deref] /) {
+	if (stmt ~ /^r\[l?deref] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
 		return output_read(proc_num, "rcu_dereference(*", splt);
-	}
-	if (stmt ~ /^r\[lderef] /) {
-		n = split(stmt, splt, " ");
-		if (n != 3)
-			return "???" stmt;
-		return output_read(proc_num, "lockless_dereference(*", splt);
 	}
 	if (stmt ~ /^r\[once] /) {
 		n = split(stmt, splt, " ");
