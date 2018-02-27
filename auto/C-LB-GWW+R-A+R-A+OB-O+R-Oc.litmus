@@ -4,7 +4,6 @@ C auto/C-LB-GWW+R-A+R-A+OB-O+R-Oc
  * 
  *)
 {
- 4:r4=1;
 }
 
 P0(intptr_t *u0, intptr_t *x1)
@@ -38,8 +37,10 @@ P3(intptr_t *x3, intptr_t *x4)
 
 P4(intptr_t *v0, intptr_t *x4)
 {
+	intptr_t r4=1;
+
 	intptr_t r1 = READ_ONCE(*x4);
-	intptr_t r4 = (r1 == r4);
+	r4 = (r1 == r4);
 	if (r4) {
 		WRITE_ONCE(*v0, 1);
 	}

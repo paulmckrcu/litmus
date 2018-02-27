@@ -4,11 +4,13 @@ C auto/C-LB-GWR+R-Dd
  * P0 GWR: Never->Sometimes: Power rel-acq does not provide write-to-read global transitivity
  *)
 {
- 0:r3=v0; x1=y1;
+	x1=y1;
 }
 
-P0(intptr_t *u0, intptr_t *x1)
+P0(intptr_t *u0, intptr_t *v0, intptr_t *x1)
 {
+	intptr_t r3=v0;
+
 	WRITE_ONCE(*u0, 3);
 	smp_store_release(x1, r3);
 }

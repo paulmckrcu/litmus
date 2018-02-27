@@ -19,7 +19,7 @@ C auto/C-RW-G+RW-G+RW-G+RW-Rs+RW-RD+RW-R
  * Process 0 start at t=100000, process 6 end at t=301007: Cycle forbidden.
  *)
 {
- 3:r3=x5; x4=y5; 4:r4=y5;
+	x4=y5;
 }
 
 P0(intptr_t *x0, intptr_t *x1)
@@ -46,8 +46,10 @@ P2(intptr_t *x2, intptr_t *x3)
 }
 
 
-P3(intptr_t *x3, intptr_t *x4)
+P3(intptr_t *x3, intptr_t *x4, intptr_t *x5)
 {
+	intptr_t r3=x5;
+
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x3);
 	rcu_assign_pointer(*x4, r3);
@@ -55,8 +57,10 @@ P3(intptr_t *x3, intptr_t *x4)
 }
 
 
-P4(intptr_t *x4)
+P4(intptr_t *x4, intptr_t *y5)
 {
+	intptr_t r4=y5;
+
 	rcu_read_lock();
 	intptr_t r1 = rcu_dereference(*x4);
 	WRITE_ONCE(*r1, 1);

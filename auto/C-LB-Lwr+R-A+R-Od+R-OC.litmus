@@ -4,7 +4,7 @@ C auto/C-LB-Lwr+R-A+R-Od+R-OC
  * 
  *)
 {
- 1:r3=x3; x2=y2; 3:r4=1;
+	x2=y2;
 }
 
 P0(intptr_t *u0, intptr_t *x1)
@@ -14,8 +14,10 @@ P0(intptr_t *u0, intptr_t *x1)
 }
 
 
-P1(intptr_t *x1, intptr_t *x2)
+P1(intptr_t *x1, intptr_t *x2, intptr_t *x3)
 {
+	intptr_t r3=x3;
+
 	intptr_t r1 = smp_load_acquire(x1);
 	smp_store_release(x2, r3);
 }
@@ -30,8 +32,10 @@ P2(intptr_t *x2)
 
 P3(intptr_t *x3, intptr_t *u0)
 {
+	intptr_t r4=1;
+
 	intptr_t r1 = READ_ONCE(*x3);
-	intptr_t r4 = (r1 == r4);
+	r4 = (r1 == r4);
 	if (r4) {
 		smp_rmb();
 		intptr_t r2 = *u0;

@@ -4,11 +4,13 @@ C auto/C-LB-LWR+R-Dd+R-A+R-A+R-A
  * 
  *)
 {
- 0:r3=x2; x1=y1;
+	x1=y1;
 }
 
-P0(intptr_t *u0, intptr_t *x1)
+P0(intptr_t *u0, intptr_t *x1, intptr_t *x2)
 {
+	intptr_t r3=x2;
+
 	WRITE_ONCE(*u0, 3);
 	smp_store_release(x1, r3);
 }

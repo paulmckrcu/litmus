@@ -4,7 +4,7 @@ C auto/C-LB-GRR+R-A+R-Dd
  * P0 GRR: Never->Maybe: Should rel-acq provide any global transitivity?
  *)
 {
- 1:r3=v0; x2=y2;
+	x2=y2;
 }
 
 P0(intptr_t *u0, intptr_t *x1)
@@ -14,8 +14,10 @@ P0(intptr_t *u0, intptr_t *x1)
 }
 
 
-P1(intptr_t *x1, intptr_t *x2)
+P1(intptr_t *v0, intptr_t *x1, intptr_t *x2)
 {
+	intptr_t r3=v0;
+
 	intptr_t r1 = smp_load_acquire(x1);
 	smp_store_release(x2, r3);
 }

@@ -4,25 +4,33 @@ C auto/C-LB-GRW+R-Dd+R-Dd+R-Dd+R-Oc
  * P0 GRW: B-cumulativity provides guarantee
  *)
 {
- 0:r3=x2; x1=y1; 1:r3=x3; x2=y2; 2:r3=x4; x3=y3; 4:r4=1;
+	x1=y1;
+	x2=y2;
+	x3=y3;
 }
 
-P0(intptr_t *u0, intptr_t *x1)
+P0(intptr_t *u0, intptr_t *x1, intptr_t *x2)
 {
+	intptr_t r3=x2;
+
 	intptr_t r1 = READ_ONCE(*u0);
 	smp_store_release(x1, r3);
 }
 
 
-P1(intptr_t *x1)
+P1(intptr_t *x1, intptr_t *x3)
 {
+	intptr_t r3=x3;
+
 	intptr_t r1 = rcu_dereference(*x1);
 	smp_store_release(r1, r3);
 }
 
 
-P2(intptr_t *x2)
+P2(intptr_t *x2, intptr_t *x4)
 {
+	intptr_t r3=x4;
+
 	intptr_t r1 = rcu_dereference(*x2);
 	smp_store_release(r1, r3);
 }
@@ -37,8 +45,10 @@ P3(intptr_t *x3)
 
 P4(intptr_t *v0, intptr_t *x4)
 {
+	intptr_t r4=1;
+
 	intptr_t r1 = READ_ONCE(*x4);
-	intptr_t r4 = (r1 == r4);
+	r4 = (r1 == r4);
 	if (r4) {
 		WRITE_ONCE(*v0, 1);
 	}

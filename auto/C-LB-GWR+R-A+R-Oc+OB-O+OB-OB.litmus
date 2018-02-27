@@ -4,7 +4,6 @@ C auto/C-LB-GWR+R-A+R-Oc+OB-O+OB-OB
  * 
  *)
 {
- 2:r4=1;
 }
 
 P0(intptr_t *u0, intptr_t *x1)
@@ -23,8 +22,10 @@ P1(intptr_t *x1, intptr_t *x2)
 
 P2(intptr_t *x2, intptr_t *x3)
 {
+	intptr_t r4=1;
+
 	intptr_t r1 = READ_ONCE(*x2);
-	intptr_t r4 = (r1 == r4);
+	r4 = (r1 == r4);
 	if (r4) {
 		smp_mb();
 		WRITE_ONCE(*x3, 1);

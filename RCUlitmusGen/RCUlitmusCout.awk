@@ -72,7 +72,8 @@ function find_scratch_regs(stmts,  i, idx, j, proc_max, stmt_regs, trash) {
 			proc_max = idx[1];
 		patsplit(stmts[i], trash, /[ \[\]()]/, stmt_regs);
 		for (j in stmt_regs) {
-			if (stmt_regs[j] ~ /^r[0-9]+$/)
+			if (stmt_regs[j] ~ /^r[0-9]+$/ &&
+			    reg_table[idx[1] ":" stmt_regs[j]] != 2)
 				reg_table[idx[1] ":" stmt_regs[j]] = 1;
 		}
 	}
@@ -275,7 +276,7 @@ function translate_statement(proc_num, stmt,  n, reg, rel, splt) {
 # exists_paren: True if the exists clause is already fully parenthisized,
 #	false otherwise.  Note that an empty argument evaluates to false.
 #
-function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exists_paren,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, nstmts, pad, proc_num, stmt, stmt_list, stmt_splt, tabs) {
+function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exists_paren,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, nstmts, pad, proc_num, stmt, stmt_list, stmt_splt, tabs, varinit_noregs) {
 	delete gvars_init;
 	delete reg_init;
 	delete reg_table;
@@ -293,10 +294,12 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exist
 	output_comments(comments, fn);
 
 	# Output initialization.
+	varinit_noregs = filter_varinit(varinit);
 	print "{" > fn;
-	if (varinit != "")
-		print varinit > fn;
-	print "}" > fn;
+	if (varinit_noregs != "")
+		print varinit_noregs "}" > fn;
+	else
+		print "}" > fn;
 
 	# Find the number of processes and maximum number of lines
 	for (i in stmts) {
@@ -317,8 +320,10 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exist
 			max_length[proc_num] = length(stmt);
 	}
 
-	# Form each process's parameter list
-	for (i in gvars) {
+	# Form each process's parameter list, pulling in initialization
+	for (i in gvars)
+		gvars_init[i] = gvars[i];
+	for (i in gvars_init) {
 		proc_num = i;
 		gsub(/:.*$/, "", proc_num);
 		curvar = i;
@@ -335,7 +340,10 @@ function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exist
 	for (proc_num = 1; proc_num <= nproc; proc_num++) {
 		print "" > fn;
 		print "P" proc_num - 1 "(" arglists[proc_num] ")" > fn;
-		print "{" > fn;
+		if (reg_init[proc_num] ~ "intptr_t")
+			print "{" reg_init[proc_num] "\n" > fn;
+		else
+			print "{" > fn;
 		tabs = "\t"
 		for (line_out = 0; line_out <= aux_max_line; line_out++) {
 			stmt = stmts[proc_num ":" line_out];

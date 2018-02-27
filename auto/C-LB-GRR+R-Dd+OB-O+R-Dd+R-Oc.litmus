@@ -4,11 +4,14 @@ C auto/C-LB-GRR+R-Dd+OB-O+R-Dd+R-Oc
  * P4 Oc,GRR: Never->Sometimes: Control dependencies do not order trailing reads
  *)
 {
- 0:r3=x2; x1=y1; 2:r3=x4; x3=y3; 4:r4=1;
+	x1=y1;
+	x3=y3;
 }
 
-P0(intptr_t *u0, intptr_t *x1)
+P0(intptr_t *u0, intptr_t *x1, intptr_t *x2)
 {
+	intptr_t r3=x2;
+
 	intptr_t r1 = READ_ONCE(*u0);
 	smp_store_release(x1, r3);
 }
@@ -22,8 +25,10 @@ P1(intptr_t *x1)
 }
 
 
-P2(intptr_t *x2, intptr_t *x3)
+P2(intptr_t *x2, intptr_t *x3, intptr_t *x4)
 {
+	intptr_t r3=x4;
+
 	intptr_t r1 = READ_ONCE(*x2);
 	smp_store_release(x3, r3);
 }
@@ -38,8 +43,10 @@ P3(intptr_t *x3)
 
 P4(intptr_t *v0, intptr_t *x4)
 {
+	intptr_t r4=1;
+
 	intptr_t r1 = READ_ONCE(*x4);
-	intptr_t r4 = (r1 == r4);
+	r4 = (r1 == r4);
 	if (r4) {
 		intptr_t r2 = READ_ONCE(*v0);
 	}

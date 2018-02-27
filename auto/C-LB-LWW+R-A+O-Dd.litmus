@@ -4,7 +4,7 @@ C auto/C-LB-LWW+R-A+O-Dd
  * P1-P2 rf O-Dd: Never->Maybe: Note lack of C11 guarantee, no synchronizes-with
  *)
 {
- 1:r3=u0; x2=y2;
+	x2=y2;
 }
 
 P0(intptr_t *u0, intptr_t *x1)
@@ -14,8 +14,10 @@ P0(intptr_t *u0, intptr_t *x1)
 }
 
 
-P1(intptr_t *x1, intptr_t *x2)
+P1(intptr_t *u0, intptr_t *x1, intptr_t *x2)
 {
+	intptr_t r3=u0;
+
 	intptr_t r1 = smp_load_acquire(x1);
 	WRITE_ONCE(*x2, r3);
 }

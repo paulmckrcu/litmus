@@ -23,7 +23,7 @@ C auto/C-RW-G+RW-Rs+RW-RCD+RW-R+RW-R+RW-R+RW-G+RW-R
  * Process 0 start at t=296993, process 8 end at t=101002: Cycle allowed.
  *)
 {
- 1:r3=x3; x2=y3; 2:r4=y3;
+	x2=y3;
 }
 
 P0(intptr_t *x0, intptr_t *x1)
@@ -34,8 +34,10 @@ P0(intptr_t *x0, intptr_t *x1)
 }
 
 
-P1(intptr_t *x1, intptr_t *x2)
+P1(intptr_t *x1, intptr_t *x2, intptr_t *x3)
 {
+	intptr_t r3=x3;
+
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x1);
 	rcu_assign_pointer(*x2, r3);
@@ -43,11 +45,13 @@ P1(intptr_t *x1, intptr_t *x2)
 }
 
 
-P2(intptr_t *x2)
+P2(intptr_t *x2, intptr_t *y3)
 {
+	intptr_t r4=y3;
+
 	rcu_read_lock();
 	intptr_t r1 = rcu_dereference(*x2);
-	intptr_t r4 = (r1 != r4);
+	r4 = (r1 != r4);
 	if (r4) {
 		WRITE_ONCE(*r1, 1);
 	}

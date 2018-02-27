@@ -5,7 +5,6 @@ C auto/C-LB-GWR+R-A+R-A+R-A+R-Oc
  * P4 Oc,GWR: Control dependencies do not order trailing reads
  *)
 {
- 4:r4=1;
 }
 
 P0(intptr_t *u0, intptr_t *x1)
@@ -38,8 +37,10 @@ P3(intptr_t *x3, intptr_t *x4)
 
 P4(intptr_t *v0, intptr_t *x4)
 {
+	intptr_t r4=1;
+
 	intptr_t r1 = READ_ONCE(*x4);
-	intptr_t r4 = (r1 == r4);
+	r4 = (r1 == r4);
 	if (r4) {
 		intptr_t r2 = READ_ONCE(*v0);
 	}

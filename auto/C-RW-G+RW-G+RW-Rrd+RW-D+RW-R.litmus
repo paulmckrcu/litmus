@@ -17,7 +17,7 @@ C auto/C-RW-G+RW-G+RW-Rrd+RW-D+RW-R
  * Process 0 start at t=100000, process 5 end at t=201006: Cycle forbidden.
  *)
 {
- 2:r3=x4; x3=y4; 3:r4=y4;
+	x3=y4;
 }
 
 P0(intptr_t *x0, intptr_t *x1)
@@ -36,8 +36,10 @@ P1(intptr_t *x1, intptr_t *x2)
 }
 
 
-P2(intptr_t *x2, intptr_t *x3)
+P2(intptr_t *x2, intptr_t *x3, intptr_t *x4)
 {
+	intptr_t r3=x4;
+
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x2);
 	smp_store_release(x3, r3);
@@ -45,8 +47,10 @@ P2(intptr_t *x2, intptr_t *x3)
 }
 
 
-P3(intptr_t *x3)
+P3(intptr_t *x3, intptr_t *y4)
 {
+	intptr_t r4=y4;
+
 	intptr_t r1 = rcu_dereference(*x3);
 	WRITE_ONCE(*r1, 1);
 }
