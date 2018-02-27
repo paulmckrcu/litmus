@@ -114,7 +114,7 @@ function get_scratch_reg(proc_num,  r) {
 #
 # Output the specified read, using a scratch register if needed.
 #
-function output_read(proc_num, rtype, splt,  reg, stmt_end) {
+function output_read(proc_num, rtype, splt,  reg, reg1, stmt_end) {
 	if (rtype == "*")
 		stmt_end = ";";
 	else
@@ -124,7 +124,10 @@ function output_read(proc_num, rtype, splt,  reg, stmt_end) {
 		return reg " = " rtype splt[3] stmt_end;
 	}
 	reg = get_scratch_reg(proc_num);
-	return reg " = (" splt[3] ");\n" splt[2] " = " rtype reg stmt_end;
+	reg1 = reg;
+	if (reg1 ~ / /)
+		gsub("^[^ ]+ +", "", reg1);
+	return reg " = (" splt[3] ");\n" splt[2] " = " rtype reg1 stmt_end;
 }
 
 ########################################################################
