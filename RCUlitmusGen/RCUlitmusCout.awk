@@ -131,7 +131,7 @@ function output_read(proc_num, rtype, splt,  reg, stmt_end) {
 #
 # Output the specified write, using a scratch register if needed.
 #
-function output_write(proc_num, wtype, splt,  reg, stmt_end, stmt_mid) {
+function output_write(proc_num, wtype, splt,  reg, reg1, stmt_end, stmt_mid) {
 	if (wtype == "*") {
 		stmt_mid = " = ";
 		stmt_end = ";";
@@ -142,7 +142,10 @@ function output_write(proc_num, wtype, splt,  reg, stmt_end, stmt_mid) {
 	if (splt[2] ~ /^[a-zA-Z0-9_]+$/)
 		return wtype splt[2] stmt_mid splt[3] stmt_end;
 	reg = get_scratch_reg(proc_num);
-	return reg " = (" splt[2] ");\n" wtype reg stmt_mid splt[3] stmt_end;
+	reg1 = reg;
+	if (reg1 ~ / /)
+		gsub("^[^ ]+ +", "", reg1);
+	return reg " = (" splt[2] ");\n" wtype reg1 stmt_mid splt[3] stmt_end;
 }
 
 ########################################################################
