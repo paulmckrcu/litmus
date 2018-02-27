@@ -30,7 +30,7 @@ P1(intptr_t *x0, intptr_t *x1, intptr_t *x2)
 
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x1);
-	rcu_assign_pointer(*x2, r3);
+	rcu_assign_pointer(*(intptr_t **)x2, (intptr_t *)r3);
 	rcu_read_unlock();
 }
 
@@ -41,7 +41,7 @@ P2(intptr_t *x2, intptr_t *y0)
 
 	rcu_read_lock();
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x2);
-	WRITE_ONCE(*r1, 1);
+	WRITE_ONCE(*(intptr_t *)r1, 1);
 	rcu_read_unlock();
 }
 

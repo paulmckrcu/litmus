@@ -39,7 +39,7 @@ P3(intptr_t *x3)
 {
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
 	smp_mb();
-	WRITE_ONCE(*r1, 1);
+	WRITE_ONCE(*(intptr_t *)r1, 1);
 }
 
 

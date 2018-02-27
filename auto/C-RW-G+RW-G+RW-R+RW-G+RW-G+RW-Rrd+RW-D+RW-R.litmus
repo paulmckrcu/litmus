@@ -83,7 +83,7 @@ P6(intptr_t *x6, intptr_t *y7)
 	intptr_t r4=y7;
 
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x6);
-	WRITE_ONCE(*r1, 1);
+	WRITE_ONCE(*(intptr_t *)r1, 1);
 }
 
 

@@ -23,7 +23,7 @@ P1(intptr_t *x1, intptr_t *x3)
 	intptr_t r3=x3;
 
 	intptr_t r1 = READ_ONCE(*x1);
-	smp_store_release(r1, r3);
+	smp_store_release((intptr_t *)r1, r3);
 }
 
 
@@ -32,7 +32,7 @@ P2(intptr_t *x2, intptr_t *x4)
 	intptr_t r3=x4;
 
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x2);
-	smp_store_release(r1, r3);
+	smp_store_release((intptr_t *)r1, r3);
 }
 
 
@@ -40,7 +40,7 @@ P3(intptr_t *x3)
 {
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
 	smp_mb();
-	WRITE_ONCE(*r1, 1);
+	WRITE_ONCE(*(intptr_t *)r1, 1);
 }
 
 

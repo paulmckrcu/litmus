@@ -113,6 +113,13 @@ function get_scratch_reg(proc_num,  r) {
 ########################################################################
 #
 # Output the specified read, using a scratch register if needed.
+# The proc_num argument is the one-based process number (thank you awk!).
+# The rtype argument contains the C prefix as a text string.
+# The splt argument is an array containing the components of the
+# corresponding LISA statement, for example, "r[once]", "r1", "x1".
+# The comma-separated list of casts contains the output cast followed
+# by the input-is-a-register cast followed by the input-is-a-variable
+# cast.
 #
 function output_read(proc_num, rtype, splt, casts,  c, c2, reg, reg1, stmt_end) {
 	split(casts, c, ",");
@@ -138,8 +145,20 @@ function output_read(proc_num, rtype, splt, casts,  c, c2, reg, reg1, stmt_end) 
 ########################################################################
 #
 # Output the specified write, using a scratch register if needed.
+# The proc_num argument is the one-based process number (thank you awk!).
+# The 2type argument contains the C prefix as a text string.
+# The splt argument is an array containing the components of the
+# corresponding LISA statement, for example, "w[once]", "x1", "1".
+# The comma-separated list of casts contains the output-is-a-register
+# cast followed by the output-is-a-variable cast followed by cast for the
+# value to be written.
 #
-function output_write(proc_num, wtype, splt,  reg, reg1, stmt_end, stmt_mid) {
+function output_write(proc_num, wtype, splt, casts,  c, c1, reg, reg1, stmt_end, stmt_mid) {
+	split(casts, c, ",");
+	if (splt[2] ~ /^r[0-9]+/)
+		c1 = c[1];
+	else
+		c1 = c[2];
 	if (wtype == "*") {
 		stmt_mid = " = ";
 		stmt_end = ";";
@@ -148,12 +167,12 @@ function output_write(proc_num, wtype, splt,  reg, reg1, stmt_end, stmt_mid) {
 		stmt_end = ");";
 	}
 	if (splt[2] ~ /^[a-zA-Z0-9_]+$/)
-		return wtype splt[2] stmt_mid splt[3] stmt_end;
+		return wtype c1 splt[2] stmt_mid c[3] splt[3] stmt_end;
 	reg = get_scratch_reg(proc_num);
 	reg1 = reg;
 	if (reg1 ~ / /)
 		gsub("^[^ ]+ +", "", reg1);
-	return reg " = (" splt[2] ");\n" wtype reg1 stmt_mid splt[3] stmt_end;
+	return reg " = (" splt[2] ");\n" wtype c[1] reg1 stmt_mid c[3] splt[3] stmt_end;
 }
 
 ########################################################################
@@ -238,25 +257,31 @@ function translate_statement(proc_num, stmt,  n, reg, rel, splt) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_write(proc_num, "rcu_assign_pointer(*", splt);
+		return output_write(proc_num, "rcu_assign_pointer(*", splt,
+				    "(intptr_t **),(intptr_t **),(intptr_t *)");
 	}
 	if (stmt ~ /^w\[once] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_write(proc_num, "WRITE_ONCE(*", splt);
+		return output_write(proc_num, "WRITE_ONCE(*", splt,
+				    "(intptr_t *),,");
 	}
 	if (stmt ~ /^w\[release] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_write(proc_num, "smp_store_release(", splt);
+		return output_write(proc_num, "smp_store_release(", splt,
+				    "(intptr_t *),,");
 	}
 	if (stmt ~ /^w\[] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_write(proc_num, "*", splt);
+		# Should be "(intptr_t *),,", but "*(intptr_t *)r1 = 1"
+		# deeply offends the herd tool.  Not a problem until the
+		# memory model handles plain accesses.
+		return output_write(proc_num, "*", splt, "");
 	}
 	if (stmt ~ /^rmw\[once]/) {
 		n = split(stmt, splt, " ");

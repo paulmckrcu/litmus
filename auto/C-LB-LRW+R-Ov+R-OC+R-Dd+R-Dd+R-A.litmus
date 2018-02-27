@@ -41,14 +41,14 @@ P3(intptr_t *x3, intptr_t *x5)
 	intptr_t r3=x5;
 
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
-	smp_store_release(r1, r3);
+	smp_store_release((intptr_t *)r1, r3);
 }
 
 
 P4(intptr_t *x4)
 {
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x4);
-	smp_store_release(r1, 1);
+	smp_store_release((intptr_t *)r1, 1);
 }
 
 

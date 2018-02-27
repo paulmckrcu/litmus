@@ -22,7 +22,7 @@ P1(intptr_t *u0, intptr_t *x1)
 	intptr_t r3=u0;
 
 	intptr_t r1 = READ_ONCE(*x1);
-	smp_store_release(r1, r3);
+	smp_store_release((intptr_t *)r1, r3);
 }
 
 

@@ -72,7 +72,7 @@ P5(intptr_t *x5, intptr_t *x6, intptr_t *x7)
 
 	rcu_read_lock();
 	intptr_t r1 = READ_ONCE(*x5);
-	rcu_assign_pointer(*x6, r3);
+	rcu_assign_pointer(*(intptr_t **)x6, (intptr_t *)r3);
 	rcu_read_unlock();
 }
 
@@ -83,7 +83,7 @@ P6(intptr_t *x6, intptr_t *y7)
 
 	rcu_read_lock();
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x6);
-	WRITE_ONCE(*r1, 1);
+	WRITE_ONCE(*(intptr_t *)r1, 1);
 	rcu_read_unlock();
 }
 

@@ -21,7 +21,7 @@ P1(intptr_t *x1)
 {
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x1);
 	smp_mb();
-	WRITE_ONCE(*r1, 1);
+	WRITE_ONCE(*(intptr_t *)r1, 1);
 }
 
 
@@ -37,8 +37,8 @@ P2(intptr_t *x2, intptr_t *x3, intptr_t *x4)
 P3(intptr_t *x3)
 {
 	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
-	smp_store_release(r1, 2);
-	WRITE_ONCE(*r1, 1);
+	smp_store_release((intptr_t *)r1, 2);
+	WRITE_ONCE(*(intptr_t *)r1, 1);
 }
 
 
