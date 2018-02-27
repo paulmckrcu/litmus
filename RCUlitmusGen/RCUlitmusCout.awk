@@ -23,16 +23,48 @@
 #
 # Global variables:
 #
+# gvars_init[proc_name ":" var]: Variables needed for register initialization.
+# reg_init[proc_num]: Per-process register-initialization table.
 # reg_table[proc_num ":" reg]: Per-process register table.
 # scratch_regs[proc_num]: Per-process scratch register.
 
 
 ########################################################################
 #
+# Parse out register initialization from LISA initialization statements,
+# placing C-language equivalents in reg_init[].  Also flag global variables
+# that must be present in function argument lists due to those global
+# variables being used in register initialization.  These global variables
+# are tracked in gvars_init[].
+#
+# Returns the remaining list of global-variable initializations, if any.
+#
+function filter_varinit(varinit,  i, proc_num, ri, rn, vi, vi_out) {
+	split(varinit, vi, ";");
+	for (i = 1; i <= length(vi); i++) {
+		gsub(/[[:space:]]*/, "", vi[i]);  # Strip whitespace.
+		if (vi[i] == "")
+			continue;
+		if (vi[i] !~ /:/) { # Global-variable initialization
+			vi_out = vi_out "\t" vi[i] ";\n";
+			continue;
+		}
+		split(vi[i], ri, ":"); # Process number and initializer.
+		proc_num = ri[1] + 1;
+		reg_init[proc_num] = reg_init[proc_num] "\n\tintptr_t " ri[2] ";";
+		split(ri[2], rn, "="); # Isolate register name.
+		reg_table[proc_num ":" rn[1]] = 2; # Already declared.
+		if (rn[2] !~ /^r?[0-9]+$/)
+			gvars_init[proc_num ":" rn[2]] = 1;
+	}
+	return vi_out;
+}
+
+########################################################################
+#
 # Find a scratch register for every process.
 #
 function find_scratch_regs(stmts,  i, idx, j, proc_max, stmt_regs, trash) {
-	delete scratch_regs;
 	proc_max = 0;
 	for (i in stmts) {
 		split(i, idx, ":");
@@ -244,7 +276,10 @@ function translate_statement(proc_num, stmt,  n, reg, rel, splt) {
 #	false otherwise.  Note that an empty argument evaluates to false.
 #
 function output_C_litmus(litname, comments, varinit, gvars, stmts, exists, exists_paren,  arglists, aux_max_line, comment, curvar, fn, i, line_out, max_length, max_stmts, nproc, nstmts, pad, proc_num, stmt, stmt_list, stmt_splt, tabs) {
+	delete gvars_init;
+	delete reg_init;
 	delete reg_table;
+	delete scratch_regs;
 	fn = litname;
 	gsub("[^/]*$", "", fn);
 	pad = litname;
