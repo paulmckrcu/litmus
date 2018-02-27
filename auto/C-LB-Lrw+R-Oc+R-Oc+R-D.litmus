@@ -39,7 +39,7 @@ P2(intptr_t *x2, intptr_t *x3)
 
 P3(intptr_t *x3, intptr_t *u0)
 {
-	intptr_t r1 = rcu_dereference(*x3);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
 	*u0 = 1;
 }
 

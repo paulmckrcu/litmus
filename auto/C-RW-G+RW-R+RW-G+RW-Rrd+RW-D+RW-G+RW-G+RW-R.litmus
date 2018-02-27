@@ -66,7 +66,7 @@ P4(intptr_t *x4, intptr_t *y5)
 {
 	intptr_t r4=y5;
 
-	intptr_t r1 = rcu_dereference(*x4);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x4);
 	WRITE_ONCE(*r1, 1);
 }
 

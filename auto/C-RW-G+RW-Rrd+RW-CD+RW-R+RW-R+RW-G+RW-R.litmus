@@ -47,7 +47,7 @@ P2(intptr_t *x2, intptr_t *y3)
 {
 	intptr_t r4=y3;
 
-	intptr_t r1 = rcu_dereference(*x2);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x2);
 	r4 = (r1 != r4);
 	if (r4) {
 		WRITE_ONCE(*r1, 1);

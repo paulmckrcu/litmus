@@ -19,7 +19,7 @@ P0(intptr_t *u0, intptr_t *x1, intptr_t *x2)
 
 P1(intptr_t *x1)
 {
-	intptr_t r1 = rcu_dereference(*x1);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x1);
 	smp_mb();
 	WRITE_ONCE(*r1, 1);
 }
@@ -36,7 +36,7 @@ P2(intptr_t *x2, intptr_t *x3, intptr_t *x4)
 
 P3(intptr_t *x3)
 {
-	intptr_t r1 = rcu_dereference(*x3);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
 	smp_mb();
 	WRITE_ONCE(*r1, 1);
 }

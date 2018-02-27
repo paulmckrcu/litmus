@@ -114,20 +114,25 @@ function get_scratch_reg(proc_num,  r) {
 #
 # Output the specified read, using a scratch register if needed.
 #
-function output_read(proc_num, rtype, splt,  reg, reg1, stmt_end) {
+function output_read(proc_num, rtype, splt, casts,  c, c2, reg, reg1, stmt_end) {
+	split(casts, c, ",");
+	if (splt[3] ~ /^r[0-9]+/)
+		c2 = c[2];
+	else
+		c2 = c[3];
 	if (rtype == "*")
 		stmt_end = ";";
 	else
 		stmt_end = ");";
 	if (splt[3] ~ /^[a-zA-Z0-9_]+$/) {
 		reg = reg_first_use(proc_num, splt[2]);
-		return reg " = " rtype splt[3] stmt_end;
+		return reg " = " c[1] rtype c2 splt[3] stmt_end;
 	}
 	reg = get_scratch_reg(proc_num);
 	reg1 = reg;
 	if (reg1 ~ / /)
 		gsub("^[^ ]+ +", "", reg1);
-	return reg " = (" splt[3] ");\n" splt[2] " = " rtype reg1 stmt_end;
+	return reg " = (" splt[3] ");\n" splt[2] " = " c[1] rtype c[2] reg1 stmt_end;
 }
 
 ########################################################################
@@ -206,25 +211,28 @@ function translate_statement(proc_num, stmt,  n, reg, rel, splt) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_read(proc_num, "smp_load_acquire(", splt);
+		return output_read(proc_num, "smp_load_acquire(", splt,
+				   ",(intptr_t *),");
 	}
 	if (stmt ~ /^r\[l?deref] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_read(proc_num, "rcu_dereference(*", splt);
+		return output_read(proc_num, "rcu_dereference(*", splt,
+				   "(intptr_t),(intptr_t **),(intptr_t **)");
 	}
 	if (stmt ~ /^r\[once] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_read(proc_num, "READ_ONCE(*", splt);
+		return output_read(proc_num, "READ_ONCE(*", splt,
+				   ",(intptr_t *),");
 	}
 	if (stmt ~ /^r\[] /) {
 		n = split(stmt, splt, " ");
 		if (n != 3)
 			return "???" stmt;
-		return output_read(proc_num, "*", splt);
+		return output_read(proc_num, "*", splt, ",(intptr_t *),");
 	}
 	if (stmt ~ /^w\[assign] /) {
 		n = split(stmt, splt, " ");

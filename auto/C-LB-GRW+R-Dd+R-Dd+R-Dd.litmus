@@ -22,7 +22,7 @@ P1(intptr_t *x1, intptr_t *x3)
 {
 	intptr_t r3=x3;
 
-	intptr_t r1 = rcu_dereference(*x1);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x1);
 	smp_store_release(r1, r3);
 }
 
@@ -31,14 +31,14 @@ P2(intptr_t *x2, intptr_t *v0)
 {
 	intptr_t r3=v0;
 
-	intptr_t r1 = rcu_dereference(*x2);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x2);
 	smp_store_release(r1, r3);
 }
 
 
 P3(intptr_t *x3)
 {
-	intptr_t r1 = rcu_dereference(*x3);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
 	WRITE_ONCE(*r1, 1);
 }
 

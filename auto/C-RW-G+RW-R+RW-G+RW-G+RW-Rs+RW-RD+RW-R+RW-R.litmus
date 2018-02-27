@@ -75,7 +75,7 @@ P5(intptr_t *x5, intptr_t *y6)
 	intptr_t r4=y6;
 
 	rcu_read_lock();
-	intptr_t r1 = rcu_dereference(*x5);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x5);
 	WRITE_ONCE(*r1, 1);
 	rcu_read_unlock();
 }

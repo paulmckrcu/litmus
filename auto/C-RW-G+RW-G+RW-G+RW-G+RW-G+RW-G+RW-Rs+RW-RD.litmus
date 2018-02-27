@@ -90,7 +90,7 @@ P7(intptr_t *y0, intptr_t *x7)
 	intptr_t r4=y0;
 
 	rcu_read_lock();
-	intptr_t r1 = rcu_dereference(*x7);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x7);
 	WRITE_ONCE(*r1, 1);
 	rcu_read_unlock();
 }

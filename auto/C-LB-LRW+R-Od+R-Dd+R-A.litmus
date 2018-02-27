@@ -28,7 +28,7 @@ P1(intptr_t *x1, intptr_t *x3)
 
 P2(intptr_t *x2)
 {
-	intptr_t r1 = rcu_dereference(*x2);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x2);
 	smp_store_release(r1, 1);
 }
 

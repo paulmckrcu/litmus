@@ -56,7 +56,7 @@ P3(intptr_t *x3, intptr_t *y4)
 	intptr_t r4=y4;
 
 	rcu_read_lock();
-	intptr_t r1 = rcu_dereference(*x3);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x3);
 	WRITE_ONCE(*r1, 1);
 	rcu_read_unlock();
 }

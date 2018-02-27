@@ -32,7 +32,7 @@ P1(intptr_t *x1, intptr_t *y2)
 	intptr_t r4=y2;
 
 	rcu_read_lock();
-	intptr_t r1 = rcu_dereference(*x1);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x1);
 	r4 = (r1 != r4);
 	if (r4) {
 		WRITE_ONCE(*r1, 1);

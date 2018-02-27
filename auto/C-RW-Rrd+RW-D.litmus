@@ -29,7 +29,7 @@ P1(intptr_t *x1, intptr_t *y0)
 {
 	intptr_t r4=y0;
 
-	intptr_t r1 = rcu_dereference(*x1);
+	intptr_t r1 = (intptr_t)rcu_dereference(*(intptr_t **)x1);
 	WRITE_ONCE(*r1, 1);
 }
 

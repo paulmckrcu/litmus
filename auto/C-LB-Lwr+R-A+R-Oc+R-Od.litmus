@@ -37,7 +37,7 @@ P2(intptr_t *x2, intptr_t *x3, intptr_t *u0)
 P3(intptr_t *x3)
 {
 	intptr_t r1 = READ_ONCE(*x3);
-	intptr_t r2 = *r1;
+	intptr_t r2 = *(intptr_t *)r1;
 }
 
 exists
