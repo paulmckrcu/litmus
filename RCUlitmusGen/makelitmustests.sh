@@ -103,6 +103,11 @@
 		echo $i-GH $i-R $i-R $i-R $i-G $i-R
 		echo $i-GH $i-R $i-R $i-R $i-G $i-R $i-R
 	done
+
+	# Alan Stern's example that breaks Boqun's proposed change
+	# and its inverse:
+	echo RW-G RW-G RW-G RW-R RW-R RW-G RW-R RW-R
+	echo RW-R RW-R RW-R RW-G RW-G RW-R RW-G RW-G
 } | sort -u | sh dir2litmus.sh auto/
 
 # LB tests
