@@ -51,7 +51,7 @@
 #
 # GRR R-A: ISA2
 # GRW R-A: 3.LB
-# GWR R-A: W+WRC (allowed on Power)
+# GWR R-A: W+RWC (allowed on Power)
 # GWW R-A: ISA2
 #
 # LRR R-A: WRC
