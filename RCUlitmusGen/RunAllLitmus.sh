@@ -65,7 +65,11 @@ ___EOF___
 	echo } >> $T/$i.sh
 done
 
+# Sort by number of processes to minimize parallelism skew
 sed -e 's/\.litmus//' |
+awk -F+ '{ print NF, $0 }' |
+sort -k1n |
+sed -e 's/^[0-9]* //' |
 awk -v ncpu=$ncpu -v t=$T '
 {
 	print "runtest " $2 " " $4 >> t "/" NR % ncpu ".sh";
