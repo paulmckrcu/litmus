@@ -1,4 +1,5 @@
 *.litmus.out
+*.litmus.out.new
 *.swp
 *.swo
 *.pdf
