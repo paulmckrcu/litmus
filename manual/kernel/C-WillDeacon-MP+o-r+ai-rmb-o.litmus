@@ -1,7 +1,7 @@
 C C-WillDeacon-MP+o-r+ai-rmb-o.litmus
 
 (*
- * Expected result: Never.
+ * Result: Never
  *)
 
 {

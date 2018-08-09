@@ -1,7 +1,9 @@
 C C-PaulEMcKenney-MP+o-a+a-o
 
-(* Expected result: Sometimes.  No ordering when rcu_assign_pointer()
- * that stores a NULL pointer. *)
+(*
+ * Result: Sometimes
+ * No ordering when rcu_assign_pointer() that stores a NULL pointer.
+ *)
 
 {
 int x = 0;

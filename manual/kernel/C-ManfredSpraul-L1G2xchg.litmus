@@ -1,6 +1,8 @@
 C C-ManfredSpraul-L1G2xchg.litmus
 
-(* Expected result: Never.  *)
+(*
+ * Result: Never
+ *)
 
 {
 }

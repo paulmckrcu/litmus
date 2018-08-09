@@ -1,6 +1,9 @@
 C C-PaulEMcKenney-MP+o-r+a-o.litmus
 
-(* Expected result: Never, as this is simple release-acquire MP. *)
+(*
+ * Result: Never
+ * This is after all simple release-acquire MP.
+ *)
 
 {
 int x;

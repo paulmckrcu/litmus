@@ -1,6 +1,9 @@
 C C-ManfredSpraul-L1G1xchgnr.litmus
 
-(* Expected result: Sometimes.  Need acquire-load of nfcla!  *)
+(*
+ * Result: Sometimes
+ * Need acquire-load of nfcla!
+ *)
 
 {
 }

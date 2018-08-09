@@ -1,6 +1,9 @@
 C C-ManfredSpraul-L1G1locknr.litmus
 
-(* Expected result: Sometimes.  Needs load-acquire from nfcla.  *)
+(*
+ * Result: Sometimes
+ * Needs load-acquire from nfcla.
+ *)
 
 {
 }
