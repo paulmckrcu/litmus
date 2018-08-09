@@ -1,8 +1,9 @@
 C C-PaulEMcKenney-MP+o-a+a-o
 
 (*
- * Result: Sometimes
+ * result: Sometimes  (disabled)
  * No ordering when rcu_assign_pointer() that stores a NULL pointer.
+ * Except that the current memory model does not handle this case.
  *)
 
 {
