@@ -1,0 +1,30 @@
+C wmb-race2
+
+{ }
+
+P0(int *x, int *y, int *z)
+{
+	int r0;
+
+	r0 = READ_ONCE(*x);
+	if (r0 == 1) {
+		*y = 0;
+		/* Above can be replaced by: if ( *y != 0) *y = 0; */
+		smp_wmb();
+	}
+	WRITE_ONCE(*z, 1);
+}
+
+P1(int *x, int *y, int *z)
+{
+	int r1;
+
+	r1 = READ_ONCE(*z);
+	if (r1 == 1) {
+		smp_rmb();
+		r2 = READ_ONCE(*y);
+	}
+	smp_store_release(x, r1);
+}
+
+exists (0:r0=1 /\ 1:r1=1)
