@@ -1,6 +1,6 @@
 LISA auto/LB-Lww+R-OC+R-OC
 (*
- * Result: Never
+ * Result: Never DATARACE
  * 
  *)
 {
