@@ -1,5 +1,7 @@
 C C-S-rcunoderef-1
 
+(* Result: Never DATARACE *)
+
 {
 }
 
@@ -22,4 +24,4 @@ P1(int *a, int *b)
 }
 
 locations [1:r1]
-exists (b=2)
+exists (~b=2)
