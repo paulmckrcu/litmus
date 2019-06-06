@@ -1,6 +1,6 @@
-C C-RR-rcuderef
+C C-RRDR-rcuderef
 
-(* Result: Never *)
+(* Result: Never DATARACE *)
 
 {
 	int *x = &a;
@@ -12,14 +12,14 @@ P0(int **x, int *y)
 	int *r1;
 
 	r0 = rcu_dereference(*x);
-	r1 = READ_ONCE(*r0);
+	r1 = *r0;
 }
 
 P1(int **x, int *y)
 {
 	int r0;
 
-	r0 = READ_ONCE(*y);
+	r0 = *y;
 	rcu_assign_pointer(*x, y);
 }
 

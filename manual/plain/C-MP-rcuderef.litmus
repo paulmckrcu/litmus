@@ -1,5 +1,7 @@
 C C-MP-rcuderef
 
+(* Result: Never *)
+
 {
 	int *x = &a;
 }

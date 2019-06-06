@@ -1,5 +1,7 @@
 C C-LB-rcuderef
 
+(* Result: Never *)
+
 {
 	int *x = &a;
 }
