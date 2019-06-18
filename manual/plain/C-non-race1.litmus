@@ -1,5 +1,12 @@
 C C-non-race1
 
+(*
+ * Result: Sometimes DATARACE
+ *
+ * P2()'s write can race with P0()'s plain read from y.  Plus P0()
+ * doesn't order its write to y.
+ *)
+
 { }
 
 P0(int *x, int *y)

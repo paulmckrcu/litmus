@@ -1,5 +1,9 @@
 C C-non-race3
 
+(*
+ * Result: Never DATARACE
+ *)
+
 { }
 
 P0(int *x, int *y, int *z)

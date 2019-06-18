@@ -1,5 +1,12 @@
 C C-non-race1-rwdep
 
+(*
+ * Result: Never DATARACE
+ *
+ * P2()'s read from y can race with P0()'s plain write.  Changing P0()'s
+ * plain write to WRITE_ONCE() results in Never.
+ *)
+
 { }
 
 P0(int *x, int *y)

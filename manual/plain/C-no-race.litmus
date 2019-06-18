@@ -1,12 +1,13 @@
 C C-no-race
 
+(* Result: Never *)
+
 { }
 
 P0(int *x, spinlock_t *s)
 {
 	spin_lock(s);
 	WRITE_ONCE(*x, 1);
-	spin_unlock(s);
 }
 
 P1(int *x, spinlock_t *s)

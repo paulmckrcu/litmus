@@ -1,5 +1,7 @@
 C C-RR-rcuderef
 
+(* Result: Never DATARACE *)
+
 {
 	int *x = &a;
 }

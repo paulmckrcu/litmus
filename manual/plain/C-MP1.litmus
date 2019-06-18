@@ -1,5 +1,7 @@
 C C-MP1
 
+(* Result: Never *)
+
 {}
 
 P0(int *x, int *y)

@@ -1,5 +1,14 @@
 C wmb-race2
 
+(*
+ * Result: Sometimes
+ *
+ * P0()'s write to z can be reordered before its read from x, but that
+ * cannot happen for P1()'s smp_store_release(), so if P0() executes
+ * its then-clause, that of P1() muse already have completed.  Therefore,
+ * there is no data race, but the "exists" clause can be satisfied.
+ *)
+
 { }
 
 P0(int *x, int *y, int *z)

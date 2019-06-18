@@ -1,5 +1,7 @@
 C C-LB1
 
+(* Result: Never *)
+
 {
 	int *x = &a;
 }

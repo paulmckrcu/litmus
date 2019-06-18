@@ -1,5 +1,13 @@
 C C-LB2
 
+(*
+ * Result: Sometimes
+ *
+ * Possible write-to-read optimization of P0() plain write to *r0
+ * can render the smp_wmb() ineffective.  (Assuming we choose to
+ * model the write-to-read optimization in this case.)
+ *)
+
 {
 	int *x = &a;
 }
