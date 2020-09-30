@@ -1,0 +1,53 @@
+C C-viro-2020.09.29a
+
+{
+	int a = 1;
+	int b = 1;
+	int v = 1;
+}
+
+
+P0(int *a, int *b, int *v, spinlock_t *l)
+{
+	int r0;
+	int r1;
+	int r2 = 1;
+
+	r0 = 0;
+	spin_lock(l);
+	r1 = smp_load_acquire(b);
+	if (r1 == 0)
+		r0 = 1;
+	WRITE_ONCE(*a, 0);
+	spin_unlock(l);
+	if (r0) {
+		r2 = READ_ONCE(*v);
+		WRITE_ONCE(*v, 0); /* kfree(). */
+	}
+}
+
+P1(int *a, int *b, int *v, spinlock_t *l)
+{
+	int r0;
+	int r1;
+	int r1a;
+	int r2 = 1;
+
+	r0 = READ_ONCE(*v);
+	r1 = READ_ONCE(*a);
+	if (r1) {
+		spin_lock(l);
+		r1a = READ_ONCE(*a);
+		if (r1a)
+			r0 = 0;
+		smp_store_release(b, 0);
+		spin_unlock(l);
+	}
+	if (r0) {
+		r2 = READ_ONCE(*v);
+		WRITE_ONCE(*v, 0); /* kfree(). */
+	}
+}
+
+locations [a;b;v]
+exists (0:r0=1:r0 \/ v=1 \/ 0:r2=0 \/ 1:r2=0)
