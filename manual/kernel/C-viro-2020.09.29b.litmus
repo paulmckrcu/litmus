@@ -12,12 +12,16 @@ P0(int *a, int *b, int *v, spinlock_t *l)
 	int r0;
 	int r1;
 	int r2 = 1;
+	int r9a = 1;
+	int r9b = 1;
 
 	r0 = 0;
 	spin_lock(l);
+	int r9b = 1;
 	r1 = READ_ONCE(*b);
 	if (r1 == 0)
 		r0 = 1;
+	r9b = READ_ONCE(*v);
 	WRITE_ONCE(*a, 0);
 	spin_unlock(l);
 	if (r0) {
@@ -32,14 +36,20 @@ P1(int *a, int *b, int *v, spinlock_t *l)
 	int r1;
 	int r1a;
 	int r2 = 1;
+	int r9a = 1;
+	int r9b = 1;
+	int r9c = 1;
 
 	r0 = READ_ONCE(*v);
+	r9a = r0;
 	r1 = READ_ONCE(*a);
 	if (r1) {
 		spin_lock(l);
+		r9b = READ_ONCE(*v);
 		r1a = READ_ONCE(*a);
 		if (r1a)
 			r0 = 0;
+		r9c = READ_ONCE(*v);
 		WRITE_ONCE(*b, 0);
 		spin_unlock(l);
 	}
@@ -50,4 +60,4 @@ P1(int *a, int *b, int *v, spinlock_t *l)
 }
 
 locations [a;b;v]
-exists (0:r0=1:r0 \/ v=1 \/ 0:r2=0 \/ 1:r2=0)
+exists (0:r0=1:r0 \/ v=1 \/ 0:r2=0 \/ 1:r2=0 \/ 0:r9a=0 \/ 0:r9b=0 \/ 1:r9a=0 \/ 1:r9b=0 \/ 1:r9c=0)
