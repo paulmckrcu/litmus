@@ -44,8 +44,8 @@ P1(int *a, int *b, int *v, spinlock_t *l)
 	int r9b = 2;
 	int r9c = 2;
 
-	r0 = READ_ONCE(*v);
-	r9a = r0; // Use after free?
+	r0 = 1;
+	r9a = READ_ONCE(*v); // Use after free?
 	r8 = r9a - r9a; // Restore address dependency
 	r8 = a + r8;
 	r1 = READ_ONCE(*r8);
