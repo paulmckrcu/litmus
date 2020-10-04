@@ -1,5 +1,17 @@
 C C-viro-2020.09.29a
 
+(*
+ * Result: Sometimes
+ *
+ * This is based on an example from Al Viro, but it is also a case
+ * where the memory model does not accurately handle compiler
+ * optimizations.  A memory model that was perfectly in tune with
+ * the compiler would instead say "Never".
+ *
+ * See Alan Stern's analysis and Joel Fernandes's testing in this thread:
+ * https://lore.kernel.org/lkml/20201003020136.GA307978@rowland.harvard.edu/
+ *)
+
 {
 	int a = 1;
 	int b = 1;
@@ -58,7 +70,7 @@ P1(int *a, int *b, int *v, spinlock_t *l)
 		if (r1a)
 			r0 = 0;
 		r9c = READ_ONCE(*v); // Use after free?
-		smp_store_release(b, r9c - rc9); // Use data dependency
+		smp_store_release(b, r9c - r9c); // Use data dependency
 		spin_unlock(l);
 	}
 	if (r0) {
