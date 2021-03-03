@@ -1,11 +1,13 @@
 C LB-ctls-diffvals-det
 (*
- * Result: Sometimes
+ * Result: Never
  *
  * The compiler cannot combine the writes because they are writing
  * different values, but the compiler can figure out that the "if"
  * statement's "then" clause will always be executed, and thus eliminate
- * the "if" statement (and the control dependency) entirely.
+ * the "if" statement (and the control dependency) entirely.  However,
+ * LKMM does not yet know about this corner case, hence "Never" rather
+ * than "Sometimes".
  *)
 {
 }

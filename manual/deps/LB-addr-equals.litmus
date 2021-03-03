@@ -1,10 +1,12 @@
 C LB-addr-equals
 (*
- * Result: Sometimes
+ * Result: Never
  *
  * If the user code compares two pointers, and if the result of that
  * comparison is equality, the compiler can substitute one pointer for
- * the other.  This can break address dependencies, hence "Sometimes".
+ * the other.  This can break address dependencies, however, LKMM
+ * does not yet know about this corner case, so "Never" rather than
+ * "Sometimes"
  *)
 {
 	int x = 2;

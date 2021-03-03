@@ -1,9 +1,10 @@
 C LB-ctls-sameval-barrier
 (*
- * Result: Sometimes
+ * Result: Never
  *
  * The compiler can combine the identical writes and the barrier() calls,
- * then hoist them all out of the "if" statements.
+ * then hoist them all out of the "if" statements.  However, LKMM does not
+ * yet know about this corner case, hence "Never" rather than "Sometimes".
  *)
 {
 }

@@ -1,9 +1,10 @@
 C LB-ctls-sameval
 (*
- * Result: Sometimes
+ * Result: Never
  *
  * The compiler can combine the identical writes, then hoist them out
- * of the "if" statements.
+ * of the "if" statements.  However, LKMM does not yet know about this
+ * corner case, hence "Never" rather than "Sometimes".
  *)
 {
 }
