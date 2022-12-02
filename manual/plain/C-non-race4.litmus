@@ -1,12 +1,10 @@
 C C-non-race4
 
 (*
- * Result: Never DATARACE
+ * Result: Never
  *
  * Standard RCU pattern with intervening store to memory, except that
- * it is to shared memory rather than a local.  Need at least a
- * WRITE_ONCE() and READ_ONCE() on the two accesses to tmp for this
- * to be forbidden.
+ * it is to shared memory rather than a local.
  *)
 
 {
