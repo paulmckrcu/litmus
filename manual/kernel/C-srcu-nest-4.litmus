@@ -1,4 +1,4 @@
-C C-srcu-nest-3
+C C-srcu-nest-4
 
 (*
  * Result: Flag srcu-bad-nesting
@@ -19,7 +19,7 @@ P0(int *x, int *y, struct srcu_struct *s1, struct srcu_struct *s2)
 	r3 = srcu_read_lock(s1);
 	r2 = READ_ONCE(*y);
 	r4 = srcu_read_lock(s2);
-	r5 = srcu_read_lock(s2);
+	srcu_read_unlock(s1, r3);
 	srcu_read_unlock(s1, r3);
 	r1 = READ_ONCE(*x);
 	srcu_read_unlock(s2, r4);
