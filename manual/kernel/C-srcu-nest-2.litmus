@@ -1,7 +1,9 @@
 C C-srcu-nest-2
 
 (*
- * Example misnesting.  LKMM should complain.
+ * Result: Never
+ *
+ * Example nesting.  LKMM should not complain.
  *)
 
 {}

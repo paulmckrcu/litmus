@@ -3,7 +3,8 @@ C C-srcu-nest-3
 (*
  * Result: Sometimes
  *
- * This demonstrates non-nesting of SRCU read-side critical sections.
+ * This demonstrates non-nesting of SRCU read-side critical sections
+ * for different srcu_struct structures.
  *)
 
 {}
