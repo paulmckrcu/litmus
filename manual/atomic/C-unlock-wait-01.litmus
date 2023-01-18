@@ -1,13 +1,16 @@
 C C-unlock-wait-01
 
-(* This test (and C-unlock-wait-00) challenges the equivalence
-   of spin_unlock_wait() and of its expansion as
-   spin_lock() followed by spin_unlock(..) as regards memory model.
-   Namely   C-unlock-wait-01 is not observed on X86, while  C-unlock-wait-00
-   is . *)
+(*
+ * Result: Never
+ *
+ * This test (and C-unlock-wait-00) challenges the equivalence
+ * of spin_unlock_wait() and of its expansion as
+ * spin_lock() followed by spin_unlock(..) as regards memory model.
+ * Namely   C-unlock-wait-01 is not observed on X86, while  C-unlock-wait-00
+ * is.
+ *)
 
 {
-  spinlock_t r;
 }
 
 P0(spinlock_t *r,int *x,int *y)

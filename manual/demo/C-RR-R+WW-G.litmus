@@ -1,4 +1,8 @@
 C auto/C-RR-R+WW-G
+
+(*
+ * Result: Never
+ *)
 {
 }
 
@@ -7,16 +11,16 @@ P0(int *x0, int *x1)
 {
         int r1; int r2;
 	rcu_read_lock();
-	r1 = READ_ONCE(*x);
-	r2 = READ_ONCE(*y);
+	r1 = READ_ONCE(*x0);
+	r2 = READ_ONCE(*x1);
 	rcu_read_unlock();
 }
 
 P1(int *x0, int *x1)
 {
-	WRITE_ONCE(*y, 1);
+	WRITE_ONCE(*x1, 1);
 	synchronize_rcu();
-	WRITE_ONCE(*x, 1);
+	WRITE_ONCE(*x0, 1);
 }
 
 exists
