@@ -1,0 +1,23 @@
+C C-Goldblatt-memb-1
+(*
+ * Result: Never
+ *)
+
+{
+}
+
+P0(int *x0, int *x1)
+{
+	WRITE_ONCE(*x0, 1);
+	r1 = READ_ONCE(*x1);
+}
+
+
+P1(int *x0, int *x1)
+{
+	WRITE_ONCE(*x1, 1);
+	smp_memb();
+	r2 = READ_ONCE(*x0);
+}
+
+exists (0:r1=0 /\ 1:r2=0)
