@@ -1,7 +1,10 @@
 C C-srcu-nest-8
 
 (*
- * Result: Never
+ * Result: Sometimes
+ *
+ * Non-nested overlapping SRCU read-side critical sections do not flatten
+ * or fuse.  They remain completely independent.
  *)
 
 {}
