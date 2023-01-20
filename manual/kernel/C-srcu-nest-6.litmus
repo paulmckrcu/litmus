@@ -8,7 +8,7 @@ C C-srcu-nest-6
 
 {}
 
-P0(int *x, int *y, struct srcu_struct *s1, int *idx)
+P0(int *x, int *y, struct srcu_struct *s1, int *idx, int *f)
 {
 	int r2;
 	int r3;
@@ -16,13 +16,16 @@ P0(int *x, int *y, struct srcu_struct *s1, int *idx)
 	r3 = srcu_down_read(s1);
 	WRITE_ONCE(*idx, r3);
 	r2 = READ_ONCE(*y);
+	smp_store_release(f, 1);
 }
 
-P1(int *x, int *y, struct srcu_struct *s1, int *idx)
+P1(int *x, int *y, struct srcu_struct *s1, int *idx, int *f)
 {
 	int r1;
 	int r3;
+	int r4;
 
+	r4 = smp_load_acquire(f);
 	r1 = READ_ONCE(*x);
 	r3 = READ_ONCE(*idx);
 	srcu_up_read(s1, r3);
@@ -36,4 +39,5 @@ P2(int *x, int *y, struct srcu_struct *s1)
 }
 
 locations [0:r1]
+filter (1:r4=1)
 exists (1:r1=1 /\ 0:r2=0)
