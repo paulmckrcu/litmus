@@ -1,10 +1,10 @@
-C C-srcu-observed-4
+C C-srcu-observed-5
 
 (*
- * Result: Sometimes
+ * Result: Never
  *
- * The Linux-kernel implementation is expected to forbid this due to
- * the stronger ordering properties offered by all known architectures.
+ * This is a version of C-srcu-observed-4.litmus with an smp_mb() that
+ * causes LKMM to forbid that litmus test's outcome.
  *)
 
 {}
@@ -31,7 +31,8 @@ P1(int *x, int *y, int *z, struct srcu_struct *s)
 P2(int *x, int *y, int *z, struct srcu_struct *s)
 {
 	WRITE_ONCE(*z, 1);
-	smp_store_release(x, 2);
+	smp_mb();
+	WRITE_ONCE(*x, 2);
 }
 
 exists (x=1 /\ y=1 /\ z=1)
