@@ -1,0 +1,24 @@
+C CoWW+sil-lock-sil-unlock-sil.litmus
+
+(*
+ * Result: Always
+ *
+ * This tests the memory model's implementation of spin_is_locked().
+ *)
+
+{}
+
+P0(spinlock_t *x)
+{
+	int r0;
+	int r1;
+	int r2;
+
+	r0 = spin_is_locked(x);
+	spin_lock(x);
+	r1 = spin_is_locked(x);
+	spin_unlock(x);
+	r2 = spin_is_locked(x);
+}
+
+exists (0:r0=0 /\ 0:r1=1 /\ 0:r2=0)
