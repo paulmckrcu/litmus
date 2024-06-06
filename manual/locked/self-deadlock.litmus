@@ -1,0 +1,16 @@
+C self-deadlock
+(*
+ * Result: DEADLOCK
+ * 
+ * Locking self-deadlock on process 0.
+ *)
+{
+}
+
+P0(spinlock_t *sl)
+{
+	spin_lock(sl);
+	spin_lock(sl);
+	spin_unlock(sl);
+	spin_unlock(sl);
+}
