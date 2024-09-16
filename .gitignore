@@ -10,3 +10,5 @@
 *-Aux.litmus
 *-AuxCat.litmus
 *~
+*-BPF.litmus
+*-BPF.litmus.out
