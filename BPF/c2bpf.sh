@@ -468,7 +468,7 @@ pstate ~ /^inproc$/ && $0 ~ /^		*smp_store_release\(.*, *[a-z_A-Z0-9]*\);$/ {
 		gsub(/^[ 	]*/, "", errline);
 		gsub(/[ 	]*$/, "", errline);
 		add_bpf_line("(* Line " NR ": " errline " ??? *)");
-		gotbadline = 1;
+		gotbadline++;
 	}
 }
 
@@ -483,6 +483,7 @@ END {
 		exists_str = map_to_bpf_regs(exists_str);
 		output_litmus(litmusfile, litmusname, hdrcomment, inits, bpfcode, locations_str, filter_str, exists_str);
 		if (gotbadline) {
+			print "Unable to translate " gotbadline " line(s), see " dq "???" dq " in BPF output file" > "/dev/stderr";
 			exit 8;
 		}
 	}
