@@ -15,21 +15,21 @@ P0(int *x1, int *y)
 
 P1(int *x1, int *x2)
 {
-	r1 = smp_load_acquire(x1);
+	int r1 = smp_load_acquire(x1);
 	smp_store_release(x2, 1);
 }
 
 P2(int *x2, int *z)
 {
-	r1 = smp_load_acquire(x2);
-	r2 = READ_ONCE(*z);
+	int r1 = smp_load_acquire(x2);
+	int r2 = READ_ONCE(*z);
 }
 
 P3(int *y, int *z)
 {
 	WRITE_ONCE(*z, 1);
 	smp_mb();
-	r1 = READ_ONCE(*y);
+	int r1 = READ_ONCE(*y);
 }
 
 exists
