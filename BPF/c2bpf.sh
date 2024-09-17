@@ -17,7 +17,8 @@ then
 fi
 
 basename="`echo ${litmusfile} | sed -e 's/\.litmus$//'`"
-awk < "${litmusfile}" -v litmusfile="${basename}" -v bs="\\" -v dq='"' '
+sed < "${litmusfile}" -e 's, *//.*$,,' |
+awk -v litmusfile="${basename}" -v bs="\\" -v dq='"' '
 
 @include "BPFlitmusout.awk"
 
@@ -141,6 +142,9 @@ function get_bpfreg_regvar(srcregvar,  bpfreg, cleanreg) {
 	if (bpfreg == "") {
 		print "Undeclared register/global " cleanreg " in P" nprocs " line " NR > "/dev/stderr";
 		goterror = 1;
+		print "Global variable dump:";
+		for (i in gvars)
+			print i, gvars[i];
 		exit 4;
 	}
 	return bpfreg;
