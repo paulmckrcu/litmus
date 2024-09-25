@@ -6,7 +6,26 @@
 # language (e.g., no RCU), produces a -BPF.litmus file.
 #
 # If the litmus test is malformed, a message is printed on stderr and
-# a non-zero exit code is returned.
+# a non-zero exit code is returned as follows:
+#
+# 1:	Specified file does not exist or is not a C-language litmus
+#	test.
+# 2:	A global variable of form 'r[0-9][0-9]*' cannot be distinguished
+#	from a register, which is something that this script will not put
+#	up with.
+# 3:	The specified initialized local variable declaration was
+#	something that this script cannot deal with.
+# 4:	The specified variable was not declared in the specified
+#	process.
+# 5:	The specified WRITE_ONCE() was something that this script
+#	cannot deal with.
+# 6:	There are not enough BPF machine registers to translate the
+#	specified process.
+# 7:	The specified smp_store_release() was something that this script
+#	cannot deal with.
+# 8:	The specified line is a C statement that is not (yet) supported
+#	by the script, for example, a call to an RCU function.  That line
+#	is placed into the output as a ocaml comment "(* ...  *)".
 
 litmusfile=${1}
 if ! test -r "${litmusfile}"
