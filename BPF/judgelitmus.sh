@@ -20,7 +20,12 @@
 # Usage:
 #	judgelitmus.sh file1.litmus file2.litmus.out
 #
-# Zero exit code for compatible results.
+# Exit codes:
+#
+# 0:	Compatible results.
+# 1:	The C-language .litmus file does not have a "Result:" comment.
+# 2:	The BPF-language herd7 output file does not have an Observation
+#	line, and thus does not specify a result.
 #
 # Copyright Meta Platforms, Inc, 2024
 #
