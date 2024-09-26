@@ -1,0 +1,83 @@
+TL;DR:
+	"sh runlitmustree.sh /path/to/litmus/tests destdir".
+
+The contents of output directory destdir are deleted using "rm -rf",
+so careful!!!
+
+For more details, read on!  Or consult the comment headers and source
+code of the individual scripts.
+
+------------------------------------------------------------------------
+
+BPFlitmusout.awk
+
+	Provides output_comments() and output_litmus() awk functions to
+	pretty-print BPF litmus tests.
+
+c2bpf.sh
+
+	Convert the specified C-language LKMM litmus test to BPF.
+
+findbpfreadytests.sh
+
+	Search the specified filesystem tree for C-language litmus tests
+	that might be converted to BPF.  This script excludes litmus tests
+	that are unfriendly to BPF assembly language, such as those using
+	locking, RCU, SRCU, or weak memory barriers.  In addition, tests
+	with "Result:" outcomes of DEADLOCK or DATARACE are excluded,
+	given that BPF assembly language does not have such things.
+
+judgelitmus.sh
+
+	Compare the "Results:" comment in the specified C-language litmus
+	test to the result in the specified BPF-language herd7 output.
+	If the results are identical, or if the C-language result is
+	"Sometimes" and the BPF-output result is "Never", all is well
+	and the script terminates with exit code zero.  In this latter
+	Sometimes/Never case, judgelitmus.sh outputs "Tighter BPF result
+	(OK)".
+
+	Otherwise, the judgelitmus.sh exit code is as follows:
+
+	1:	There is no Results: comment in the LKMM litmus test.
+	2:	There is no "Observation" line in the herd7 output.
+		This often indicates an error in the original litmus
+		test or the BPF translation of it.
+	255:	One or both of the input files are unreadable.
+
+runlitmus.sh
+
+	Given a destination directory destdir (whose contents are deleted
+	using "rm -rf", so careful!!!) and a one-per-line list on stdin
+	of C-language LKMM litmus test pathnames:
+
+	1.	Convert each to BPF using c2bpf.sh.  If successful,
+		append the pathname to ${destdir}/0.  Otherwise, append
+		the pathname and c2bpf.sh error output to ${destdir}/$?,
+		where $? is the c2bpf.sh exit code.
+
+	2.	Run each successfully converted test through herd7.
+		Append the pathname of each successful test (as
+		in for which herd7 gave an exit code of zero) to
+		${destdir}/herd7/0.  Append the pathnames of rest
+		of the tests (along with any herd7 stderr output) to
+		${destdir}/herd7/$?, where $? is the herd7 exit code.
+
+	3.	For each successful herd7 run, check the Observation line
+		of herd7 output against the Result: line of the original
+		C-language LKMM litmus test.  If the two match exactly,
+		or if the C-language test says Sometimes and the BPF
+		test says Never, all is well.  The input pathnames are
+		appended, one per line to ${destdir}/judgelitmus/$?,
+		where $? is the exit code from judgelitmus.sh.  Each line
+		also contains any judgelitmus.sh output, for example,
+		"Tighter BPF result (OK)".
+
+runlitmustree.sh
+
+	Given a path to a directory tree containing C-language LKMM litmus
+	tests and another path to an output directory (whose contents are
+	deleted using "rm -rf", so careful!!!).  The litmus-test tree
+	is passed to findbpfreadytests.sh, and the output directory is
+	passed to runlitmus.sh.  The output of findbpfreadytests.sh is
+	piped to runlitmus.sh.
