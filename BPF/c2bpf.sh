@@ -100,7 +100,7 @@ function check_bpfreg() {
 	}
 }
 
-# Allocate the specified global access for the current proces.
+# Allocate the specified global access for the current process.
 function allocate_greg(var,  bpfreg) {
 	check_bpfreg();
 	bpfreg = "r" gvreg;
@@ -113,7 +113,7 @@ function allocate_greg(var,  bpfreg) {
 	return bpfreg;
 }
 
-# Allocate the specified register local to the current proces.
+# Allocate the specified register local to the current process.
 function allocate_lreg(reg,  bpfreg) {
 	check_bpfreg();
 	bpfreg = "r" lvreg;
