@@ -16,6 +16,10 @@ basename="`echo ${litmusfile} | sed -e 's/\.litmus$//'`"
 sed < "${litmusfile}" -e 's, *//.*$,,' |
 awk -v litmusfile="${basename}" -v bs="\\" -v dq='"' '
 
+BEGIN {
+	archname = "BPF";
+}
+
 @include "BPFlitmusout.awk"
 
 ########################################################################

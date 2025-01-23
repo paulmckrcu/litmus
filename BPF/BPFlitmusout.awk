@@ -49,12 +49,13 @@ function output_comments(comments, fn,  comment, i, n) {
 # Output a full BPF litmus test.  The arguments are as follows:
 #
 # basename: Base name of the litmus test, with .litmus stripped.
-# litname: Name of the litmus test for the test header (with -BPF).
+# litname: Name of the litmus test for the test header (with arch
+#	suffix, for example, -BPF).
 # comments: String containing comments, optionally with embedded "\n".
 #	Can be empty string for no comment.
 # varinit: String containing initializers, optionally with embedded "\n".
 #	Can be empty string for no initializers.
-# stmts[proc_num ":" line_out]: Array of BPF statements.
+# stmts[proc_num ":" line_out]: Array of assembly statements.
 # locations: String containing list of vars from locations clause,
 #	separated by ";". The square brackets are supplied by
 #	output_litmus.
@@ -64,9 +65,9 @@ function output_comments(comments, fn,  comment, i, n) {
 #	The outermost set of parentheses are supplied by output_litmus.
 #
 function output_litmus(basename, litname, comments, varinit, stmts, locations, filter, exists,  aux_max_line, comment, fn, i, line_out, max_length, max_stmts, nproc, pad, proc_num, stmt) {
-	fn = basename "-BPF.litmus";
+	fn = basename "-" archname ".litmus";
 	# Output file header.
-	print "BPF " litname "-BPF" > fn;
+	print archname " " litname "-" archname > fn;
 
 	# Process and output comments
 	output_comments(comments, fn);
