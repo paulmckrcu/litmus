@@ -33,7 +33,7 @@ function do_read_once_genasm(regdst, regsrc) {
 
 # Emit BPF code for WRITE_ONCE(regdst, regsrc).
 function do_write_once_genasm(regdst, regsrc) {
-	add_bpf_line(bpfreg "*(u32 *)(" regdst " + 0) = " regsrc);
+	add_bpf_line("*(u32 *)(" regdst " + 0) = " regsrc);
 }
 
 # Emit BPF code for smp_mb().  No need for _genasm because no registers
