@@ -14,9 +14,18 @@ BPFlitmusout.awk
 	Provides output_comments() and output_litmus() awk functions to
 	pretty-print BPF litmus tests.
 
+c2asmfuncs.awk
+
+	Architecture-independent awk functions for generating
+	assembly-language litmus tests.
+
 c2bpf.sh
 
 	Convert the specified C-language LKMM litmus test to BPF.
+
+c2ppc.sh
+
+	Convert the specified C-language LKMM litmus test to PowerPC.
 
 findbpfreadytests.sh
 
