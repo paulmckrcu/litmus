@@ -347,8 +347,8 @@ pstate ~ /^ininit$/ && $0 ~ /^}$/ {
 }
 
 pstate ~ /^$/ && $0 ~ /^P[0-9]*\(/ {
-	gvreg = 10;
-	lvreg = 1;
+	gvreg = maxreg;
+	lvreg = minreg;
 	nlines[nprocs] = 0;
 	phdr = $0;
 	gsub(/P[0-9]*\(/, "", pdhr);

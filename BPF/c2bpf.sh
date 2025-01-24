@@ -18,6 +18,8 @@ awk -v litmusfile="${basename}" -v bs="\\" -v dq='"' '
 
 BEGIN {
 	archname = "BPF";
+	minreg = 1;
+	maxreg = 10;
 }
 
 @include "BPFlitmusout.awk"
