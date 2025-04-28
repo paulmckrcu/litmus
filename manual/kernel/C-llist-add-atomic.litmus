@@ -1,0 +1,69 @@
+C C-llist-add-atomic
+
+(*
+ * Result: Never
+ *
+ * Validate two concurrent additions of the same node to an llist.
+ * Algorithm proposed by Shakeel Butt.
+ *
+ * bool llist_add_iff_not_on_list(struct llist_node *new, struct llist_head *head)
+ * {
+ *	struct llist_node *first = READ_ONCE(head->first);
+ *
+ *	if (llist_on_list(new))
+ *		return false;
+ *	if (cmpxchg(&new->next, new, first) != new)
+ *		return false;
+ *	while (!try_cmpxchg(&head->first, &first, new))
+ *		new->next = first;
+ *	return true;
+ * }
+ *)
+
+{
+	l2=l3;
+	l1=l2;
+	h=l1;
+	new=0;
+}
+
+P0(int *h, int *new)
+{
+	int r1;
+	int r8;
+	int r9;
+	int r10 = 0;
+
+	r1 = READ_ONCE(*h);
+	if (r1 != new) {
+		if (cmpxchg(new, 0, r1) == 0) {
+			r8 = 1;
+			r9 = cmpxchg(h, r1, new);
+			if (r9 == r1) {
+				r10 = 1;
+			}
+		}
+	}
+}
+
+P1(int *h, int *new)
+{
+	int r1;
+	int r8;
+	int r9;
+	int r10 = 0;
+
+	r1 = READ_ONCE(*h);
+	if (r1 != new) {
+		if (cmpxchg(new, 0, r1) == 0) {
+			r8 = 1;
+			r9 = cmpxchg(h, r1, new);
+			if (r9 == r1) {
+				r10 = 1;
+			}
+		}
+	}
+}
+
+locations [new;0:r1;0:r8;0:r9;1:r1;1:r8;1:r9]
+exists (~h=new \/ 0:r10=1:r10)
