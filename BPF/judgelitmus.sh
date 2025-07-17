@@ -50,7 +50,7 @@ else
 fi
 
 # Extract expectations and test results.
-litmusresult="`grep '^[( ]\* Result: ' $litmus | awk '{ print $NF; }'`"
+litmusresult="`grep '^[( ]\* Result: ' $litmus | head -1 | awk '{ print $3; }'`"
 testresult="`grep '^Observation' $litmusout | awk '{ fn = NF - 2; print $fn; }'`"
 
 # Did we get both expectations and results?
