@@ -23,6 +23,6 @@ xargs < $T/list-C-bpf1 -r grep -L '^[ 	]*if *(\|smp_store_mb(.*);' > $T/list-C-b
 
 # Take only tests with a "Result:" specified that is consistent with BPF
 # assembly language: No data races and no deadlocks.
-xargs < $T/list-C-bpf2 -r grep -E -l '^ \* Result: (Never|Sometimes|Always)$' > $T/list-C-bpf3
+xargs < $T/list-C-bpf2 -r grep -E -l '^[( ]\* Result: (Never|Sometimes|Always)\>' > $T/list-C-bpf3
 
 cat $T/list-C-bpf3
