@@ -6,6 +6,7 @@ Safe=FenceMbdWWOnceOnce PodWWOnceRelease PodWWReleaseRelease
 Prefetch=0:x=F,0:y=W,1:y=F,1:z=W,2:z=F,2:x=W
 Com=Ws Ws Ws
 Orig=FenceMbdWWOnceOnce WseOnceRelease PodWWReleaseRelease WseReleaseOnce PodWWOnceRelease WseReleaseOnce
+(* Result: Sometimes *)
 {
 }
 

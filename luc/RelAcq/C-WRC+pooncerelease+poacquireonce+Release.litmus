@@ -6,6 +6,7 @@ Safe=PodRRAcquireOnce PodRWOnceRelease
 Prefetch=1:x=F,1:y=W,2:y=F,2:x=T
 Com=Rf Rf Fr
 Orig=RfeReleaseOnce PodRWOnceRelease RfeReleaseAcquire PodRRAcquireOnce FreOnceRelease
+(* Result: Never *)
 {
 }
 

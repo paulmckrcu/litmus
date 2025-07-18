@@ -6,6 +6,7 @@ Safe=PodRWAcquireOnce WseOnceOnce FenceMbdWWOnceOnce
 Prefetch=0:x=F,0:y=W,1:y=F,1:x=W
 Com=Rf Ws
 Orig=FenceMbdWWOnceOnce RfeOnceAcquire PodRWAcquireOnce WseOnceOnce
+(* Result: Never *)
 {
 }
 
