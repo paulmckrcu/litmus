@@ -59,6 +59,7 @@
 #	to assign for the next global variable.  Counts down from r10.
 # hdrcomment: Header comment from original litmus test onto which things
 #	like register mappings are appended.  Contains newlines.
+# hdrcommentpiece: Header ending comment line needing "*)" removed.
 # inits: Newline-containing string accumulating generated initialization.
 # locations_str: String accumulating "locations" clauses.
 # lvreg: While processing a give process, the number of the BPF register
@@ -312,12 +313,59 @@ NR == 1 {
 	next;
 }
 
+/^[ 	]*$/ {
+	next;
+}
+
+/^"[a-zA-Z ]*"$/ {
+	next;
+}
+
+/^Cycle=[a-zA-Z ]*$/ {
+	next;
+}
+
+/^Relax=[a-zA-Z ]*$/ {
+	next;
+}
+
+/^Safe=[a-zA-Z ]*$/ {
+	next;
+}
+
+/^Prefetch=[a-zA-Z0-9:=, ]*$/ {
+	next;
+}
+
+/^Com=[a-zA-Z ]*$/ {
+	next;
+}
+
+/^Orig=[a-zA-Z ]*$/ {
+	next;
+}
+
 pstate ~ /^gotlitname$/ && /[ 	]*\(\*$/ {
 	pstate = "incomment";
 	next;
 }
 
-pstate ~ /^incomment$/ && $0 !~ /^ \*\)$/ {
+pstate ~ /^gotlitname$/ && /[ 	]*\(\*.*\*\)/ {
+	hdrcomment = $0;
+	sub(/\(\*/, "  ", hdrcomment);
+	sub(/\*\)/, "", hdrcomment);
+	pstate = "";
+	next;
+}
+
+pstate ~ /^gotlitname$/ && /[ 	]*\(\*/ {
+	hdrcomment = $0;
+	sub(/\(/, " ", hdrcomment);
+	pstate = "incomment";
+	next;
+}
+
+pstate ~ /^incomment$/ && $0 !~ /\*\)$/ {
 	hdrcomment = append_string_nl(hdrcomment, $0);
 	next;
 }
@@ -325,6 +373,14 @@ pstate ~ /^incomment$/ && $0 !~ /^ \*\)$/ {
 pstate ~ /^incomment$/ && /^ \*\)$/ {
 	pstate = "";
 	hdrcomment = append_string_nl(hdrcomment, " *");
+	next;
+}
+
+pstate ~ /^incomment$/ && /\*\)$/ {
+	pstate = "";
+	hdrcommentpiece = $0;
+	sub(/\*\)$/, "", hdrcommentpiece);
+	hdrcomment = append_string_nl(hdrcomment, hdrcommentpiece);
 	next;
 }
 
@@ -469,11 +525,13 @@ pstate ~ /^inproc$/ && $0 ~ /^		*smp_store_release\(.*, *[a-z_A-Z0-9]*\);$/ {
 		filter_str = append_string_nl(filter_str, $0);
 	} else if (pstate == "exists") {
 		exists_str = append_string_nl(exists_str, $0);
-	} else if ($0 != "") {
+	} else {
 		errline = $0;
 		gsub(/^[ 	]*/, "", errline);
 		gsub(/[ 	]*$/, "", errline);
 		add_bpf_line("(* Line " NR ": " errline " ??? *)");
+		# @@@ Uncomment the following line to get nice summary of unhandled statements.
+		# print "(* Line " NR ": " errline " ??? " pstate " *)" >> "/tmp/badlines.txt";
 		gotbadline++;
 	}
 }
