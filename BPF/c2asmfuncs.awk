@@ -127,7 +127,7 @@ function get_bpfreg(srcreg,  bpfreg, cleanreg) {
 	cleanreg = clean_srcreg(srcreg);
 	bpfreg = lvars[nprocs ":" cleanreg];
 	if (bpfreg == "") {
-		if (srcreg == "-tmp-") {
+		if (srcreg == "-tmp-" || srcreg ~ /^r[0-9][0-9]*$/) {
 			bpfreg = allocate_lreg(cleanreg);
 		} else {
 			print "Undeclared local " cleanreg " in P" nprocs " line " NR > "/dev/stderr";
@@ -141,10 +141,13 @@ function get_bpfreg(srcreg,  bpfreg, cleanreg) {
 # Get BPF register corresponding to specified source register or variable.
 function get_bpfreg_regvar(srcregvar,  bpfreg, cleanreg) {
 	cleanreg = clean_srcreg(srcregvar);
-	if (cleanreg ~ /^r[0-9][0-9]*$/ || cleanreg == "-tmp-")
+	if (cleanreg ~ /^r[0-9][0-9]*$/ || cleanreg == "-tmp-") {
 		bpfreg = lvars[nprocs ":" cleanreg];
-	else
+		if (bpfreg == "")
+			bpfreg = allocate_lreg(cleanreg);
+	} else {
 		bpfreg = gvars[nprocs ":" cleanreg];
+	}
 	if (bpfreg == "") {
 		print "Undeclared register/global " cleanreg " in P" nprocs " line " NR > "/dev/stderr";
 		goterror = 1;
