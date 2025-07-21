@@ -19,7 +19,7 @@ awk -v litmusfile="${basename}" -v bs="\\" -v dq='"' '
 BEGIN {
 	archname = "PPC";
 	minreg = 1;
-	maxreg = 15
+	maxreg = 14
 }
 
 @include "BPFlitmusout.awk"
@@ -35,7 +35,12 @@ function do_read_once_genasm(regdst, regsrc) {
 
 # Emit PPC code for WRITE_ONCE(regdst, regsrc).
 function do_write_once_genasm(regdst, regsrc) {
-	add_bpf_line("stw " regsrc ",0(" regdst ")");
+	if (regsrc ~ /^[0-9][0-9]*$/) {
+		add_bpf_line("li r15," regsrc);
+		add_bpf_line("stw r15,0(" regdst ")");
+	} else {
+		add_bpf_line("stw " regsrc ",0(" regdst ")");
+	}
 }
 
 # Emit PPC code for smp_mb().  No need for _genasm because no registers
@@ -53,7 +58,7 @@ function do_smp_load_acquire_genasm(regdst, regsrc) {
 # Emit PPC code for regdst = smp_load_release(regsrc).
 function do_smp_store_release_genasm(regdst, regsrc) {
 	add_bpf_line("lwsync");
-	add_bpf_line("stw " regsrc ",0(" regdst ")");
+	do_write_once_genasm(regdst, regsrc);
 }
 
 @include "c2asmfuncs.awk"
