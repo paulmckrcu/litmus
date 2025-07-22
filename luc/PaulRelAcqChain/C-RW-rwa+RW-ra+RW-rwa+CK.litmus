@@ -1,8 +1,11 @@
 C C-RW-rwa+RW-ra+RW-rwa+CK
-(*
- * Result: Maybe
+(* Result: Sometimes
+ * Initial thought was "Maybe".
  * "Allow" for simpler ruleset, "Forbid" for tighter ordering.
  * I -think- that this is forbidden on Power...
+ *
+ * This is forbidden on Power, so LKMM could probably also forbid it.
+ * In the meantime, it is a useful check of tooling.
  *)
 {
 }

@@ -1,7 +1,11 @@
 C C-RW-rra+RW-ra+RW-rwa+CK
-(*
- * Result: Free choice.  "Allow" for simpler ruleset, "Forbid" for
+(* Result: Never
+ * Initial thought was "Free choice".  "Allow" for simpler ruleset, "Forbid" for
  * tighter ordering.  I -think- that this is forbidden on Power...
+ *
+ * But there are no non-rf links, so this would still be "Never" even if
+ * the smp_mb() was dropped in favor of turning the last READ_ONCE() into
+ * smp_load_acquire() or the last WRITE_ONCE() into smp_store_release().
  *)
 {
 }

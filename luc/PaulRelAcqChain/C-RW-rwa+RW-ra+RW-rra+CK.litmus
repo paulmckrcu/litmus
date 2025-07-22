@@ -3,6 +3,9 @@ C C-RW-rwa+RW-ra+RW-rra+CK
  * Result: Sometimes
  * This is due to release-acquire being only locally transitive.
  * I believe that this is allowed by PowerPC.
+ *
+ * And it is allowed both by LKMM and PowerPC due to having two non-rf
+ * links and only one smp_mb().
  *)
 {
 }
