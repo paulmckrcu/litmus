@@ -28,6 +28,11 @@ BEGIN {
 #
 # Functions to emit BPF code.
 
+# Emit BPF code for loading a constant into a register.
+function do_load_const_genasm(regdst, cv) {
+	add_bpf_line(bpfregdst " = " cv);
+}
+
 # Emit BPF code for regdst = READ_ONCE(regsrc).
 function do_read_once_genasm(regdst, regsrc) {
 	add_bpf_line(regdst " = *(u32 *)(" regsrc " + 0)");

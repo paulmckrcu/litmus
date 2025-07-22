@@ -28,6 +28,11 @@ BEGIN {
 #
 # Functions to emit PPC code.
 
+# Emit PPC code for loading a constant into a register.
+function do_load_const_genasm(regdst, cv) {
+	add_bpf_line("li " regdst "," cv);
+}
+
 # Emit PPC code for regdst = READ_ONCE(regsrc).
 function do_read_once_genasm(regdst, regsrc) {
 	add_bpf_line("lwz " regdst ",0(" regsrc ")");
@@ -55,7 +60,7 @@ function do_smp_load_acquire_genasm(regdst, regsrc) {
 	add_bpf_line("lwsync");
 }
 
-# Emit PPC code for regdst = smp_load_release(regsrc).
+# Emit PPC code for regdst = smp_store_release(regsrc).
 function do_smp_store_release_genasm(regdst, regsrc) {
 	add_bpf_line("lwsync");
 	do_write_once_genasm(regdst, regsrc);

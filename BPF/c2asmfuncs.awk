@@ -245,7 +245,7 @@ function do_smp_store_release(ssr,  bpfregdst, bpfregsrc, cv, i, n_args, src, ss
 	if (ssr_args[2] ~ /^[0-9][0-9]*$/) {
 		cv = ssr_args[2];
 		bpfregsrc = get_bpfreg("-tmp-");
-		add_bpf_line(bpfregsrc " = " cv);
+		do_load_const_genasm(bpfregsrc, cv);
 	} else {
 		bpfregsrc = get_bpfreg_regvar(ssr_args[2]);
 	}
