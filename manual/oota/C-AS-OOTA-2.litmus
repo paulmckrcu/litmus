@@ -1,0 +1,33 @@
+C C-AS-OOTA-2
+
+(*
+ * Result: Always
+ *
+ * If we were using C-language relaxed atomics instead of volatiles,
+ * the compiler *could* eliminate the first WRITE_ONCE() in each process,
+ * then also each process's local variable, thus having an undefined value
+ * for each of those local variables.  But this cannot happen given that
+ * we are using Linux-kernel _ONCE() primitives.
+ *
+ * https://lore.kernel.org/all/c2ae9bca-8526-425e-b9b5-135004ad59ad@rowland.harvard.edu/
+ *)
+
+{}
+
+P0(int *a, int *b)
+{
+	int r0 = READ_ONCE(*a);
+
+	WRITE_ONCE(*b, r0);
+	WRITE_ONCE(*b, 2);
+}
+
+P1(int *a, int *b)
+{
+	int r1 = READ_ONCE(*b);
+
+	WRITE_ONCE(*a, r0);
+	WRITE_ONCE(*a, 2);
+}
+
+exists ((0:r0=0 \/ 0:r0=2) /\ (1:r1=0 \/ 1:r1=2))
