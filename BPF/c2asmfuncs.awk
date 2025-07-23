@@ -296,6 +296,17 @@ function do_decl(newdecl,  bpfreg, bpfregsrc, initstr, localname) {
 	}
 }
 
+# Output code for source code that this script cannot handle.
+function do_bad_input_line(badline,  errline) {
+	errline = badline;
+	gsub(/^[ 	]*/, "", errline);
+	gsub(/[ 	]*$/, "", errline);
+	add_bpf_line("(* Line " NR ": " errline " ??? *)");
+	# @@@ Uncomment the following line to get nice summary of unhandled statements.
+	# print "(* Line " NR ": " errline " ??? " pstate " *)" >> "/tmp/badlines.txt";
+	gotbadline++;
+}
+
 BEGIN {
 	nprocs = 0;
 	goterror = 0;
@@ -519,21 +530,14 @@ pstate ~ /^inproc$/ && $0 ~ /^		*smp_store_release\(.*, *[a-z_A-Z0-9]*\);$/ {
 }
 
 {
-	if (pstate == "locations") {
+	if (pstate == "locations")
 		locations_str = append_string_nl(locations_str, $0);
-	} else if (pstate == "filter") {
+	else if (pstate == "filter")
 		filter_str = append_string_nl(filter_str, $0);
-	} else if (pstate == "exists") {
+	else if (pstate == "exists")
 		exists_str = append_string_nl(exists_str, $0);
-	} else {
-		errline = $0;
-		gsub(/^[ 	]*/, "", errline);
-		gsub(/[ 	]*$/, "", errline);
-		add_bpf_line("(* Line " NR ": " errline " ??? *)");
-		# @@@ Uncomment the following line to get nice summary of unhandled statements.
-		# print "(* Line " NR ": " errline " ??? " pstate " *)" >> "/tmp/badlines.txt";
-		gotbadline++;
-	}
+	else
+		do_bad_input_line($0);
 }
 
 END {
