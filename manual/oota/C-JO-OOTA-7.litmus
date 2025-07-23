@@ -3,7 +3,7 @@ C C-JO-OOTA-7
 (*
  * Result: Never
  *
- * But LKMM finds the all-ones result, due to OOTA on r2.
+ * And LKMM agrees.
  *
  * https://lore.kernel.org/all/1147ad3e-e3ad-4fa1-9a63-772ba136ea9a@huaweicloud.com/
  *)
@@ -11,6 +11,8 @@ C C-JO-OOTA-7
 {
 	0:r2=a;
 	1:r2=b;
+	a=b;
+	b=b;
 }
 
 P0(int *a, int *b, int *x, int *y)
