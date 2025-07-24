@@ -313,6 +313,8 @@ BEGIN {
 	gotbadline = 0;
 }
 
+# Process the file header line, which must begin with "C " for C-style
+# LKMM litmus test.
 NR == 1 {
 	if ($0 !~ /^C /) {
 		print "Malformed first line, expected " dq "C" dq > "/dev/stderr";
@@ -324,10 +326,12 @@ NR == 1 {
 	next;
 }
 
+# Ignore blank lines.
 /^[ 	]*$/ {
 	next;
 }
 
+# Ignore various types of automatically generated commentary.
 /^"[a-zA-Z ]*"$/ {
 	next;
 }
@@ -356,6 +360,9 @@ NR == 1 {
 	next;
 }
 
+# Various forms of header comments.  These are preserved for the
+# benefit of scripts that process the "Result:" tag.  This script also
+# adds variable-to-register mappings.
 pstate ~ /^gotlitname$/ && /[ 	]*\(\*$/ {
 	pstate = "incomment";
 	next;
@@ -395,6 +402,7 @@ pstate ~ /^incomment$/ && /\*\)$/ {
 	next;
 }
 
+# Various formats of initializers
 !gotinit && /^{}$/ {
 	gotinit = 1;
 	next;
@@ -416,6 +424,8 @@ pstate ~ /^ininit$/ && $0 ~ /^}$/ {
 	next;
 }
 
+# Process declaration on one line, including parameters.  Sorry, but
+# the open curly brace must currently be on the next line.
 pstate ~ /^$/ && $0 ~ /^P[0-9]*\(/ {
 	gvreg = maxreg;
 	lvreg = minreg;
@@ -441,26 +451,33 @@ pstate ~ /^$/ && $0 ~ /^P[0-9]*\(/ {
 	next;
 }
 
+# A line containing a single open curly brace can start a process.
 pstate ~ /^inproc$/ && $0 ~ /^{$/ {
 	next;
 }
 
+# Local variable declaration without initializer.
 pstate ~ /^inproc$/ && $0 ~ /^	[a-zA-Z_][a-zA-Z_0-9]*[^=]*\<r[0-9][0-9]*;$/ {
 	do_decl($0);
 	next;
 }
 
+# Local variable declaration with initializer, which can include
+# READ_ONCE() or smp_load_acquire().
 pstate ~ /^inproc$/ && $0 ~ /^	[a-zA-Z_][a-zA-Z_0-9]*.*\<r[0-9][0-9]* *=.*;$/ {
 	do_decl($0);
 	next;
 }
 
+# A line consisting of a single unindented close curly brace marks the
+# end of the current process.
 pstate ~ /^inproc$/ && $0 ~ /^}$/ {
 	nprocs++;
 	pstate = "";
 	next;
 }
 
+# READ_ONCE(), WRITE_ONCE(), and WRITE_ONCE(..., READ_ONCE()).
 pstate ~ /^inproc$/ && $0 ~ /^		*r[0-9][0-9]* *= *READ_ONCE\(\*.*\);$/ {
 	ro = $0;
 	gsub(/^.*=[ 	]*/, "", ro);
@@ -486,11 +503,13 @@ pstate ~ /^inproc$/ && $0 ~ /^		*WRITE_ONCE\(\*.*, *READ_ONCE\(\*.*\)\);$/ {
 	next;
 }
 
+# smp_mb().
 pstate ~ /^inproc$/ && $0 ~ /^		*smp_mb\(\);$/ {
 	do_smp_mb();
 	next;
 }
 
+# smp_load_acquire().
 pstate ~ /^inproc$/ && $0 ~ /^		*r[0-9][0-9]* *= *smp_load_acquire\(.*\);$/ {
 	sla = $0;
 	gsub(/^.*=[ 	]*/, "", sla);
@@ -498,6 +517,7 @@ pstate ~ /^inproc$/ && $0 ~ /^		*r[0-9][0-9]* *= *smp_load_acquire\(.*\);$/ {
 	next;
 }
 
+# smp_store_release().
 pstate ~ /^inproc$/ && $0 ~ /^		*smp_store_release\(.*, *[a-z_A-Z0-9]*\);$/ {
 	ssr = $0;
 	gsub(/^.*=[ 	]*/, "", ssr);
@@ -505,6 +525,7 @@ pstate ~ /^inproc$/ && $0 ~ /^		*smp_store_release\(.*, *[a-z_A-Z0-9]*\);$/ {
 	next;
 }
 
+# The locations, filter, and exists clauses after all processes.
 /^locations\>/ {
 	clause = $0;
 	gsub(/locations */, "", clause);
