@@ -60,10 +60,18 @@
 # hdrcomment: Header comment from original litmus test onto which things
 #	like register mappings are appended.  Contains newlines.
 # hdrcommentpiece: Header ending comment line needing "*)" removed.
+# if_nesting: Zero if not in a "if" statement.  Nested "if" statements
+#	are currently not supported, so the values zero and one are
+#	currently all that you get.
+# if_stmtsleft: Number of statements remaining in a curly-brace-free
+#	"then" or "else" clause.  Set to -1 when not in such a clause.
 # inits: Newline-containing string accumulating generated initialization.
 # locations_str: String accumulating "locations" clauses.
 # lvreg: While processing a give process, the number of the BPF register
 #	to assign for the next process-local register.  Counts up from r1.
+# nifs: Number of the "if" statement currently being processed within
+#	the current process, or later, the total number of "if"
+#	statements.
 # nprocs: Number of the process currently being processed, or later, the
 #	total number of processes.
 # pstate: State variable containing a string.  An empty string denotes
@@ -252,6 +260,14 @@ function do_smp_store_release(ssr,  bpfregdst, bpfregsrc, cv, i, n_args, src, ss
 	do_smp_store_release_genasm(bpfregdst, bpfregsrc);
 }
 
+# Create the tail of the "if" labels for the current "if" statement.
+# This is prefixed with "ELSE" and "ENDIF" for the two labels.  Note that
+# labels must be globally unique, as in herd7 has been happy to have on
+# process branch to another process's label.
+function make_if_label_tail() {
+	return "_" nprocs "_" nifs;
+}
+
 # Map the specified string from source registers to BPF registers,
 # returning the mapped string.
 function map_to_bpf_regs(s,  i, mapcap) {
@@ -297,17 +313,23 @@ function do_decl(newdecl,  bpfreg, bpfregsrc, initstr, localname) {
 }
 
 # Output code for source code that this script cannot handle.
-function do_bad_input_line(badline,  errline) {
+function do_bad_input_line(badline, msg,  errline, spc) {
 	errline = badline;
 	gsub(/^[ 	]*/, "", errline);
 	gsub(/[ 	]*$/, "", errline);
-	add_bpf_line("(* Line " NR ": " errline " ??? *)");
+	spc = ""
+	if (msg != "")
+		spc = " ";
+	add_bpf_line("(* Line " NR ": " errline " ??? " msg spc "*)");
 	# @@@ Uncomment the following line to get nice summary of unhandled statements.
 	# print "(* Line " NR ": " errline " ??? " pstate " *)" >> "/tmp/badlines.txt";
 	gotbadline++;
 }
 
 BEGIN {
+	if_nesting = 0;
+	if_stmtsleft = -1;
+	nifs = -1;
 	nprocs = 0;
 	goterror = 0;
 	gotbadline = 0;
@@ -456,6 +478,16 @@ pstate ~ /^inproc$/ && $0 ~ /^{$/ {
 	next;
 }
 
+# Handle "if" statements lacking curly braces, which we do by counting
+# lines.  This means that a given braceless "if" statement's then-clause
+# and else-clause must fit on a single line.
+pstate ~ /^inproc$/ && if_stmtsleft >= 0 && !if_stmtsleft-- {
+	labeltail = make_if_label_tail();
+	add_bpf_line("ELSE" labeltail ":");
+	add_bpf_line("ENDIF" labeltail ":");
+	if_nesting = 0;
+}
+
 # Local variable declaration without initializer.
 pstate ~ /^inproc$/ && $0 ~ /^	[a-zA-Z_][a-zA-Z_0-9]*[^=]*\<r[0-9][0-9]*;$/ {
 	do_decl($0);
@@ -517,9 +549,27 @@ pstate ~ /^inproc$/ && $0 ~ /^		*smp_store_release\(.*, *[a-z_A-Z0-9]*\);$/ {
 	next;
 }
 
+pstate ~ /^inproc$/ && $0 ~ /^		*if *\(r[0-9][0-9]*)$/ {
+	if (if_nesting) {
+		do_bad_input_line($0, "nested " dq "if" dq " unsupported");
+		next
+	}
+	if_nesting++;
+	nifs++;
+	ifcond = $0;
+	sub(/^[	 ]*if \(/, "", ifcond);
+	sub(/\)$/, "", ifcond);
+	labeltail = make_if_label_tail();
+	do_if_cond_genasm(ifcond, "ELSE" labeltail, "ENDIF" labeltail);
+	if_stmtsleft = 1;
+	next;
+}
+
 # A line consisting of a single unindented close curly brace marks the
 # end of the current process.
 pstate ~ /^inproc$/ && $0 ~ /^}$/ {
+	if (if_nesting)
+		do_bad_input_line($0, "unterminated " dq "if" dq);
 	nprocs++;
 	pstate = "";
 	next;
@@ -558,7 +608,7 @@ pstate ~ /^inproc$/ && $0 ~ /^}$/ {
 	else if (pstate == "exists")
 		exists_str = append_string_nl(exists_str, $0);
 	else
-		do_bad_input_line($0);
+		do_bad_input_line($0, "");
 }
 
 END {

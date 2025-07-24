@@ -66,5 +66,12 @@ function do_smp_store_release_genasm(regdst, regsrc) {
 	do_write_once_genasm(regdst, regsrc);
 }
 
+# Emit PPC code to evaluate "if" condition and take the indicated branch.
+function do_if_cond_genasm(cond, else_label, endif_label) {
+	add_bpf_line("cmpwi " cond ",0");
+	add_bpf_line("beq " else_label);
+	# add_bpf_line("if (" ifcond ") ELSE" labeltail " ENDIF" labeltail);
+}
+
 @include "c2asmfuncs.awk"
 '

@@ -61,5 +61,10 @@ function do_smp_store_release_genasm(regdst, regsrc) {
 	add_bpf_line("store_release((u32 *)(" regdst " + 0), " regsrc ")");
 }
 
+# Emit PPC code to evaluate "if" condition and take the indicated branch.
+function do_if_cond_genasm(cond, else_label, endif_label) {
+	add_bpf_line("if " cond " == 0 goto " else_label);
+}
+
 @include "c2asmfuncs.awk"
 '
