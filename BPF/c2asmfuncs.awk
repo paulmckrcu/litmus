@@ -469,14 +469,6 @@ pstate ~ /^inproc$/ && $0 ~ /^	[a-zA-Z_][a-zA-Z_0-9]*.*\<r[0-9][0-9]* *=.*;$/ {
 	next;
 }
 
-# A line consisting of a single unindented close curly brace marks the
-# end of the current process.
-pstate ~ /^inproc$/ && $0 ~ /^}$/ {
-	nprocs++;
-	pstate = "";
-	next;
-}
-
 # READ_ONCE(), WRITE_ONCE(), and WRITE_ONCE(..., READ_ONCE()).
 pstate ~ /^inproc$/ && $0 ~ /^		*r[0-9][0-9]* *= *READ_ONCE\(\*.*\);$/ {
 	ro = $0;
@@ -522,6 +514,14 @@ pstate ~ /^inproc$/ && $0 ~ /^		*smp_store_release\(.*, *[a-z_A-Z0-9]*\);$/ {
 	ssr = $0;
 	gsub(/^.*=[ 	]*/, "", ssr);
 	do_smp_store_release(ssr);
+	next;
+}
+
+# A line consisting of a single unindented close curly brace marks the
+# end of the current process.
+pstate ~ /^inproc$/ && $0 ~ /^}$/ {
+	nprocs++;
+	pstate = "";
 	next;
 }
 
