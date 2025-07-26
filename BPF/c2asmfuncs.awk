@@ -559,8 +559,9 @@ pstate ~ /^inproc$/ && $0 ~ /^		*if *\(r[0-9][0-9]*)$/ {
 	ifcond = $0;
 	sub(/^[	 ]*if \(/, "", ifcond);
 	sub(/\)$/, "", ifcond);
+	bpfreg = get_bpfreg(ifcond);
 	labeltail = make_if_label_tail();
-	do_if_cond_genasm(ifcond, "ELSE" labeltail, "ENDIF" labeltail);
+	do_if_cond_genasm(bpfreg, "ELSE" labeltail, "ENDIF" labeltail);
 	if_stmtsleft = 1;
 	next;
 }
