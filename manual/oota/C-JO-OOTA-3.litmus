@@ -4,7 +4,8 @@ C C-JO-OOTA-3
  * Result: Never
  *
  * But LKMM finds the all-ones result, perhaps due to not tracking
- * control dependencies out of the "if" statement.
+ * control dependencies out of the "if" statement.  LKMM might or might
+ * not ever be adjusted to produce "Never" for this litmus test.
  *
  * https://lore.kernel.org/all/1daba0ea-0dd6-4e67-923e-fd3c1a62b40b@huaweicloud.com/
  *)

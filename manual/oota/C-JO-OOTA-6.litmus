@@ -3,7 +3,8 @@ C C-JO-OOTA-6
 (*
  * Result: Never
  *
- * But LKMM finds the all-ones result, due to OOTA on r2.
+ * But LKMM finds the all-ones result, due to OOTA on r2.  LKMM might
+ * or might not ever be adjusted to produce "Never" for this litmus test.
  *
  * https://lore.kernel.org/all/1147ad3e-e3ad-4fa1-9a63-772ba136ea9a@huaweicloud.com/
  *)

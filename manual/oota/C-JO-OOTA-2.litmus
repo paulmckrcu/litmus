@@ -4,7 +4,8 @@ C C-JO-OOTA-2
  * Result: Never
  *
  * But Sometimes in LKMM as of early 2025, given that 42 is a possible
- * value for things like S23.
+ * value for things like S23.  LKMM might or might not ever be adjusted
+ * to produce "Never" for this litmus test.
  *
  * https://lore.kernel.org/all/1daba0ea-0dd6-4e67-923e-fd3c1a62b40b@huaweicloud.com/
  *)
