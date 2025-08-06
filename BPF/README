@@ -90,3 +90,27 @@ runlitmustree.sh
 	is passed to findbpfreadytests.sh, and the output directory is
 	passed to runlitmus.sh.  The output of findbpfreadytests.sh is
 	piped to runlitmus.sh.
+
+------------------------------------------------------------------------
+
+Destination Directory Layout
+
+"0":
+	List of litmus tests that were successfully converted.
+
+exitcode, for example, "1", "2", ...:
+	Concatenated stderr from unsuccessful conversion attempted
+	in which the c2bpf.sh script exited with this exit code.
+
+"herd7/0":
+	List of litmus tests for which herd7 gave a zero (successful)
+	exit code.
+
+"herd7/"exitcode
+	Concatenated stderr from runs for which herd7 gave a non-zero
+	(unsuccessful) exit code.
+
+"judgelitmus/"exitcode
+	Concatenated one-liner output from judgelitmus.sh, split out
+	on a per-exitcode basis.
+
