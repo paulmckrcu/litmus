@@ -46,14 +46,6 @@ judgelitmus.sh
 	Sometimes/Never case, judgelitmus.sh outputs "Tighter BPF result
 	(OK)".
 
-	Otherwise, the judgelitmus.sh exit code is as follows:
-
-	1:	There is no Results: comment in the LKMM litmus test.
-	2:	There is no "Observation" line in the herd7 output.
-		This often indicates an error in the original litmus
-		test or the BPF translation of it.
-	255:	One or both of the input files are unreadable.
-
 runlitmus.sh
 
 	Given a destination directory destdir (whose contents are deleted
@@ -96,15 +88,19 @@ runlitmustree.sh
 Destination Directory Layout
 
 "0":
-	List of litmus tests that were successfully converted.
+	List of pathnames of the C-language litmus tests that were
+	successfully converted to BPF.	If the C-language litmus test
+	pathname is f.litmus, the BPF pathname will be f-BPF.litmus.
+	The BPF pathname is not recorded because litmus-test judging
+	needs the pathnames of both litmus tests.
 
 exitcode, for example, "1", "2", ...:
 	Concatenated stderr from unsuccessful conversion attempted
 	in which the c2bpf.sh script exited with this exit code.
 
 "herd7/0":
-	List of litmus tests for which herd7 gave a zero (successful)
-	exit code.
+	List of the BPF pathnames of the litmus tests for which herd7
+	gave a zero (successful) exit code.
 
 "herd7/"exitcode
 	Concatenated stderr from runs for which herd7 gave a non-zero
