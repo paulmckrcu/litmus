@@ -24,8 +24,10 @@
 #
 # 0:	Compatible results.
 # 1:	The C-language .litmus file does not have a "Result:" comment.
-# 2:	The BPF-language herd7 output file does not have an Observation
-#	line, and thus does not specify a result.
+# 2:	The herd7 output file does not have an Observation line, and
+#	thus does not specify a result.
+# 3:	Incompatible results.
+# 255:	At least one of the files is unreadable.
 #
 # Copyright Meta Platforms, Inc, 2024
 #
