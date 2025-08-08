@@ -40,7 +40,9 @@ rm -rf "$destdir"/*
 T="`mktemp -d ${TMPDIR-/tmp}/runlitmus.sh.XXXXXX`"
 trap 'rm -rf $T' 0
 
-# convert_a_test(path)
+# convert_a_test(path, suffix, destdir)
+# The path is to the litmus test, the suffix is "-BPF" or "-PPC", and
+# the destdir is the place to put the output file.
 convert_a_test()
 {
 	sh ./c2bpf.sh "$1" > $T/stdout 2> $T/stderr
@@ -64,17 +66,17 @@ run_a_test()
 	run_a_test_ret=$?
 	if test $run_a_test_ret -eq 0
 	then
-		echo $1 >> "$destdir/herd7/0"
+		echo $1 >> "$destdir/BPF/herd7/0"
 	else
-		echo ${1}: `cat $T/stderr` >> "$destdir/herd7/$run_a_test_ret"
+		echo ${1}: `cat $T/stderr` >> "$destdir/BPF/herd7/$run_a_test_ret"
 	fi
 }
 
 # Run the tests that were successfully converted.
-mkdir "$destdir"/herd7 || :
+mkdir -p "$destdir"/BPF/herd7 || :
 sed < "$destdir/0" -e 's/^/run_a_test /' -e 's/\.litmus/\-BPF\.litmus/' > $T/runscript
 . $T/runscript
-wc -l "$destdir"/herd7/*
+wc -l "$destdir"/BPF/herd7/*
 
 # judge_a_test(path-BPF.litmus)
 judge_a_test()
@@ -87,5 +89,5 @@ judge_a_test()
 }
 
 mkdir "$destdir"/judgelitmus || :
-sed < "$destdir/herd7/0" -e 's/^/judge_a_test /' > $T/judgescript
+sed < "$destdir/BPF/herd7/0" -e 's/^/judge_a_test /' > $T/judgescript
 . $T/judgescript
