@@ -30,7 +30,7 @@ BEGIN {
 
 # Emit BPF code for loading a constant into a register.
 function do_load_const_genasm(regdst, cv) {
-	add_bpf_line(bpfregdst " = " cv);
+	add_bpf_line(regdst " = " cv);
 }
 
 # Emit BPF code for regdst = READ_ONCE(regsrc).
@@ -56,7 +56,7 @@ function do_smp_load_acquire_genasm(regdst, regsrc) {
 	add_bpf_line(regdst " = load_acquire((u32 *)(" regsrc " + 0))");
 }
 
-# Emit BPF code for regdst = smp_load_release(regsrc).
+# Emit BPF code for regdst = smp_store_release(regsrc).
 function do_smp_store_release_genasm(regdst, regsrc) {
 	add_bpf_line("store_release((u32 *)(" regdst " + 0), " regsrc ")");
 }
