@@ -88,9 +88,13 @@ run_a_test()
 
 # Run the tests that were successfully converted.
 mkdir -p "$destdir"/BPF/herd7 || :
-sed < "$destdir/BPF/0" -e 's/^/run_a_test /' -e 's?\.litmus?\-BPF\.litmus '$destdir' BPF?' > $T/runscript
-. $T/runscript
+sed < "$destdir/BPF/0" -e 's/^/run_a_test /' -e 's?\.litmus?\-BPF\.litmus '$destdir' BPF?' > $T/runscript-BPF
+. $T/runscript-BPF
 wc -l "$destdir"/BPF/herd7/*
+mkdir -p "$destdir"/PPC/herd7 || :
+sed < "$destdir/PPC/0" -e 's/^/run_a_test /' -e 's?\.litmus?\-PPC\.litmus '$destdir' PPC?' > $T/runscript-PPC
+. $T/runscript-PPC
+wc -l "$destdir"/PPC/herd7/*
 
 # judge_a_test(path-BPF.litmus)
 judge_a_test()
