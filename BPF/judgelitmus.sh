@@ -1,13 +1,13 @@
 #!/bin/sh
 # SPDX-License-Identifier: GPL-2.0+
 #
-# Given a .litmus test and the corresponding litmus output file, check
-# the specified output file against the "Result:" comment to judge whether
-# the test ran correctly.  The result from the output file may be stronger
-# than that of the "Result:" comment, that is to say, a Sometimes comment
-# is satisfied by a Never run.  This is appropriate for the case where
-# a C-language litmus test has been translated to assembly language and
-# then run.
+# Given a pair of .litmus and or .litmus.out files, check the the
+# "Result:" comment and/or the "Observation" lineto judge whether the
+# corresponding litmus tests are compatible.  The result from the second
+# file may be stronger than that of the first file, for example, a Sometimes
+# comment is satisfied by a Never run.  This is appropriate for the case
+# where a C-language litmus test has been translated to assembly language
+# and then run.
 #
 # The script does not deal with DEADLOCK or DATARACE Result: commments
 # because assembly language does not have either locks or data races.
@@ -19,6 +19,8 @@
 #
 # Usage:
 #	judgelitmus.sh file1.litmus file2.litmus.out
+#
+# Again, either file can be a .litmus or a .litmus.out file.
 #
 # Exit codes:
 #
@@ -33,49 +35,49 @@
 #
 # Author: Paul E. McKenney <paulmck@kernel.org>
 
-litmus=$1
-litmusout=$2
+litmus1=$1
+litmus2=$2
 
-if test -f "$litmus" -a -r "$litmus"
+if test -f "$litmus1" -a -r "$litmus1"
 then
 	:
 else
-	echo ' --- ' error: \"$litmus\" is not a readable file
+	echo ' --- ' error: \"$litmus1\" is not a readable file
 	exit 255
 fi
-if test -f "$litmusout" -a -r "$litmusout"
+if test -f "$litmus2" -a -r "$litmus2"
 then
 	:
 else
-	echo ' --- ' error: \"$litmusout\" is not a readable file
+	echo ' --- ' error: \"$litmus2\" is not a readable file
 	exit 255
 fi
 
 # Extract expectations and test results.
-litmusresult="`grep '^[( ]\* Result: ' $litmus | head -1 | awk '{ print $3; }'`"
-testresult="`grep '^Observation' $litmusout | awk '{ fn = NF - 2; print $fn; }'`"
+litmus1result="`grep '^[( ]\* Result: ' $litmus1 | head -1 | awk '{ print $3; }'`"
+litmus2result="`grep '^Observation' $litmus2 | awk '{ fn = NF - 2; print $fn; }'`"
 
 # Did we get both expectations and results?
-if test -z "$litmusresult"
+if test -z "$litmus1result"
 then
 	echo "No Result: clause in .litmus file.
 	exit 1
 fi
-if test -z "$testresult"
+if test -z "$litmus2result"
 then
 	echo "No Result: clause in .out file.
 	exit 2
 fi
 
 # Got results from both files, check them.
-if test "$litmusresult" = "$testresult"
+if test "$litmus1result" = "$litmus2result"
 then
 	exit 0
 fi
-if test "$litmusresult" = Sometimes && test "$testresult" = Never
+if test "$litmus1result" = Sometimes && test "$litmus2result" = Never
 then
 	echo Tighter BPF result "(OK)".
 	exit 0
 fi
-echo BPF result mismatch "$litmusresult" vs. "$testresult".
+echo BPF result mismatch "$litmus1result" vs. "$litmus2result".
 exit 3
