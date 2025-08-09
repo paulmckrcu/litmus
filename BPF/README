@@ -106,6 +106,9 @@ exitcode, for example, "1", "2", ...:
 	Concatenated stderr from runs for which herd7 gave a non-zero
 	(unsuccessful) exit code.
 
+"PPC"
+	Parallel to the BPF directory, but for PowerPC assembly language.
+
 "judgelitmus/"exitcode
 	Concatenated one-liner output from judgelitmus.sh, split out
 	on a per-exitcode basis.
