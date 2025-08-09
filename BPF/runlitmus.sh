@@ -40,24 +40,27 @@ rm -rf "$destdir"/*
 T="`mktemp -d ${TMPDIR-/tmp}/runlitmus.sh.XXXXXX`"
 trap 'rm -rf $T' 0
 
-# convert_a_test(path, suffix, destdir)
-# The path is to the litmus test, the suffix is "-BPF" or "-PPC", and
-# the destdir is the place to put the output file.
+# convert_a_test(path, destdir, suffix)
+# The path is to the litmus test, the destdir is the place to put the
+# output file sans suffix, and the suffix is "BPF" or "PPC".
 convert_a_test()
 {
+	local ret
+
 	sh ./c2bpf.sh "$1" > $T/stdout 2> $T/stderr
-	run_a_test_ret=$?
-	if test $run_a_test_ret -eq 0
+	ret=$?
+	if test $ret -eq 0
 	then
-		echo $1 >> "$destdir/0"
+		echo $1 >> "$2/$3/0"
 	else
-		echo ${1}: `cat $T/stderr` >> "$destdir/$run_a_test_ret"
+		echo ${1}: `cat $T/stderr` >> "$2/$3/$ret"
 	fi
 }
 
 # Convert the tests.
-sed -e 's/^/convert_a_test /' > $T/script
-. $T/script
+mkdir -p "$destdir"/BPF || :
+sed -e 's/^/convert_a_test /' -e 's?$? '$destdir' BPF?' > $T/script-BPF
+. $T/script-BPF
 
 # run_a_test(path-BPF.litmus)
 run_a_test()
@@ -74,7 +77,7 @@ run_a_test()
 
 # Run the tests that were successfully converted.
 mkdir -p "$destdir"/BPF/herd7 || :
-sed < "$destdir/0" -e 's/^/run_a_test /' -e 's/\.litmus/\-BPF\.litmus/' > $T/runscript
+sed < "$destdir/BPF/0" -e 's/^/run_a_test /' -e 's/\.litmus/\-BPF\.litmus/' > $T/runscript
 . $T/runscript
 wc -l "$destdir"/BPF/herd7/*
 
