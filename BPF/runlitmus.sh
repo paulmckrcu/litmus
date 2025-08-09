@@ -49,7 +49,6 @@ convert_a_test()
 	local cvscript
 
 	cvscript="`echo $3 | tr '[A-Z]' '[a-z]'`"
-	echo sh ./c2${cvscript}.sh "$1" ">" $T/stdout "2>" $T/stderr
 	sh ./c2${cvscript}.sh "$1" > $T/stdout 2> $T/stderr
 	ret=$?
 	if test $ret -eq 0
@@ -60,10 +59,14 @@ convert_a_test()
 	fi
 }
 
-# Convert the tests.
+# Copy the input and convert the tests.
+cat > $T/inputlist
 mkdir -p "$destdir"/BPF || :
-sed -e 's/^/convert_a_test /' -e 's?$? '$destdir' BPF?' > $T/script-BPF
+sed -e 's/^/convert_a_test /' -e 's?$? '$destdir' BPF?' < $T/inputlist > $T/script-BPF
 . $T/script-BPF
+mkdir -p "$destdir"/PPC || :
+sed -e 's/^/convert_a_test /' -e 's?$? '$destdir' PPC?' < $T/inputlist > $T/script-PPC
+. $T/script-PPC
 
 # run_a_test(path-BPF.litmus)
 run_a_test()
