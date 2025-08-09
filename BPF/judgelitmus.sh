@@ -53,9 +53,23 @@ else
 	exit 255
 fi
 
+# get_result(path)
+# Extracts the "Result:" comment expection (for .litmus files) or the
+# "Observation" line (for .litmus.out files).
+get_result()
+{
+	if echo $1 | grep -q '\.litmus$'
+	then
+		grep '^[( ]\* Result: ' $1 | head -1 | awk '{ print $3; }'
+	elif echo $1 | grep -q '\litmus\.out$'
+	then
+		grep '^Observation' $1 | awk '{ fn = NF - 2; print $fn; }'
+	fi
+}
+
 # Extract expectations and test results.
-litmus1result="`grep '^[( ]\* Result: ' $litmus1 | head -1 | awk '{ print $3; }'`"
-litmus2result="`grep '^Observation' $litmus2 | awk '{ fn = NF - 2; print $fn; }'`"
+litmus1result="`get_result "$litmus1"`"
+litmus2result="`get_result "$litmus2"`"
 
 # Did we get both expectations and results?
 if test -z "$litmus1result"
