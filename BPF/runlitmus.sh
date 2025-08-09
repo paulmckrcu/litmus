@@ -68,22 +68,27 @@ mkdir -p "$destdir"/PPC || :
 sed -e 's/^/convert_a_test /' -e 's?$? '$destdir' PPC?' < $T/inputlist > $T/script-PPC
 . $T/script-PPC
 
-# run_a_test(path-BPF.litmus)
+# run_a_test(path-XXX.litmus, destdir, suffix)
+# The path is to the (assembly language) litmus test, the destdir is
+# the place to put the output file sans suffix, and the suffix is "BPF"
+# or "PPC".
 run_a_test()
 {
+	local run_a_test_ret
+
 	herd7 "$1" > "$1".out
 	run_a_test_ret=$?
 	if test $run_a_test_ret -eq 0
 	then
-		echo $1 >> "$destdir/BPF/herd7/0"
+		echo $1 >> "$2/$3/herd7/0"
 	else
-		echo ${1}: `cat $T/stderr` >> "$destdir/BPF/herd7/$run_a_test_ret"
+		echo ${1}: `cat $T/stderr` >> "$2/$3/herd7/$run_a_test_ret"
 	fi
 }
 
 # Run the tests that were successfully converted.
 mkdir -p "$destdir"/BPF/herd7 || :
-sed < "$destdir/BPF/0" -e 's/^/run_a_test /' -e 's/\.litmus/\-BPF\.litmus/' > $T/runscript
+sed < "$destdir/BPF/0" -e 's/^/run_a_test /' -e 's?\.litmus?\-BPF\.litmus '$destdir' BPF?' > $T/runscript
 . $T/runscript
 wc -l "$destdir"/BPF/herd7/*
 
