@@ -46,8 +46,11 @@ trap 'rm -rf $T' 0
 convert_a_test()
 {
 	local ret
+	local cvscript
 
-	sh ./c2bpf.sh "$1" > $T/stdout 2> $T/stderr
+	cvscript="`echo $3 | tr '[A-Z]' '[a-z]'`"
+	echo sh ./c2${cvscript}.sh "$1" ">" $T/stdout "2>" $T/stderr
+	sh ./c2${cvscript}.sh "$1" > $T/stdout 2> $T/stderr
 	ret=$?
 	if test $ret -eq 0
 	then
