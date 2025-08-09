@@ -99,8 +99,9 @@ wc -l "$destdir"/PPC/herd7/*
 # judge_a_test(path-BPF.litmus)
 judge_a_test()
 {
-	pathbpflitmus="$1"
-	pathlitmus="`echo $pathbpflitmus | sed -e 's/-BPF//'`"
+	local pathbpflitmus="$1"
+	local pathlitmus="`echo $pathbpflitmus | sed -e 's/-BPF//'`"
+
 	sh judgelitmus.sh "$pathlitmus" "${pathbpflitmus}.out" > $T/judgelitmus.out
 	judge_a_test_ret=$?
 	echo $pathbpflitmus `cat $T/judgelitmus.out` >> "$destdir/judgelitmus/$judge_a_test_ret"
