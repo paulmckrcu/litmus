@@ -102,6 +102,9 @@ exitcode, for example, "1", "2", ...:
 	List of the BPF pathnames of the litmus tests for which herd7
 	gave a zero (successful) exit code.
 
+"BPF/herd7/"0-sorted:
+	The same list of BPF pathnames, but sorted.
+
 "BPF/herd7/"exitcode
 	Concatenated stderr from runs for which herd7 gave a non-zero
 	(unsuccessful) exit code.
@@ -113,3 +116,4 @@ exitcode, for example, "1", "2", ...:
 	Concatenated one-liner output from judgelitmus.sh, split out
 	on a per-exitcode basis.
 
+"judgelitmus/PPC/"exitcode
