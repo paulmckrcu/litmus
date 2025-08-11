@@ -114,3 +114,27 @@ judge_a_test()
 mkdir "$destdir"/judgelitmus || :
 sed < "$destdir/BPF/herd7/0" -e 's/^/judge_a_test /' > $T/judgescript
 . $T/judgescript
+
+# judge_an_asm_test(path.litmus, suffix1, suffix2)
+judge_an_asm_test()
+{
+	local path1
+	local path2
+	local ret
+	local suffix1="$2"
+	local suffix2="$3"
+	local TJ=$T/judgelitmus."$suffix1"-"$suffix2".out
+
+	local path1="`echo $1 | sed -e 's?\.litmus$?\-'$suffix1'.litmus.out?'`"
+	local path2="`echo $1 | sed -e 's?\.litmus$?\-'$suffix2'.litmus.out?'`"
+	sh judgelitmus.sh "$path1" "$path2" > $TJ
+	ret=$?
+	echo $1 `cat $TJ` >> "$destdir/judgelitmus/${suffix1}-${suffix2}/$judge_a_test_ret"
+}
+
+# Judge -BPF litmus test results against the corresponding PPC litmus
+# test results.
+mkdir -p "$destdir"/judgelitmus/BPF-PPC
+join "$destdir"/BPF/herd7/0-sorted "$destdir"/PPC/herd7/0-sorted > $T/BPF-PPC
+sed -e 's/^/judge_an_asm_test /' -e 's/$/ BPF PPC/' < $T/BPF-PPC > $T/judgescript-BPF-PPC.sh
+. $T/judgescript-BPF-PPC.sh
