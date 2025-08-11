@@ -74,12 +74,12 @@ litmus2result="`get_result "$litmus2"`"
 # Did we get both expectations and results?
 if test -z "$litmus1result"
 then
-	echo "No Result: clause in .litmus file.
+	echo "No Result: clause in .litmus file."
 	exit 1
 fi
 if test -z "$litmus2result"
 then
-	echo "No Result: clause in .out file.
+	echo "No Result: clause in .out file."
 	exit 2
 fi
 
