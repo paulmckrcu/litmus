@@ -116,6 +116,13 @@ sed < "$destdir/BPF/herd7/0" -e 's/^/judge_a_test /' > $T/judgescript
 . $T/judgescript
 
 # judge_an_asm_test(path.litmus, suffix1, suffix2)
+# This compares path-suffix1.litmus.out to path-suffix2.litmus.out,
+# and puts the results into destdir/judgelitmus/suffix1-suffix2.
+# For example, "judge_an_asm_test a.litmus BPF PPC" would compare
+# a-BPF.litmus.out to a-PPC.litmus.out, and place the result into
+# destdir/judgelitmus/BPF-PPC/$ret, where $ret is the exit code from
+# judgelitmus.sh.  Consolidation with judge_a_test() is possible,
+# but uglier than one might like.
 judge_an_asm_test()
 {
 	local path1
