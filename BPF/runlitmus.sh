@@ -138,3 +138,4 @@ mkdir -p "$destdir"/judgelitmus/BPF-PPC
 join "$destdir"/BPF/herd7/0-sorted "$destdir"/PPC/herd7/0-sorted > $T/BPF-PPC
 sed -e 's/^/judge_an_asm_test /' -e 's/$/ BPF PPC/' < $T/BPF-PPC > $T/judgescript-BPF-PPC.sh
 . $T/judgescript-BPF-PPC.sh
+wc -l "$destdir"/judgelitmus/BPF-PPC/*
