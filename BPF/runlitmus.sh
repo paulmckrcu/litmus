@@ -90,13 +90,13 @@ run_a_test()
 mkdir -p "$destdir"/BPF/herd7 || :
 sed < "$destdir/BPF/0" -e 's/^/run_a_test /' -e 's?\.litmus?\-BPF\.litmus '$destdir' BPF?' > $T/runscript-BPF
 . $T/runscript-BPF
-sed -e 's/-BPF\.litmus$/.litmus/' < "$destdir"/BPF/herd7/0 | sort > "$destdir"/BPF/herd7/0-sorted
 wc -l "$destdir"/BPF/herd7/*
+sed -e 's/-BPF\.litmus$/.litmus/' < "$destdir"/BPF/herd7/0 | sort > "$destdir"/BPF/herd7/0-sorted
 mkdir -p "$destdir"/PPC/herd7 || :
 sed < "$destdir/PPC/0" -e 's/^/run_a_test /' -e 's?\.litmus?\-PPC\.litmus '$destdir' PPC?' > $T/runscript-PPC
 . $T/runscript-PPC
-sed -e 's/-PPC\.litmus$/.litmus/' < "$destdir"/PPC/herd7/0 | sort > "$destdir"/PPC/herd7/0-sorted
 wc -l "$destdir"/PPC/herd7/*
+sed -e 's/-PPC\.litmus$/.litmus/' < "$destdir"/PPC/herd7/0 | sort > "$destdir"/PPC/herd7/0-sorted
 
 # judge_a_test(path-BPF.litmus)
 judge_a_test()
