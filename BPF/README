@@ -116,4 +116,10 @@ exitcode, for example, "1", "2", ...:
 	Concatenated one-liner output from judgelitmus.sh, split out
 	on a per-exitcode basis.
 
-"judgelitmus/PPC/"exitcode
+"judgelitmus/BPF-PPC/"0
+	List of LKMM litmus tests for which the PPC herd7 run was
+	compatible with that of the BPF herd7 run.
+
+"judgelitmus/BPF-PPC/"exitcode
+	Concatenated one-liner BPF/PPC output from judgelitmus.sh,
+	split out on a per-exitcode basis.
