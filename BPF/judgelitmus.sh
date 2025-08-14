@@ -88,10 +88,18 @@ if test "$litmus1result" = "$litmus2result"
 then
 	exit 0
 fi
+litmustype=LKMM
+if echo $litmus2 | grep -qe '-BPF\.litmus'
+then
+	litmustype=BPF
+elif echo $litmus2 | grep -qe '-PPC\.litmus'
+then
+	litmustype=PPC
+fi
 if test "$litmus1result" = Sometimes && test "$litmus2result" = Never
 then
-	echo Tighter BPF result "(OK)".
+	echo Tighter $litmustype result "(OK)".
 	exit 0
 fi
-echo BPF result mismatch "$litmus1result" vs. "$litmus2result".
+echo Result mismatch "$litmus1result" vs. "$litmus2result".
 exit 3
